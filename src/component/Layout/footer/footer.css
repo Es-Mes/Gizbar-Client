@@ -1,0 +1,129 @@
+.footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 30px;
+    color:var(--text);
+    border-radius: 10px;
+    /* font-family: cursive; */
+    min-height: 50vh;
+    min-width: 93%;
+    max-width: 93%;
+    background-color:var(--bgSoft);
+    /* border-style:double; */
+    /* border-color: rgb(250, 105, 185); */
+    background-color: #fff;
+    margin: 3vw;
+}
+.footer-logo{
+    font-weight: bold;
+    max-height: 27vh;
+    margin-top: 10px;
+    margin-bottom: 0;
+     object-fit: cover;
+}
+
+.footer-text{
+    /* font-size: 12px; */
+    font-family: cursive;
+    padding-bottom: 2%;
+}
+.brandsImgs{
+    display: flex;
+    flex-wrap: wrap;
+    gap:5px;
+    justify-content: space-around;
+}
+.logoP{
+    min-width: 25vw;
+    /* min-height: 39vh; */
+    max-height: 31vh;
+}
+.footerInfo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    min-width: 80vw;
+    max-height: 70vh;
+   margin-top: 0;
+   margin-bottom: 5vh;
+}
+.footerInfo div{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    font-size: 1.3rem;
+    text-align: right;
+    margin-top: 0;
+}
+/* .footerInfo div :hover{
+    color: rgb(255, 155, 171);
+} */
+.linkCompany:hover{
+    color: rgb(255, 155, 171);
+}
+.timeActive {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+.adress{
+    display: flex;
+    flex-direction:row;
+
+}
+h3{
+    color:rgb(249, 151, 155);
+    font-size: 1.8rem;
+    font-weight: lighter;
+    /* text-align: center; */
+}
+.icon{
+    color:rgb(249, 151, 155);
+
+}
+.mailLink{
+    display: flex;
+
+}
+link:active:hover{
+    color: red;
+}
+@media screen and (max-width: 900px) {
+    h3, .footerInfo div{
+      font-size: 1.5rem;
+    }
+    .footerInfo{
+        flex-wrap: wrap;
+    }
+    .footerInfo div{
+       min-width: 50vw;
+       text-align: center;
+       padding: 0;
+       margin-top:0;
+
+    }
+    .footer{
+        min-height: 200vh;
+        padding: 0;
+    }
+    .footer-logo{
+        max-height: 5vh;
+        margin-top: 0vh;
+        margin-bottom:0;
+         object-fit: cover;
+    }
+    .logoP{
+        /* max-height: 5vh; */
+        margin: 0;
+    }
+    .footerCategories, .footerCategories div,.categoryLinkFooter,.categoriesTitle{
+        display:none;
+    }
+    .linkAbout{
+        display: block;
+    }
+
+
+  }

@@ -1,0 +1,24 @@
+body{
+    text-align: center;
+}
+
+.HomeOpenImage{
+max-width: 95%;
+}
+.categoryIcon{
+    max-width: 2vw;
+    max-height: 2vh;
+}
+img{
+    max-width: 500px;
+    max-height:50px;
+}
+.HomeCategorys{
+     max-width: 90vw;
+     min-height: 30vh;
+    /* background-color: #fff; */ 
+}
+.carouselImg{
+    min-width: 20vw;
+    min-height: 25vw;
+}

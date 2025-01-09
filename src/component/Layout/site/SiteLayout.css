@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+header {
+    width: 100%; /* תפריט ברוחב מלא */
+}
+
+main {
+    width: 68%; /* מגביל את הרוחב של main */
+    margin-left: 0; /* מצמיד לשמאל */
+    box-sizing: border-box; /* לוקח padding ו-border בחשבון */
+    float: left; /* מבטיח שהוא יישאר בצד שמאל */
+}
+

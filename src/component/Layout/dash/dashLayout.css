@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* body{
+    max-width: 99vw;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    min-width: 100vw;
+}
+.menu {
+    color: var(--textSoft);
+    max-height: 100px;
+    min-width: 100vw;
+}
+.content{
+    padding: 20px;
+    min-width: 90vw;
+    align-items: center;
+    justify-content: center;
+    
+} */
+/* .navbar-search{
+    max-width: 90vw;
+} */
