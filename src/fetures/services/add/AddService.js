@@ -64,7 +64,6 @@ const AddService = () => {
                     name="price"
                     value={serviceData.price}
                     onChange={handleChange}
-                    required
                 />
 
                 <button type="submit" disabled={isLoading}>

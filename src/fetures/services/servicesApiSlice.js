@@ -4,13 +4,13 @@ const servicesApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({
         getAllServices: build.query({
             query: ({ phone }) => ({
-                url: `/${phone}/services`,
+                url: `/api/agent/${phone}/services`,
             }),
             providesTags: ["Services"],
         }),
         addService: build.mutation({
             query: ({ phone, service }) => ({
-                url: `/${phone}/service`,
+                url: `/api/agent/${phone}/service`,
                 method: "POST",
                 body: service,
             }),
@@ -18,7 +18,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
         }),
         updateService: build.mutation({
             query: ({ phone, _id, service }) => ({
-                url: `/${phone}/service`,
+                url: `/api/agent/${phone}/service`,
                 method: "PUT",
                 body: service,
             }),
@@ -26,7 +26,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
         }),
         deleteService: build.mutation({
             query: ({ phone, _id }) => ({
-                url: `/${phone}/services/delete/${_id}`,
+                url: `/api/agent/${phone}/services/delete/${_id}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["Services"],
