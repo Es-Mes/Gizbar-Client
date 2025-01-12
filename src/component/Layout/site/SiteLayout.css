@@ -1,22 +1,37 @@
-* {
+/* * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 .page {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     width: 100%;
+} */
+
+/* header {
+    width: 100%; /* ה-NavBar תופס את כל הרוחב 
+} */
+
+/* main {
+    display: flex; /* מחלק את החלוקה בין main לתפריט 
+    width: 100%; 
+    margin: 0;
+    padding: 0;
+} */
+
+/* main > .content {
+    width: 80% !important; /* תופס 80% מרוחב המסך 
+    float: left; /* מצמיד לשמאל 
+    padding: 20px; /* מרווח פנימי 
+    box-sizing: border-box;
 }
 
-header {
-    width: 100%; /* תפריט ברוחב מלא */
-}
-
-main {
-    width: 68%; /* מגביל את הרוחב של main */
-    margin-left: 0; /* מצמיד לשמאל */
-    box-sizing: border-box; /* לוקח padding ו-border בחשבון */
-    float: left; /* מבטיח שהוא יישאר בצד שמאל */
-}
-
+main > .menu {
+    width: 20% !important; /* התפריט תופס 20% 
+    background-color: #f4f4f4;
+    padding: 20px; /* מרווח פנימי 
+    box-sizing: border-box;
+} */

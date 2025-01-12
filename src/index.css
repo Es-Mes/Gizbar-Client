@@ -1,9 +1,9 @@
 
 :root{
-  --bg:#fdf0f5;
-  --bgSoft:#f6a6c5;
-  --bgPink: #c76681d6;
-  --text:rgb(60, 83, 88);
+  --bg:#cadde9;
+  --bgSoft:rgba(11, 123, 11, 0.767);
+  --bgPink: #668dc7d6;
+  --text:rgb(19, 38, 85);
   --textSoft:#d6dbe7;
   --bgWhite:whitesmoke;
   --blue:rgb(26, 26, 163);
@@ -57,7 +57,7 @@ a{
   min-width: 97vw;
   max-width: 97vw;
   min-height: 100vh;
-  background-color: #f3dce5;
+  background-color: #dcf3ef;
   font-size: 5rem;
   text-align: center;
   align-items: center;

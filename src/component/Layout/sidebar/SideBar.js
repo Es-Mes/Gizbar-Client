@@ -1,134 +1,104 @@
-import MenuLink from "./MenuLink"
-import "./sidebar.css"
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
-    MdDashboard,
-    MdSupervisedUserCircle,
-    MdPendingActions,
-    MdOutlineSettings,
-    MdHelpCenter,
-    MdOutlineBusinessCenter,
-    MdLogout
+  FaHouseChimney,
+  FaAddressBook,
+  FaSackDollar,
+  FaMoneyBillTransfer,
+  FaCreditCard,
+  FaArrowDownShortWide,
+  FaChartColumn,
+  FaPlay,
+  FaRegComments,
+} from "react-icons/fa6";
+import "./sidebar.css"; // יצירת קובץ CSS מותאם ל-sidebar
 
-} from "react-icons/md"
-import { useSendLogoutMutation } from "../../../fetures/auth/authApiSlice"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import useAuth from "../../../hooks/useAuth"
+const Sidebar = () => {
+  const [openIndex, setOpenIndex] = useState(null);
 
-const SideBar = () => {
-    const { _id, userName, name, email, roles } = useAuth()
-    const navigate = useNavigate()
-    const [logout, { isSuccess }] = useSendLogoutMutation()
-    const adminMenuItem = [
-        {
-            // title: "דפים",
-            list: [
-                {
-                    title: "ראשי",
-                    path: "/dash",
-                    icon: <MdDashboard />
-                },
-                {
-                    title: "משתמשים",
-                    path: "/dash/users",
-                    icon: <MdSupervisedUserCircle />
-                },
-                {
-                    title: "מוצרים",
-                    path: "/dash/products",
-                    icon: <MdOutlineBusinessCenter />
-                },
-                {
-                    title: "פעולות",
-                    path: "/dash/actions",
-                    icon: <MdPendingActions />
-                }
-                // {
-                //     title: "הגדרות",
-                //     path: "/dash/settings",
-                //     icon: <MdOutlineSettings />
-                // },
-                // {
-                //     title: "עזרה",
-                //     path: "/dash/help",
-                //     icon: <MdHelpCenter />
-                // }
-            ],
-        }]
-    const userMenuItem = [{
-        title: "משתמש",
-        list: [
-            {
-                title: "הגדרות",
-                path: "/dash/settings",
-                icon: <MdOutlineSettings />
-            },
-            {
-                title: "עזרה",
-                path: "/dash/help",
-                icon: <MdHelpCenter />
-            }
-        ],
-    }]
+  const toggleSubmenu = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
-    const user = {
-        username: "username",
-        name: "פלומה-מוצרי תינוקות",
-        //we dond need picture, but i want to see how can i put it
-        image: ""
-    }
-    const menuItem = roles === 'admin' ? adminMenuItem : userMenuItem
-    //when success logout:
-    useEffect(() => {
-        if (isSuccess) {
-            navigate("/login")
-        }
-    }, [isSuccess])
+  return (
+    <div className="sidebar-main-menu">
+      <ul>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/">
+            <FaHouseChimney size={25} className="icon" /> עמוד הבית
+          </NavLink>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/transactions">
+            <FaAddressBook size={25} className="icon" /> לקוחות
+          </NavLink>
+          <ul className={`submenu ${openIndex === 1 ? "open" : ""}`}>
+            <li>ניהול לקוחות</li>
+            <li>הוספת לקוח חדש</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/customerBilling">
+            <FaSackDollar size={25} className="icon" /> הכנסות
+          </NavLink>
+          <ul className={`submenu ${openIndex === 2 ? "open" : ""}`}>
+            <li>דוחות הכנסות</li>
+            <li>הפקת חשבונית</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/paymentRequirements">
+            <FaMoneyBillTransfer size={25} className="icon" /> הוצאות
+          </NavLink>
+          <ul className={`submenu ${openIndex === 3 ? "open" : ""}`}>
+            <li>תשלומים שוטפים</li>
+            <li>דוחות הוצאות</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/creditClearing">
+            <FaCreditCard size={25} className="icon" /> סליקת אשראי
+          </NavLink>
+          <ul className={`submenu ${openIndex === 4 ? "open" : ""}`}>
+            <li>חיובים שנכשלו</li>
+            <li>דוחות סליקה</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/standingOrders">
+            <FaArrowDownShortWide size={25} className="icon" /> הוראות קבע
+          </NavLink>
+          <ul className={`submenu ${openIndex === 5 ? "open" : ""}`}>
+            <li>הוספת הוראה חדשה</li>
+            <li>ניהול הוראות קיימות</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/history">
+            <FaChartColumn size={25} className="icon" /> היסטוריה
+          </NavLink>
+          <ul className={`submenu ${openIndex === 6 ? "open" : ""}`}>
+            <li>היסטוריית תשלומים</li>
+            <li>היסטוריית פעולות</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/services">
+            <FaPlay size={25} className="icon" /> שירותים
+          </NavLink>
+          <ul className={`submenu ${openIndex === 7 ? "open" : ""}`}>
+            <li>שירותים פעילים</li>
+            <li>הוספת שירות חדש</li>
+          </ul>
+        </li>
+        <li className="menu-item">
+          <NavLink className="nav-link" to="/categories/contact">
+            <FaRegComments size={25} className="icon" /> צור קשר
+          </NavLink>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
-    const logOutClick = () => {
-        logout()
-        navigate("/")
-    }
-
-
-    const [showFixedMenu, setShowFixedMenu] = useState(false);
-    useEffect(() => {
-        const handleScroll = () => {
-            const threshold = 120; // הגדרת סף הגלילה שבו ישתנה התפריט ל־position: fixed
-            const isScrolled = window.scrollY > threshold;
-
-            setShowFixedMenu(isScrolled);
-        };
-
-        window.addEventListener("scroll", handleScroll);
-
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    return (
-        <div className={`"sidebar" ${showFixedMenu ? "fixed-admin" : ""}`}>
-            {/* <div className="sidebar-user">
-                <img src={user.image || "/logo512.png"} alt="" width="50" height="50" className="sidebar-user-image"/>
-                <div className="sidebar-user-datails">
-                    <span className="sidebar-user-username">{name}</span>
-                    <span className="sidebar-user-username">{userName}</span>
-                    <span className="sidebar-user-username">{email}</span>
-                    <span className="sidebar-user-username">roles:{roles}</span>
-                </div>
-            </div> */}
-            <ul className="sidebar-menu-list">
-                {menuItem.map(cat => (
-                    <li className="sidebar-menu-li" key={cat.title}>
-                        <span className="sidebar-menu-cat">{cat.title}</span>
-                        {cat.list.map(item => (
-                            <MenuLink item={item}>{item.title}</MenuLink>
-                        ))}
-                    </li>
-                ))}
-                <li className="sidebar-menu-li" key="exit"><button onClick={logOutClick} className="sidebar-logout"><MdLogout />יציאה</button></li>
-            </ul>
-
-        </div>
-    )
-}
-export default SideBar
+export default Sidebar;

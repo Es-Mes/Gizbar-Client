@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
 import useAuth from "../../../hooks/useAuth";
-
+import './AddService.css'
 const AddService = () => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
@@ -13,6 +13,7 @@ const AddService = () => {
         description: "",
         price: "",
     });
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // ניהול הצגת ההודעה
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,8 +29,13 @@ const AddService = () => {
 
         try {
             await addService({ phone, service: serviceData }).unwrap();
-            alert("השירות נוסף בהצלחה!");
-            navigate("/services"); // נווט חזרה לעמוד השירותים
+            setShowSuccessMessage(true); // הצג הודעת הצלחה
+
+            // עיכוב לפני הניווט
+            setTimeout(() => {
+                setShowSuccessMessage(false); // הסתר את ההודעה
+                navigate("/dash"); // נווט לעמוד השירותים
+            }, 2000); // עיכוב של 2 שניות (2000ms)
         } catch (err) {
             console.error("Error adding service:", err);
         }

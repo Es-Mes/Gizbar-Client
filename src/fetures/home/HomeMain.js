@@ -15,7 +15,13 @@ const HomeMain = () => {
          <h1>שלום {phone}</h1>
          <div className="QuickActions">
             <button>
-               <Link to="services/add">הוספת עסקה</Link>
+               <Link to="services/add">הוספת שירות</Link>
+            </button>
+            <button>
+               <Link to="customers/add">הוספת לקוח</Link>
+            </button>
+            <button>
+               <Link to="transactions/add">הוספת עסקה</Link>
             </button>
          </div>
       </>

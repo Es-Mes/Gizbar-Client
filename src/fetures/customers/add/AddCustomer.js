@@ -1,34 +1,111 @@
-import "./AddCustomer.css"
-import { useAddCustomerMutation } from "../customersApiSlice"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAddCustomerMutation } from "../customersApiSlice";
+import useAuth from "../../../hooks/useAuth";
+import './AddCustomer.css'
 const AddCustomer = () => {
-    const [addUser, { error, isError, isLoading, isSuccess }] = useAddCustomerMutation()
-    const navigate = useNavigate()
-    useEffect(() => {
-        if (isSuccess) {
-            navigate("/dash/users")
+    const { phone } = useAuth(); // קבלת מזהה ה-agent
+    const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
+    const navigate = useNavigate();
+
+    const [customerData, setCustomerData] = useState({
+        full_name: "",
+        phone: "",
+        email: "",
+        address: "",
+        city: "",
+    });
+
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // ניהול הצגת ההודעה
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCustomerData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!phone) {
+            alert("מזהה הסוכן לא נמצא. נסה להתחבר מחדש.");
+            return;
         }
-    }, [isSuccess])
-    const formSubmit = (e) => {
-        e.preventDefault()
-        const data = new FormData(e.target)
-        const userObj = Object.fromEntries(data.entries())
-        console.log(userObj)
-        addUser(userObj)
-    }
+
+        try {
+            await addCustomer({phone, customer: customerData }).unwrap();
+            setShowSuccessMessage(true); // הצג הודעת הצלחה
+
+            // עיכוב לפני הניווט
+            setTimeout(() => {
+                setShowSuccessMessage(false); // הסתר את ההודעה
+                navigate("/dash"); // נווט לעמוד הבית
+            }, 2000); // עיכוב של 2 שניות (2000ms)
+        } catch (err) {
+            console.error("Error adding customer:", err);
+        }
+    };
+
     return (
-        <div className="add-user-container">
-            <form onSubmit={formSubmit} className="add-user-form">
-                <input type="text" name="name" placeholder="שם מלא" required />
-                <input type="text" name="userName" placeholder="שם משתמש" required />
-                <input type="email" name="email" placeholder="כתובת מייל" required />
-                <input type="tel" name="phone" placeholder="מספר פלאפון" />
-                <input type="password" name="password" placeholder="סיסמא" required />
-                {/* <input type="file" name="image"/> */}
-                <button type="submit">אישור</button>
+        <div className="add-customer-container">
+            <h1>הוסף לקוח חדש</h1>
+            <form onSubmit={handleSubmit} className="add-customer-form">
+                <label htmlFor="full_name">שם מלא:</label>
+                <input
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    value={customerData.full_name}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label htmlFor="phone">מספר פלאפון:</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={customerData.phone}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label htmlFor="email">כתובת מייל:</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={customerData.email}
+                    onChange={handleChange}
+                />
+
+                <label htmlFor="address">כתובת:</label>
+                <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={customerData.address}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label htmlFor="city">עיר:</label>
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={customerData.city}
+                    onChange={handleChange}
+                    required
+                />
+
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? "מוסיף..." : "הוסף לקוח"}
+                </button>
             </form>
+
+            {isSuccess && <p className="success-message">הלקוח נוסף בהצלחה!</p>}
+            {isError && <p className="error-message">{error?.data?.message || "שגיאה בהוספת הלקוח"}</p>}
         </div>
-    )
-}
-export default AddCustomer
+    );
+};
+
+export default AddCustomer;

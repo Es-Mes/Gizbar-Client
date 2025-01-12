@@ -42,7 +42,7 @@ const authApiSlice=apiSlice.injectEndpoints({
         sendLogout:build.mutation({
             query:()=>({
                 url:"/api/auth/logout",
-                method:"put"
+                method:"POST"
             }),
             async onQueryStarted(arg,{dispatch,queryFulfilled }){
                 try{

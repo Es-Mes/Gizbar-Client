@@ -49,6 +49,21 @@ const App = () => {
             <Route path="login" element={<LoginPage />} />
             <Route path="regist" element={<RegistPage />} />
             <Route path="/" element={<SiteLayout />} >
+                {/* <Route index element={<HomeMain/>} /> */}
+                {/* <Route index element={<HomePage />} /> */}
+                {/* <Route path="/favouriets" element={<FavouritesList />} />
+                <Route path="/about" element={<PlumaAbout />} />
+                <Route path="/regulation" element={<Regulation />} />
+                <Route path="/posts" element={<Posts />} />
+                <Route path="/posts/sportLinePost" element={<SportLinePost />} />
+                <Route path="/posts/winterPost" element={<WinterPost />} />
+                <Route path="/posts/safePost" element={<SafePost />} />
+                <Route path="/posts/carriagePost" element={<CarriagePost />} />
+                <Route path="/posts/badPost" element={<BadPost />} />
+                {/* <Route path="/feedback" element={<ContactForm/>}/> */}
+                {/* <Route index element={<HomeMain/>} /> */}
+               
+
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         <Route path="/dash" element={<DashLayout />}>

@@ -1,4 +1,5 @@
-.add-service-container {
+.add-customer-container,
+.add-transaction-container {
   border: 2px solid var(--bgSoft);
   padding: 20px;
   border-radius: 10px;
@@ -7,44 +8,51 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.add-service-container h1 {
+.add-customer-container h1,
+.add-transaction-container h1 {
   text-align: center;
   color: var(--primary);
   margin-bottom: 20px;
 }
 
-.add-service-form {
+.add-customer-form,
+.add-transaction-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.add-service-form label {
+.add-customer-form label,
+.add-transaction-form label {
   font-size: 16px;
   color: var(--text);
   font-weight: bold;
 }
 
-.add-service-form input,
-.add-service-form textarea {
+.add-customer-form input,
+.add-customer-form textarea,
+.add-transaction-form input,
+.add-transaction-form textarea {
   padding: 15px;
   border: 1px solid var(--bgSoft);
   border-radius: 5px;
   background-color: var(--bg);
   color: var(--text);
   font-size: 14px;
-  width: 100%;
+  width: inherit;
   box-sizing: border-box;
 }
 
-.add-service-form textarea {
+.add-customer-form textarea,
+.add-transaction-form textarea {
   resize: none;
   height: 100px;
 }
 
-.add-service-form button {
+.add-customer-form button,
+.add-transaction-form button {
   padding: 15px;
-  background-color: teal;
+  background-color: var(--blue);
   color: white;
   border: none;
   border-radius: 5px;
@@ -54,7 +62,8 @@
   transition: background-color 0.3s ease;
 }
 
-.add-service-form button:hover {
+.add-customer-form button:hover,
+.add-transaction-form button:hover {
   background-color: darkcyan;
 }
 

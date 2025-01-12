@@ -70,7 +70,7 @@
     /* justify-content: space-between; */
     /* max-width: 30%; */
     /* margin-left: 8vw; */
-    background-color: var(--bg);
+    background-color: var(--bgSoft);
 }
 
 .navbar-menu-div {
@@ -95,75 +95,7 @@
     min-height: 100px;
 } */
 
-.sidebar-main-menu {
-    width: 250px;
-    height: calc(100vh - 70px); /* גובה שמותאם לגובה החלון פחות גובה התפריט העליון */
-    max-width: 30vw;
-    background-color: #333;
-    color: #fff;
-    position: fixed;
-    right: 0;
-    top: 70px;
-    overflow-y: auto;
-    padding-top: 20px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  }
-  
-  .sidebar-main-menu ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .sidebar-main-menu .menu-item {
-    padding: 10px 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.3s ease;
-  }
-  
-  .sidebar-main-menu .menu-item:hover {
-    background-color: #444;
-  }
-  
-  .sidebar-main-menu .menu-item .homeLink {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .sidebar-main-menu .menu-item .homeLink:hover {
-    text-decoration: none;
-  }
-  
-  .sidebar-main-menu .menu-item svg {
-    margin-left: 10px;
-  }
-  
-  .sidebar-main-menu .submenu {
-    display: none;
-    list-style-type: none;
-    padding-left: 20px;
-    margin: 0;
-  }
-  
-  .sidebar-main-menu .submenu li {
-    padding: 8px 20px;
-    background-color: #555;
-    transition: background-color 0.3s ease;
-  }
-  
-  .sidebar-main-menu .submenu li:hover {
-    background-color: #666;
-  }
-  
-  .sidebar-main-menu .menu-item.open .submenu {
-    display: block;
-  }
-  
+
 
   
  /* .fixed-menu {

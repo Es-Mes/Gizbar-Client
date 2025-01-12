@@ -4,27 +4,34 @@
     box-sizing: border-box;
 }
 
-
-/* body{
-    max-width: 99vw;
-}
-.container{
+.page {
     display: flex;
     flex-direction: column;
-    min-width: 100vw;
+    min-height: 100vh;
+    width: 100%;
 }
-.menu {
-    color: var(--textSoft);
-    max-height: 100px;
-    min-width: 100vw;
+
+header {
+    width: 100%; /* ה-NavBar תופס את כל הרוחב */
 }
-.content{
-    padding: 20px;
-    min-width: 90vw;
-    align-items: center;
-    justify-content: center;
-    
-} */
-/* .navbar-search{
-    max-width: 90vw;
-} */
+
+main {
+    display: flex; /* מחלק את החלוקה בין main לתפריט */
+    flex-direction: row-reverse; /* הופך את כיוון הפריסה כך שהתפריט בצד ימין */
+    width: 100%; /* מכסה את כל הרוחב */
+    margin: 0;
+    padding: 0;
+}
+
+main > .content {
+    width: 80% !important; /* תופס 80% מרוחב המסך */
+    padding: 20px; /* מרווח פנימי */
+    box-sizing: border-box;
+}
+
+main > .menu {
+    width: 20% !important; /* התפריט תופס 20% */
+    /* background-color: #f4f4f4; */
+    padding: 20px; /* מרווח פנימי */
+    box-sizing: border-box;
+}
