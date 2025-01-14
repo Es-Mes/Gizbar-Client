@@ -2,12 +2,12 @@ import apiSlice from "../../app/apiSlice";
 
 const servicesApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({
-        getAllServices: build.query({
-            query: ({ phone }) => ({
-                url: `/api/agent/${phone}/service`,
-            }),
-            providesTags: ["Services"],
-        }),
+        // getAllServices: build.query({
+        //     query: ({ phone }) => ({
+        //         url: `/api/agent/${phone}/service`,
+        //     }),
+        //     providesTags: ["Services"],
+        // }),
         addService: build.mutation({
             query: ({ phone, service }) => ({
                 url: `/api/agent/${phone}/service`,

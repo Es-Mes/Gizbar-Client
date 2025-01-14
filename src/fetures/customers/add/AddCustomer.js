@@ -40,12 +40,6 @@ const AddCustomer = ({onSuccess}) => {
             const customer = await addCustomer({ phone, customer: customerData }).unwrap();
             const newCustomer = customer.data;
             setShowSuccessMessage(true); // הצג הודעת הצלחה
-            // refetchCustomers().then((result) => {
-            //     console.log("Refetch Customers Result:", result);
-            // }).catch((error) => {
-            //     console.error("Refetch Customers Error:", error);
-            // });
-
              // עדכון הסטור עם הלקוח החדש
              dispatch(addCustomerStore(newCustomer));
 

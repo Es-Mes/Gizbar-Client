@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { addServiceStore } from "../../../app/agentSlice";
-import { useGetAllServicesQuery } from "../servicesApiSlice";
+import { setAgentData } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddService.css'
 const AddService = ({ onSuccess }) => {
@@ -39,7 +38,7 @@ const AddService = ({ onSuccess }) => {
             // const newService = service.data;
             setShowSuccessMessage(true); // הצג הודעת הצלחה
 
-            dispatch(addServiceStore(agent.data));
+            dispatch(setAgentData(agent));
 
     
             if (onSuccess) {

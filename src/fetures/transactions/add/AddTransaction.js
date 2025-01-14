@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
-import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
+// import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
 import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
 
 import useAuth from "../../../hooks/useAuth";
@@ -15,7 +15,7 @@ const AddTransaction = () => {
     const services = useSelector((state) => state.agent?.data?.data?.services || []);
     const customers = useSelector((state) =>state.agent?.data?.data?.customers || [])
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
-    const { refetch: refetchServices } = useGetAllServicesQuery({ phone });
+    // const { refetch: refetchServices } = useGetAllServicesQuery({ phone });
 
     const navigate = useNavigate();
     const [addTransaction, { isLoading, isSuccess, isError, error }] =
@@ -233,7 +233,6 @@ const AddTransaction = () => {
             >
                 <AddService
                 onSuccess={() => {
-                    refetchServices(); // רענון השירותים
                     setServiceModalOpen(false); // סגור את המודל
                 }} />
             </Modal>
