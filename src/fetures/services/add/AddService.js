@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setAgentData } from "../../../app/agentSlice";
+import { addServiceStore } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddService.css'
 const AddService = ({ onSuccess }) => {
@@ -11,8 +11,9 @@ const AddService = ({ onSuccess }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const services = useSelector((state) => state.agent?.data?.data?.services || []);
-    console.log(services);
+    // const services = useSelector((state) => state.agent?.data?.data?.services || []);
+    
+    // console.log(`services: ${services}`);
     const [serviceData, setServiceData] = useState({
         name: "",
         description: "",
@@ -33,12 +34,13 @@ const AddService = ({ onSuccess }) => {
         }
     
         try {
-            const agent =  await addService({ phone, service: serviceData }).unwrap();
-            console.log(agent);
+            await addService({ phone, service: serviceData }).unwrap();
+            console.log(`serviceData: ${serviceData}`);
+
             // const newService = service.data;
             setShowSuccessMessage(true); // הצג הודעת הצלחה
 
-            dispatch(setAgentData(agent));
+            dispatch(addServiceStore(serviceData));//עדכון הסטור בשירות החדש
 
     
             if (onSuccess) {

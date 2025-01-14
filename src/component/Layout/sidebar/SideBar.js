@@ -24,7 +24,7 @@ const Sidebar = () => {
     <div className="sidebar-main-menu">
       <ul>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/">
+          <NavLink className="nav-link" to="/dash">
             <FaHouseChimney size={25} className="icon" /> עמוד הבית
           </NavLink>
         </li>

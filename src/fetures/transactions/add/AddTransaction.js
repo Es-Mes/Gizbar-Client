@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
 // import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
 import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
-
+import { addTransactionStore } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
@@ -15,6 +15,8 @@ const AddTransaction = () => {
     const services = useSelector((state) => state.agent?.data?.data?.services || []);
     const customers = useSelector((state) =>state.agent?.data?.data?.customers || [])
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
+    const dispatch = useDispatch();
+
     // const { refetch: refetchServices } = useGetAllServicesQuery({ phone });
 
     const navigate = useNavigate();
@@ -106,6 +108,7 @@ const AddTransaction = () => {
         };
         console.log(transactionData);
         addTransaction({ phone, transaction: transactionData });
+        dispatch(addTransactionStore(transactionData));
     };
 
     return (

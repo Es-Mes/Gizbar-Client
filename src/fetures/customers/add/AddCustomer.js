@@ -37,11 +37,10 @@ const AddCustomer = ({onSuccess}) => {
         }
 
         try {
-            const customer = await addCustomer({ phone, customer: customerData }).unwrap();
-            const newCustomer = customer.data;
-            setShowSuccessMessage(true); // הצג הודעת הצלחה
+            await addCustomer({ phone, customer: customerData }).unwrap();
+            setShowSuccessMessage(true); // הצג הודעת הצלחה         
              // עדכון הסטור עם הלקוח החדש
-             dispatch(addCustomerStore(newCustomer));
+            dispatch(addCustomerStore(customerData));
 
 
 
@@ -98,7 +97,6 @@ const AddCustomer = ({onSuccess}) => {
                     name="address"
                     value={customerData.address}
                     onChange={handleChange}
-                    required
                 />
 
                 <label htmlFor="city">עיר:</label>
@@ -108,7 +106,6 @@ const AddCustomer = ({onSuccess}) => {
                     name="city"
                     value={customerData.city}
                     onChange={handleChange}
-                    required
                 />
 
                 <button type="submit" disabled={isLoading}>

@@ -26,9 +26,6 @@ const DashLayout=()=>{
     // )
     return (
         <div>
-            {/* <header>
-                <NavBar />
-            </header> */}
             <main>
                 <div className="content">
                     <Outlet />
