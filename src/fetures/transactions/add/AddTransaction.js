@@ -108,7 +108,7 @@ const AddTransaction = () => {
         };
         console.log(transactionData);
         addTransaction({ phone, transaction: transactionData });
-        dispatch(addTransactionStore(transactionData));
+        // dispatch(addTransactionStore(transactionData));
     };
 
     return (

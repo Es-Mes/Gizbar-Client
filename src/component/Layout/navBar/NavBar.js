@@ -33,7 +33,7 @@ const NavBar = () => {
       <div className="navbar-title">
         <div className="navbar-logo-box">
           <div className="logoNavBar"></div>
-          <Search className="navBarSearch" placeholder={"חיפוש כללי"} />
+          {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}
           <h2 className="title">SLIKA</h2>
         </div>
 
