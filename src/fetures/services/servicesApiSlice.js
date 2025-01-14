@@ -4,7 +4,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({
         getAllServices: build.query({
             query: ({ phone }) => ({
-                url: `/api/agent/${phone}/services`,
+                url: `/api/agent/${phone}/service`,
             }),
             providesTags: ["Services"],
         }),

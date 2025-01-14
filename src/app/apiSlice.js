@@ -1,42 +1,67 @@
-import{createApi,fetchBaseQuery}from "@reduxjs/toolkit/query/react"
-import {setToken} from "../fetures/auth/authSlice"
+// import{createApi,fetchBaseQuery}from "@reduxjs/toolkit/query/react"
+// import {setToken} from "../fetures/auth/authSlice"
 
-const baseQuery=fetchBaseQuery({
-    baseUrl:"http://localhost:50901",
-  //baseUrl: "https://primary-react-node-mongodb-project.onrender.com",
-    credentials:"include",
-    prepareHeaders:(headers,{getState})=>{
-        const token=getState().auth.token
-        // if(token){
-        headers.set("authorization",`Bearer ${token}`)
-        // }
-        return headers
-    }
-})
+// const baseQuery=fetchBaseQuery({
+//     baseUrl:"http://localhost:50901",
+//   //baseUrl: "https://primary-react-node-mongodb-project.onrender.com",
+//     credentials:"include",
+//     prepareHeaders:(headers,{getState})=>{
+//         const token=getState().auth.token
+//         // if(token){
+//         headers.set("authorization",`Bearer ${token}`)
+//         // }
+//         return headers
+//     }
+// })
 
-const baseQueryWithReauth=async(args,api,extraOptions)=>{
-    let result=await baseQuery(args,api,extraOptions)
-    if(result?.error?.status===403){
-        console.log("sending refresh token");
-        const refreshResult=await baseQuery("/api/auth/refresh",api,extraOptions)
-        if(refreshResult?.data){
-            //store the new token:
-            api.dispatch(setToken({...refreshResult.data}))
-            result=await baseQuery(args,api,extraOptions)
-        }else{
-            if(refreshResult?.error?.status===403){
-                refreshResult.error.data.message="You login has expired."
+// const baseQueryWithReauth=async(args,api,extraOptions)=>{
+//     let result=await baseQuery(args,api,extraOptions)
+//     if(result?.error?.status===403){
+//         console.log("sending refresh token");
+//         const refreshResult=await baseQuery("/api/auth/refresh",api,extraOptions)
+//         if(refreshResult?.data){
+//             //store the new token:
+//             api.dispatch(setToken({...refreshResult.data}))
+//             result=await baseQuery(args,api,extraOptions)
+//         }else{
+//             if(refreshResult?.error?.status===403){
+//                 refreshResult.error.data.message="You login has expired."
+//             }
+//             return refreshResult
+//         }
+//     }
+//     return result
+// }
+
+
+// const apiSlice=createApi({
+//     reducerPath:"api",
+//     baseQuery:baseQueryWithReauth,
+//     endpoints:()=>({ })
+// })
+// export default apiSlice;
+
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+const apiSlice = createApi({
+    reducerPath: "api",
+    baseQuery: fetchBaseQuery({
+        baseUrl: "http://localhost:50901",
+        credentials: "include",
+        prepareHeaders: (headers, { getState }) => {
+            const token = getState().auth.token;
+            if (token) {
+                headers.set("authorization", `Bearer ${token}`);
             }
-            return refreshResult
-        }
-    }
-    return result
-}
+            return headers;
+        },
+    }),
+    endpoints: (builder) => ({
+        getAgent: builder.query({
+            query: ({ phone }) => `/api/agent/${phone}`,
+        }),
+    }),
+});
 
-
-const apiSlice=createApi({
-    reducerPath:"api",
-    baseQuery:baseQueryWithReauth,
-    endpoints:()=>({ })
-})
+export const { useGetAgentQuery } = apiSlice;
 export default apiSlice;

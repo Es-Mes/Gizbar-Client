@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addServiceStore } from "../../../app/agentSlice";
+import { useGetAllServicesQuery } from "../servicesApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddService.css'
-const AddService = () => {
+const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+    const services = useSelector((state) => state.agent?.data?.data?.services || []);
+    console.log(services);
     const [serviceData, setServiceData] = useState({
         name: "",
         description: "",
@@ -26,20 +32,29 @@ const AddService = () => {
             alert("מספר הטלפון של הסוכן לא נמצא. נסה להתחבר מחדש.");
             return;
         }
-
+    
         try {
-            await addService({ phone, service: serviceData }).unwrap();
+            const agent =  await addService({ phone, service: serviceData }).unwrap();
+            console.log(agent);
+            // const newService = service.data;
             setShowSuccessMessage(true); // הצג הודעת הצלחה
 
-            // עיכוב לפני הניווט
-            setTimeout(() => {
-                setShowSuccessMessage(false); // הסתר את ההודעה
-                navigate("/dash"); // נווט לעמוד השירותים
-            }, 2000); // עיכוב של 2 שניות (2000ms)
+            dispatch(addServiceStore(agent.data));
+
+    
+            if (onSuccess) {
+                onSuccess(); // קריאה ל־onSuccess אם הוגדר
+            } else {
+                setTimeout(() => {
+                    setShowSuccessMessage(false); // הסתר את ההודעה
+                    navigate("/dash"); // נווט לעמוד השירותים
+                }, 2000); // עיכוב של 2 שניות (2000ms)
+            }
         } catch (err) {
             console.error("Error adding service:", err);
         }
     };
+    
 
     return (
         <div className="add-service-container">

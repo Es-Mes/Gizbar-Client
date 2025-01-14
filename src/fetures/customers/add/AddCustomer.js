@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddCustomerMutation } from "../customersApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addCustomerStore } from "../../../app/agentSlice";
+import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
-const AddCustomer = () => {
+const AddCustomer = ({onSuccess}) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
     const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const customers = useSelector((state) => state.agent?.data?.data?.customers || []);
 
     const [customerData, setCustomerData] = useState({
         full_name: "",
@@ -22,7 +28,7 @@ const AddCustomer = () => {
         const { name, value } = e.target;
         setCustomerData((prev) => ({ ...prev, [name]: value }));
     };
-
+    const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!phone) {
@@ -31,14 +37,28 @@ const AddCustomer = () => {
         }
 
         try {
-            await addCustomer({phone, customer: customerData }).unwrap();
+            const customer = await addCustomer({ phone, customer: customerData }).unwrap();
+            const newCustomer = customer.data;
             setShowSuccessMessage(true); // הצג הודעת הצלחה
+            // refetchCustomers().then((result) => {
+            //     console.log("Refetch Customers Result:", result);
+            // }).catch((error) => {
+            //     console.error("Refetch Customers Error:", error);
+            // });
 
-            // עיכוב לפני הניווט
-            setTimeout(() => {
-                setShowSuccessMessage(false); // הסתר את ההודעה
-                navigate("/dash"); // נווט לעמוד הבית
-            }, 2000); // עיכוב של 2 שניות (2000ms)
+             // עדכון הסטור עם הלקוח החדש
+             dispatch(addCustomerStore(newCustomer));
+
+
+
+            if (onSuccess) {
+                onSuccess(); // קריאה ל־onSuccess אם הוגדר
+            } else {
+                setTimeout(() => {
+                    setShowSuccessMessage(false); // הסתר את ההודעה
+                    navigate("/dash"); // נווט לעמוד השירותים
+                }, 2000); // עיכוב של 2 שניות (2000ms)
+            }
         } catch (err) {
             console.error("Error adding customer:", err);
         }

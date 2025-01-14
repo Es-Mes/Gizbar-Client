@@ -37,12 +37,15 @@ import AddTransaction from "./fetures/transactions/add/AddTransaction"
 import AddService from "./fetures/services/add/AddService"
 import ServicesList from "./fetures/services/list/ServicesList"
 import SingleService from "./fetures/services/view/SingleService"
-
+import useAgentData from "./hooks/useAgentData"
+import useAuth from "./hooks/useAuth"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
 
 const App = () => {
+    const { phone } = useAuth();
+  useAgentData(phone); // הפעלת ה-hook
     return <Router>
         <ScrollToTop />
         <Routes>
@@ -62,7 +65,7 @@ const App = () => {
                 <Route path="/posts/badPost" element={<BadPost />} />
                 {/* <Route path="/feedback" element={<ContactForm/>}/> */}
                 {/* <Route index element={<HomeMain/>} /> */}
-               
+
 
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
