@@ -16,9 +16,43 @@ img{
 .HomeCategorys{
      max-width: 90vw;
      min-height: 30vh;
-    /* background-color: #fff; */ 
 }
 .carouselImg{
     min-width: 20vw;
     min-height: 25vw;
 }
+.transactions-display{
+    max-width: 40vw;
+
+}
+
+
+.QuickActions {
+    position: fixed;
+    top: 110px; /* הרחיק מהפינה התחתונה */
+    left: 90px; /* הרחיק מהפינה השמאלית */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* ריווח גדול יותר בין הכפתורים */
+}
+
+.QuickActions button {
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+}
+
+.QuickActions button a {
+    color: white;
+    text-decoration: none;
+}
+
+.QuickActions button:hover {
+    background-color: #0056b3;
+}
+

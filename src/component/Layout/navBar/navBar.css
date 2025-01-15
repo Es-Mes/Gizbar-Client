@@ -85,12 +85,11 @@
 .navbar-menu-div {
     max-height: 60px;
     padding-left: 20px;
-    color: #505151;
 }
 
 .navbar-menu-div p {
     margin-top: -10px;
-    color: #505151;
+    color: var(--darkGreen);
 }
 
 .title {
@@ -160,7 +159,7 @@
         display: flex;
         gap: 10px;
         cursor: pointer;
-        color: rgb(107, 104, 104);
+        color:var(--darkGreen);
     }
 
     /* .navbar{
@@ -214,7 +213,7 @@
 } */
     .userMenu {
         cursor: pointer;
-        color: rgb(87, 84, 84);
+        color: var(--darkGreen);
         background-color: none;
         font-size: 4rem;
         font-weight: lighter;

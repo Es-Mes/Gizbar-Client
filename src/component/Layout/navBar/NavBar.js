@@ -32,10 +32,10 @@ const NavBar = () => {
     <div className="navbar">
       <div className="navbar-title">
         <div className="navbar-logo-box">
-          <div className="logoNavBar"></div>
+          {/* <div className="logoNavBar"></div> */}
           {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}
-          <h1>שלום {first_name || "אורח"}</h1>
           <h2 className="title">GIZBAR</h2>
+          <h2>שלום {first_name || "אורח"}</h2>
         </div>
 
         {roles !== "admin" && !phone && (

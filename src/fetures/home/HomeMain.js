@@ -60,11 +60,6 @@ const HomeMain = () => {
    console.log(agent);
    return (
       <>
-         {/* <h1>שלום {phone}{agent?.data?.first_name || "אורח"}</h1> */}
-         <h1>שלום {agent?.first_name || "אורח"}</h1>
-
-
-
          <div className="QuickActions">
             <button>
                <Link to="services/add">הוספת שירות</Link>
