@@ -19,6 +19,9 @@
     width: 100%;
     position: relative;
 }
+.modal-content.regist-page{
+    background: rgba(0, 0, 0, 0);
+    }
 
 .modal-close {
     position: absolute;
@@ -28,4 +31,10 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+}
+
+.modal-overlay.modal-static {
+    position: static; /* משנים את position */
+    padding-top: 5vh;
+    padding-bottom: 5vh;
 }

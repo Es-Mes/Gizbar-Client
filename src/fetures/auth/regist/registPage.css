@@ -44,7 +44,7 @@
 } */
 
 .regist-page-form {
-    background-color: whitesmoke;
+    background-color: white;
     padding: 50px;
     padding-bottom: 25px;
     border-radius: 10px;
@@ -56,11 +56,9 @@
     gap: 25px;
     border: solid transparent 4px;
     z-index: 1001;
-
     border-image: linear-gradient(45deg, green, blue);
     border-image-slice: 1;
     /* animation: borderGradient 3s infinite alternate; */
-
     overflow: hidden;  /* מאפשר למסגרת להתאים לעיגול */
 }
 
@@ -110,6 +108,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.exit{
+    margin-right: -60px;
 }
 
 h1 {

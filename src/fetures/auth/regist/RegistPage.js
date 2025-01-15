@@ -80,7 +80,7 @@ export const RegistPage = () => {
   );
 
   return (
-    <div className='modal-overlay' ref={modalRef}>
+    <div className='modal-overlay modal-static' ref={modalRef}>
       <div className='regist-page modal-content'>
         <form onChange={checkFull} onSubmit={handleSubmit} className='regist-page-form'>
           <button onClick={handleGoHome} className="exit"><Link to='/' />x</button>

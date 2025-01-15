@@ -34,15 +34,15 @@ const NavBar = () => {
         <div className="navbar-logo-box">
           <div className="logoNavBar"></div>
           {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}
-          <h2 className="title">SLIKA</h2>
+          <h2 className="title">GIZBAR</h2>
         </div>
 
         {roles !== "admin" && !phone && (
           <div className="navbar-a-box">
-            <Link to="/login" className="products-list-add-btn">
+            <Link to="/login" className="nav-bar-btn">
               התחברות
             </Link>
-            <Link to="/regist" className="products-list-add-btn">
+            <Link to="/regist" className="nav-bar-btn">
               הרשמה
             </Link>
           </div>
