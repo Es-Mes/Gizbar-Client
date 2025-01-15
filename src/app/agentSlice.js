@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const agentSlice = createSlice({
     name: "agent",
-    initialState: { data: null, isLoading: false, error: null },
+    initialState: { data: { transactionsAsProvider: [], customers: [], services: [] }, isLoading: false, error: null },
     reducers: {
         setAgentData(state, action) {
             state.data = action.payload;
@@ -14,7 +14,7 @@ const agentSlice = createSlice({
             state.data.data.customers.push(action.payload); // הוספת לקוח חדש
         },
         addTransactionStore(state, action) {
-            state.data.data.transactions.push(action.payload); // הוספת לקוח חדש
+            state.data.data.transactionsAsProvider.push(action.payload); // הוספת עסקה  חדשה
         },
         setLoading(state, action) {
             state.isLoading = action.payload;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
 // import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
 import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
@@ -11,9 +11,12 @@ import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 
 const AddTransaction = () => {
-    const { phone} = useAuth();
+    const { _id,phone } = useAuth();
     const services = useSelector((state) => state.agent?.data?.data?.services || []);
-    const customers = useSelector((state) =>state.agent?.data?.data?.customers || [])
+    const customers = useSelector((state) => state.agent?.data?.data?.customers || [])
+    console.log(`customers  :${customers}`);
+    console.log(`servisces  :${services}`);
+
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const dispatch = useDispatch();
 
@@ -47,27 +50,39 @@ const AddTransaction = () => {
     // useEffect(() => {
     //     console.log("Customers updated:", customers);
     // }, [customers]);
-    
+
     // useEffect(() => {
     //     console.log("Services updated:", services);
     // }, [services]);
 
     const handleServiceChange = (event) => {
         const serviceId = event.target.value;
+        console.log(`service id:${serviceId}`);
         const service = services.find((srv) => srv._id === serviceId);
         setSelectedService(service);
+        console.log();
     };
 
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
+        console.log(`customerId:${customerId}`);
+        customers.forEach((cust) => {
+            console.log("לקוח ב-customers:", cust._id);
+        });
+        console.log("customerId type:", typeof customerId);
+        customers.forEach((cust) => {
+            console.log("cust._id type:", typeof cust._id);
+        });
+
         const customer = customers.find((cust) => cust._id === customerId);
+        console.log(`selectedCustomer:${customer}`);
         setSelectedCustomer(customer);
     };
 
     const handleInputChange = (event) => {
         const { name, value, type, checked } = event.target;
         const fieldValue = type === "checkbox" ? checked : value;
-    
+
         setTransactionDetails((prev) => {
             // אם סוג השדה הוא "alerts" (התראות)
             if (name === "alerts") {
@@ -85,11 +100,12 @@ const AddTransaction = () => {
             };
         });
     };
-    
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!selectedService || !selectedCustomer) {
+            console.log(`selectedCustomer:${selectedCustomer}`);
             alert("בחר שירות ולקוח!");
             return;
         }
@@ -101,6 +117,7 @@ const AddTransaction = () => {
             return;
         }
         const transactionData = {
+            agent:_id,
             customer: selectedCustomer._id,
             service: selectedService._id,
             serviceName: selectedService.name,
@@ -108,7 +125,7 @@ const AddTransaction = () => {
         };
         console.log(transactionData);
         addTransaction({ phone, transaction: transactionData });
-        // dispatch(addTransactionStore(transactionData));
+        dispatch(addTransactionStore(transactionData));
     };
 
     return (
@@ -223,9 +240,9 @@ const AddTransaction = () => {
                 onClose={() => setCustomerModalOpen(false)}
             >
                 <AddCustomer
-                onSuccess={() =>{
-                     refetchCustomers(); // רענון הלקוחות
-                    setCustomerModalOpen(false);
+                    onSuccess={() => {
+                        refetchCustomers(); // רענון הלקוחות
+                        setCustomerModalOpen(false);
                     }} />
             </Modal>
 
@@ -235,9 +252,9 @@ const AddTransaction = () => {
                 onClose={() => setServiceModalOpen(false)}
             >
                 <AddService
-                onSuccess={() => {
-                    setServiceModalOpen(false); // סגור את המודל
-                }} />
+                    onSuccess={() => {
+                        setServiceModalOpen(false); // סגור את המודל
+                    }} />
             </Modal>
         </div>
     );

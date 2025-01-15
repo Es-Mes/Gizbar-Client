@@ -14,11 +14,12 @@ const HomeMain = () => {
 
    // if (isLoading) return <p>Loading...</p>;
    // if (error) return <p>Error: {error.message}</p>;
-   const agent = useSelector((state) => state.agent.data.data);
-   const {transactionsAsProvider} = useSelector((state) => state.agent.data.data);
+   const agent = useSelector((state) => state.agent.data.data ||{});
+   console.log(`agent${agent}`);
+   const transactionsAsProvider = agent?.transactionsAsProvider || [];
    console.log(`transactions:${transactionsAsProvider}`);
-   const isLoading = useSelector((state) => state.agent.isLoading);
-   const error = useSelector((state) => state.agent.error);
+   const isLoading = useSelector((state) => state.agent?.isLoading);
+   const error = useSelector((state) => state.agent?.error);
 
 //עסקאות
    const filterRecentTransactions = (transactionsAsProvider) => {
