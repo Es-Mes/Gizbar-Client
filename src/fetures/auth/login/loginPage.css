@@ -73,11 +73,11 @@
         position: fixed;
         top:0%;
         left:0%;
-         max-height: 50px;
-         max-width: 50px;
-         align-self:self-end;
-         border-radius: 25px;
-         font-size: 40px;
+        max-height: 50px;
+        max-width: 50px;
+        align-self:self-end;
+        border-radius: 25px;
+        font-size: 40px;
     }
     .toRegist button{
         background-color: var(--bgWhite);

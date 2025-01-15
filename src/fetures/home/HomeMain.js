@@ -23,13 +23,35 @@ const HomeMain = () => {
 
 //עסקאות
    const filterRecentTransactions = (transactionsAsProvider) => {
-      return [...transactionsAsProvider].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5); // חמש האחרונות
+      const today = new Date();
+      return [...transactionsAsProvider]
+            .filter(transaction => 
+               transaction.status === "paid" && // רק עסקאות שלא נגבו
+               new Date(transaction.billingDay) <= today // תאריך גבייה מאוחר מהיום
+            )
+            .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
+            .slice(0, 5) // חמש הראשונות
+            .map(transaction => ({
+               ...transaction, // שומר את שאר המידע של העסקה
+               agent: undefined, // מחיקת שדה agent
+           }));
    };
    const recentTransactions = filterRecentTransactions(transactionsAsProvider);
 
    const filterPendingTransactions = (transactionsAsProvider) => {
-      return [...transactionsAsProvider].filter(transaction => !transaction.isCollected); // רק שלא נגבו
-   };
+         // קבלת תאריך נוכחי
+         const today = new Date();
+      
+         return [...transactionsAsProvider]
+            .filter(transaction => 
+               transaction.status === "pendingCharge" && // רק עסקאות שלא נגבו
+               new Date(transaction.billingDay) > today // תאריך גבייה מאוחר מהיום
+            )
+            .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
+            .slice(0, 5); // חמש הראשונות
+      };
+      
+   
    const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
 
 
@@ -39,7 +61,7 @@ const HomeMain = () => {
    return (
       <>
          {/* <h1>שלום {phone}{agent?.data?.first_name || "אורח"}</h1> */}
-         <h1>שלום {agent?.phone || "אורח"}</h1>
+         <h1>שלום {agent?.first_name || "אורח"}</h1>
 
 
 
@@ -61,7 +83,7 @@ const HomeMain = () => {
                <TransactionsList transactions={recentTransactions} />
             </div>
             <div>
-               <h2>עסקאות שלא נגבו</h2>
+               <h2>עסקאות קרובות</h2>
                <TransactionsList transactions={pendingTransactions} />
             </div>
          </div>

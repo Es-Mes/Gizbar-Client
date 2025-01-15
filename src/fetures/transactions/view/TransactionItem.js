@@ -44,7 +44,6 @@ const TransactionItem = ({ transaction }) => {
             {/* פרטים נוספים */}
             {isExpanded && (
                 <div className='details'>
-                    <p><strong>סוכן:</strong> {agent}</p>
                     <p><strong>לקוח:</strong> {customer}</p>
                     <p><strong>תיאור:</strong> {description}</p>
                     <p><strong>התראות:</strong> {alerts ? "כן" : "לא"}</p>

@@ -34,6 +34,7 @@ const NavBar = () => {
         <div className="navbar-logo-box">
           <div className="logoNavBar"></div>
           {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}
+          <h1>שלום {first_name || "אורח"}</h1>
           <h2 className="title">GIZBAR</h2>
         </div>
 

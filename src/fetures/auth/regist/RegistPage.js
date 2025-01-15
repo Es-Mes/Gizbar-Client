@@ -83,7 +83,7 @@ export const RegistPage = () => {
     <div className='modal-overlay modal-static' ref={modalRef}>
       <div className='regist-page modal-content'>
         <form onChange={checkFull} onSubmit={handleSubmit} className='regist-page-form'>
-          <button onClick={handleGoHome} className="exit"><Link to='/' />x</button>
+          <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button>
           <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
           <input type='text' name='first_name' id='first_name' onChange={(e) => setFirst_name(e.target.value)} placeholder="שם פרטי" />
           <input type='text' required name='phone' onChange={(e) => setPhone(e.target.value)} id='phone' placeholder="טלפון" />
