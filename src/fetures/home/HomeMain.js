@@ -26,10 +26,10 @@ const HomeMain = () => {
       const today = new Date();
       return [...transactionsAsProvider]
             .filter(transaction => 
-               transaction.status === "paid" && // רק עסקאות שלא נגבו
-               new Date(transaction.billingDay) <= today // תאריך גבייה מאוחר מהיום
+               transaction.status !== "canceld"  // רק עסקאות שלא בוטלו
+               // new Date(transaction.billingDay) <= today // תאריך גבייה מאוחר מהיום
             )
-            .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
+            // .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
             .slice(0, 5) // חמש הראשונות
             .map(transaction => ({
                ...transaction, // שומר את שאר המידע של העסקה

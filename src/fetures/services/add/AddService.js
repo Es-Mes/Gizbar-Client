@@ -7,7 +7,8 @@ import useAuth from "../../../hooks/useAuth";
 import './AddService.css'
 const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
-    const [addService, { data, isLoading, isSuccess, isError, error }] = useAddServiceMutation();
+    const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
+   
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -34,17 +35,18 @@ const AddService = ({ onSuccess }) => {
         }
 
         try {
-            await addService({ phone, service: serviceData }).unwrap();
+            const data = await addService({ phone, service: serviceData }).unwrap();
+            console.log(data);
             console.log(`serviceData: ${serviceData}`);
-            if (isSuccess) {
-                // const newService = service.data;
+            if (data) {
                 setShowSuccessMessage(true); // הצג הודעת הצלחה
                 const services = data.data.services;
-                const newService = services[services.length()-1];
+                console.log(services);
+                const newService = services[services.length -1];
                 dispatch(addServiceStore(newService));//עדכון הסטור בשירות החדש
 
 
-            }
+             }
 
 
             if (onSuccess) {

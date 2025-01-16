@@ -12,10 +12,10 @@ import Modal from "../../../modals/Modal";
 
 const AddTransaction = () => {
     const { _id,phone } = useAuth();
-    let services = useSelector((state) => state.agent?.data?.data?.services || []);
+    const services = useSelector((state) => state.agent?.data?.data?.services || []);
     const customers = useSelector((state) => state.agent?.data?.data?.customers || [])
-    console.log(`customers  :${customers}`);
-    console.log(`servisces  :${services}`);
+    // console.log(`customers  :${customers}`);
+    // console.log(`servisces  :${services}`);
 
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const dispatch = useDispatch();

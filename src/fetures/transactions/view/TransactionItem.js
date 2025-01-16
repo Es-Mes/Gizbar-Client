@@ -30,7 +30,7 @@ const TransactionItem = ({ transaction }) => {
             {/* שורה בסיסית */}
             <div className='basicRow'>
                 <span>{serviceName || "שירות ללא שם"}</span>
-                <span>₪{price.toFixed(2)}</span>
+                <span>₪{price}</span>
                 <span>{statusTranslations[status] || status}</span>
                 <span>{new Date(billingDay).toLocaleDateString('he-IL')}</span>
                 <button
