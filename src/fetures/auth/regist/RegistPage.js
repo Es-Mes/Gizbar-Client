@@ -14,6 +14,7 @@ export const RegistPage = () => {
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
   const [password, setPassword] = useState("")
+  const [city, setCity] = useState("")
   const [passwordError, setPasswordError] = useState('');
 
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -86,9 +87,10 @@ export const RegistPage = () => {
           <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button>
           <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
           <input type='text' name='first_name' id='first_name' onChange={(e) => setFirst_name(e.target.value)} placeholder="שם פרטי" />
-          <input type='text' required name='phone' onChange={(e) => setPhone(e.target.value)} id='phone' placeholder="טלפון" />
           <input type='text'  name='last_name'  onChange={(e) => setLast_name(e.target.value)} id='last_name' placeholder="שם משפחה" />
+          <input type='text' required name='phone' onChange={(e) => setPhone(e.target.value)} id='phone' placeholder="טלפון" />
           <input type='email'  name='email' onChange={(e) => setEmail(e.target.value)} id='email' placeholder="אימייל" />
+          <input type='text'  name='city' onChange={(e) => setCity(e.target.value)} id='city' placeholder="עיר" />
           <input type='text'  name='address' onChange={(e) => setAddress(e.target.value)} id='address' placeholder="כתובת" />
           <input type='password' required name='password' onChange={(e) => setPassword(e.target.value)} id='password' placeholder='סיסמה' />
           <input type='password' required name='confirmPassword' onChange={(e) => setConfirmPassword(e.target.value)} id='confirmPassword' placeholder='אימות סיסמה' />

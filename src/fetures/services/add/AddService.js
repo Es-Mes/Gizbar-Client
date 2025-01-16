@@ -7,12 +7,12 @@ import useAuth from "../../../hooks/useAuth";
 import './AddService.css'
 const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
-    const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
+    const [addService, { data, isLoading, isSuccess, isError, error }] = useAddServiceMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     // const services = useSelector((state) => state.agent?.data?.data?.services || []);
-    
+
     // console.log(`services: ${services}`);
     const [serviceData, setServiceData] = useState({
         name: "",
@@ -32,17 +32,21 @@ const AddService = ({ onSuccess }) => {
             alert("מספר הטלפון של הסוכן לא נמצא. נסה להתחבר מחדש.");
             return;
         }
-    
+
         try {
             await addService({ phone, service: serviceData }).unwrap();
             console.log(`serviceData: ${serviceData}`);
+            if (isSuccess) {
+                // const newService = service.data;
+                setShowSuccessMessage(true); // הצג הודעת הצלחה
+                const services = data.data.services;
+                const newService = services[services.length()-1];
+                dispatch(addServiceStore(newService));//עדכון הסטור בשירות החדש
 
-            // const newService = service.data;
-            setShowSuccessMessage(true); // הצג הודעת הצלחה
 
-            dispatch(addServiceStore(serviceData));//עדכון הסטור בשירות החדש
+            }
 
-    
+
             if (onSuccess) {
                 onSuccess(); // קריאה ל־onSuccess אם הוגדר
             } else {
@@ -55,7 +59,7 @@ const AddService = ({ onSuccess }) => {
             console.error("Error adding service:", err);
         }
     };
-    
+
 
     return (
         <div className="add-service-container">

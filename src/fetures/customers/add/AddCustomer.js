@@ -8,7 +8,7 @@ import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
 const AddCustomer = ({onSuccess}) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
-    const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
+    const [addCustomer, { data,isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -38,10 +38,13 @@ const AddCustomer = ({onSuccess}) => {
 
         try {
             await addCustomer({ phone, customer: customerData }).unwrap();
-            setShowSuccessMessage(true); // הצג הודעת הצלחה         
-             // עדכון הסטור עם הלקוח החדש
-            dispatch(addCustomerStore(customerData));
-
+    
+           
+            if(isSuccess){
+                setShowSuccessMessage(true); // הצג הודעת הצלחה         
+                // עדכון הסטור עם הלקוח החדש
+               dispatch(addCustomerStore(data.data));
+            }
 
 
             if (onSuccess) {

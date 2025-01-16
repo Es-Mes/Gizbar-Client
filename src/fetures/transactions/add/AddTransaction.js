@@ -12,7 +12,7 @@ import Modal from "../../../modals/Modal";
 
 const AddTransaction = () => {
     const { _id,phone } = useAuth();
-    const services = useSelector((state) => state.agent?.data?.data?.services || []);
+    let services = useSelector((state) => state.agent?.data?.data?.services || []);
     const customers = useSelector((state) => state.agent?.data?.data?.customers || [])
     console.log(`customers  :${customers}`);
     console.log(`servisces  :${services}`);
@@ -69,11 +69,10 @@ const AddTransaction = () => {
         customers.forEach((cust) => {
             console.log("לקוח ב-customers:", cust._id);
         });
-        console.log("customerId type:", typeof customerId);
+        // console.log("customerId type:", typeof customerId);
         customers.forEach((cust) => {
-            console.log("cust._id type:", typeof cust._id);
+        // console.log("cust._id type:", typeof cust._id);
         });
-
         const customer = customers.find((cust) => cust._id === customerId);
         console.log(`selectedCustomer:${customer}`);
         setSelectedCustomer(customer);
@@ -105,7 +104,7 @@ const AddTransaction = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!selectedService || !selectedCustomer) {
-            console.log(`selectedCustomer:${selectedCustomer}`);
+            console.log(`selectedCustomer:${selectedCustomer} selectedService${selectedService}`);
             alert("בחר שירות ולקוח!");
             return;
         }
@@ -166,7 +165,6 @@ const AddTransaction = () => {
                     name="description"
                     value={transactionDetails.description}
                     onChange={handleInputChange}
-                    required
                 />
                 <label>מחיר:</label>
                 <input
