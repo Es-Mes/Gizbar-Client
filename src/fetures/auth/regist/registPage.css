@@ -14,6 +14,21 @@
     padding-bottom: 10vh;
     z-index: 1000;
 }
+.field {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  .required-wrapper {
+    position: absolute;
+    top: -20px; /* המרחק מעל ה-input */
+    right: 0;   /* להצמיד לימין */
+  }
+  .required-asterisk {
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+  }
 
 .logoP {
     /* width: 200px; */

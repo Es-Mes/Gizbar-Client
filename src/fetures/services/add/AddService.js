@@ -67,7 +67,8 @@ const AddService = ({ onSuccess }) => {
         <div className="add-service-container">
             <h1>הוסף שירות חדש</h1>
             <form onSubmit={handleSubmit} className="add-service-form">
-                <label htmlFor="name">שם השירות:</label>
+                <label htmlFor="name">שם השירות: <span className="required-asterisk">*</span>
+                </label>
                 <input
                     type="text"
                     id="name"

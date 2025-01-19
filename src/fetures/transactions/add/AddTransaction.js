@@ -132,7 +132,8 @@ const AddTransaction = () => {
             <h1>הוסף עסקה</h1>
             <form className="add-transaction-form" onSubmit={handleSubmit}>
                 {/* בחירת שירות */}
-                <label>בחר שירות:</label>
+                <label>בחר שירות: <span className="required-asterisk">*</span>
+                </label>
                 <select onChange={handleServiceChange} required>
                     <option value="">-- בחר שירות --</option>
                     {services.map((service) => (
@@ -146,7 +147,8 @@ const AddTransaction = () => {
                 </button>
 
                 {/* בחירת לקוח */}
-                <label>בחר לקוח:</label>
+                <label>בחר לקוח: <span className="required-asterisk">*</span>
+                </label>
                 <select onChange={handleCustomerChange} required>
                     <option value="">-- בחר לקוח --</option>
                     {customers.map((customer) => (
@@ -166,7 +168,8 @@ const AddTransaction = () => {
                     value={transactionDetails.description}
                     onChange={handleInputChange}
                 />
-                <label>מחיר:</label>
+                <label>מחיר: <span className="required-asterisk">*</span>
+                </label>
                 <input
                     type="number"
                     name="price"
@@ -174,7 +177,8 @@ const AddTransaction = () => {
                     onChange={handleInputChange}
                     required
                 />
-                <label>תאריך חיוב:</label>
+                <label>תאריך חיוב: <span className="required-asterisk">*</span>
+                </label>
                 <input
                     type="date"
                     name="billingDay"

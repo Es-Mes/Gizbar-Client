@@ -56,7 +56,9 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/creditClearing">
+          {/* <NavLink className="nav-link" to="/categories/creditClearing"> */}
+          <NavLink className="nav-link" to="/dash">
+
             <FaCreditCard size={25} className="icon" /> סליקת אשראי
           </NavLink>
           <ul className={`submenu ${openIndex === 4 ? "open" : ""}`}>
@@ -65,7 +67,9 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/standingOrders">
+          {/* <NavLink className="nav-link" to="/categories/standingOrders"> */}
+          <NavLink className="nav-link" to="/dash">
+
             <FaArrowDownShortWide size={25} className="icon" /> הוראות קבע
           </NavLink>
           <ul className={`submenu ${openIndex === 5 ? "open" : ""}`}>
@@ -74,7 +78,9 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/history">
+          {/* <NavLink className="nav-link" to="/categories/history"> */}
+          <NavLink className="nav-link" to="/dash">
+
             <FaChartColumn size={25} className="icon" /> היסטוריה
           </NavLink>
           <ul className={`submenu ${openIndex === 6 ? "open" : ""}`}>
@@ -83,7 +89,9 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/services">
+          {/* <NavLink className="nav-link" to="/categories/services"> */}
+          <NavLink className="nav-link" to="/dash">
+
             <FaPlay size={25} className="icon" /> שירותים
           </NavLink>
           <ul className={`submenu ${openIndex === 7 ? "open" : ""}`}>
@@ -92,7 +100,9 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/contact">
+          {/* <NavLink className="nav-link" to="/categories/contact"> */}
+          <NavLink className="nav-link" to="/dash">
+
             <FaRegComments size={25} className="icon" /> צור קשר
           </NavLink>
         </li>

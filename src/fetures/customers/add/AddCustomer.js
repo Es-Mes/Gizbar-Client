@@ -63,7 +63,8 @@ const AddCustomer = ({onSuccess}) => {
         <div className="add-customer-container">
             <h1>הוסף לקוח חדש</h1>
             <form onSubmit={handleSubmit} className="add-customer-form">
-                <label htmlFor="full_name">שם מלא:</label>
+                <label htmlFor="full_name">שם מלא: <span className="required-asterisk">*</span>
+                </label>
                 <input
                     type="text"
                     id="full_name"
@@ -73,7 +74,8 @@ const AddCustomer = ({onSuccess}) => {
                     required
                 />
 
-                <label htmlFor="phone">מספר פלאפון:</label>
+                <label htmlFor="phone">מספר פלאפון: <span className="required-asterisk">*</span>
+                </label>
                 <input
                     type="tel"
                     id="phone"

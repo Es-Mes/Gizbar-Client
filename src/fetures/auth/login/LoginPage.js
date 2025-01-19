@@ -47,8 +47,32 @@ export const LoginPage = () => {
         <button onClick={handleGoHome} className="exit"><Link to='/' />x</button>
         <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
         <h1>כניסת משתמשים</h1>
-        <input type='text' required name='phone' id='phone' placeholder="פלאפון" />
-        <input type='password' required name='password' id='password' placeholder='ססמא' />
+        {/* <input type='text' required name='phone' id='phone' placeholder="פלאפון" /> */}
+        {/* <input type='password' required name='password' id='password' placeholder='ססמא' /> */}
+        <div className="field">
+            <div className="required-wrapper">
+              <span className="required-asterisk">*</span>
+            </div>
+            <input
+              type="text"
+              name="phone"
+              id="phone"
+              placeholder="טלפון"
+              required
+            />
+          </div>
+          <div className="field">
+            <div className="required-wrapper">
+              <span className="required-asterisk">*</span>
+            </div>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="סיסמה"
+              required
+            />
+          </div>
         {isError &&
           <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px'}}>
             {error && error.data?.message}
