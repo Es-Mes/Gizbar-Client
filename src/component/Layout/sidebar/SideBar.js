@@ -89,8 +89,8 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/services"> */}
-          <NavLink className="nav-link" to="/dash">
+          <NavLink className="nav-link" to="/dash/services">
+          {/* <NavLink className="nav-link" to="/dash"> */}
 
             <FaPlay size={25} className="icon" /> שירותים
           </NavLink>

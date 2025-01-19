@@ -10,6 +10,20 @@ const agentSlice = createSlice({
         addServiceStore(state, action) {
             state.data.data.services.push(action.payload); // הוספת שירות חדש
         },
+        updateServiceStore(state, action) {
+            const updatedService = action.payload;
+            const index = state.data.services.findIndex(service => service._id === updatedService._id);
+            if (index !== -1) {
+                state.data.services[index] = updatedService; // עדכון השירות
+            }
+        },
+        toggleServiceFreezeStore(state, action) {
+            const serviceId = action.payload;
+            const service = state.data.services.find(service => service._id === serviceId);
+            if (service) {
+                service.active = !service.active; // שינוי מצב הקפאה
+            }
+        },
         addCustomerStore(state, action) {
             state.data.data.customers.push(action.payload); // הוספת לקוח חדש
         },
@@ -25,5 +39,7 @@ const agentSlice = createSlice({
     },
 });
 
-export const { setAgentData, addServiceStore, addCustomerStore,addTransactionStore, setLoading, setError } = agentSlice.actions;
+export const { setAgentData, addServiceStore, updateServiceStore,
+    toggleServiceFreezeStore,
+    addCustomerStore, addTransactionStore, setLoading, setError } = agentSlice.actions;
 export default agentSlice.reducer;

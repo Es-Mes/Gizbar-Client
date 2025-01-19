@@ -17,7 +17,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Services"],
         }),
         updateService: build.mutation({
-            query: ({ phone, _id, service }) => ({
+            query: ({ phone, service }) => ({
                 url: `/api/agent/${phone}/service`,
                 method: "PUT",
                 body: service,
