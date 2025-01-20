@@ -29,7 +29,8 @@ const Sidebar = () => {
           </NavLink>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/transactions">
+          {/* <NavLink className="nav-link" to="/categories/transactions"> */}
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaAddressBook size={25} className="icon" /> לקוחות
           </NavLink>
           <ul className={`submenu ${openIndex === 1 ? "open" : ""}`}>
@@ -38,7 +39,8 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/customerBilling">
+          {/* <NavLink className="nav-link" to="/categories/customerBilling"> */}
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaSackDollar size={25} className="icon" /> הכנסות
           </NavLink>
           <ul className={`submenu ${openIndex === 2 ? "open" : ""}`}>
@@ -47,7 +49,8 @@ const Sidebar = () => {
           </ul>
         </li>
         <li className="menu-item">
-          <NavLink className="nav-link" to="/categories/paymentRequirements">
+          {/* <NavLink className="nav-link" to="/categories/paymentRequirements"> */}
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaMoneyBillTransfer size={25} className="icon" /> הוצאות
           </NavLink>
           <ul className={`submenu ${openIndex === 3 ? "open" : ""}`}>
@@ -57,8 +60,7 @@ const Sidebar = () => {
         </li>
         <li className="menu-item">
           {/* <NavLink className="nav-link" to="/categories/creditClearing"> */}
-          <NavLink className="nav-link" to="/dash">
-
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaCreditCard size={25} className="icon" /> סליקת אשראי
           </NavLink>
           <ul className={`submenu ${openIndex === 4 ? "open" : ""}`}>
@@ -68,8 +70,7 @@ const Sidebar = () => {
         </li>
         <li className="menu-item">
           {/* <NavLink className="nav-link" to="/categories/standingOrders"> */}
-          <NavLink className="nav-link" to="/dash">
-
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaArrowDownShortWide size={25} className="icon" /> הוראות קבע
           </NavLink>
           <ul className={`submenu ${openIndex === 5 ? "open" : ""}`}>
@@ -79,8 +80,7 @@ const Sidebar = () => {
         </li>
         <li className="menu-item">
           {/* <NavLink className="nav-link" to="/categories/history"> */}
-          <NavLink className="nav-link" to="/dash">
-
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaChartColumn size={25} className="icon" /> היסטוריה
           </NavLink>
           <ul className={`submenu ${openIndex === 6 ? "open" : ""}`}>
@@ -90,8 +90,6 @@ const Sidebar = () => {
         </li>
         <li className="menu-item">
           <NavLink className="nav-link" to="/dash/services">
-          {/* <NavLink className="nav-link" to="/dash"> */}
-
             <FaPlay size={25} className="icon" /> שירותים
           </NavLink>
           <ul className={`submenu ${openIndex === 7 ? "open" : ""}`}>
@@ -101,8 +99,7 @@ const Sidebar = () => {
         </li>
         <li className="menu-item">
           {/* <NavLink className="nav-link" to="/categories/contact"> */}
-          <NavLink className="nav-link" to="/dash">
-
+          <NavLink className="nav-link" to="/dash/UnderConstruction">
             <FaRegComments size={25} className="icon" /> צור קשר
           </NavLink>
         </li>

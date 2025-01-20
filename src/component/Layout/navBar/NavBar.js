@@ -78,10 +78,12 @@ const NavBar = () => {
               </div>
             )}
             <div className="navbar-icons">
-              <NavLink className="btn" to="/settings">
+              {/* <NavLink className="btn" to="/settings"> */}
+              <NavLink className="nav-link" to="/dash/UnderConstruction">
                 <FaWhmcs size={20} />
               </NavLink>
-              <NavLink className="btn" to="/letters">
+              {/* <NavLink className="btn" to="/letters"> */}
+              <NavLink className="nav-link" to="/dash/UnderConstruction">
                 <FaEnvelopeOpenText size={20} />
               </NavLink>
               <div className="btn" onClick={logOutClick}>

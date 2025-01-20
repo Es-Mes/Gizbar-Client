@@ -39,6 +39,7 @@ import ServicesList from "./fetures/services/list/ServicesList"
 import SingleService from "./fetures/services/view/SingleService"
 import useAgentData from "./hooks/useAgentData"
 import useAuth from "./hooks/useAuth"
+import UnderConstruction from "./component/UnderConstruction"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
@@ -55,6 +56,7 @@ const App = () => {
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         <Route path="/dash" element={<DashLayout />}>
+                            <Route path="UnderConstruction" element={<UnderConstruction />} />
                             <Route index element={<HomeMain />} />
                             <Route path="customers" element={<Outlet />}>
                                 <Route index element={<CustomersList />} />
@@ -63,7 +65,7 @@ const App = () => {
                             </Route>
                             <Route path="services" element={<Outlet />}>
                                 <Route index element={<ServicesList />} />
-                                <Route path="add" element={<AddService/>} />
+                                <Route path="add" element={<AddService />} />
                                 <Route path=":userId" element={<SingleService />} />
                             </Route>
                             <Route path="transactions" element={<Outlet />}>
