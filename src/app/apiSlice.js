@@ -1,11 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import dotenv from 'dotenv';
-dotenv.config();
-
 const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({
-        baseUrl:process.env.BASE_URL,
+        baseUrl:process.env.REACT_APP_BASE_URL,
         credentials: "include",
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth.token;
