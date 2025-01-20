@@ -27,16 +27,28 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #007BFF;
+    color: var(--blue);
     font-size: 16px;
     margin-left: 8px;
 }
+.actions{
+    border: solid 2px var(--text);
+    color: var(--text);
+    padding: 4px;
+    border-radius: 50px;
+}
 
 .details {
+    display: flex;
+    flex-direction: column;
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    background-color: #fff;
+    background-color: #dbefca;
+    min-width: 100%;
+}
+.details p{
+    
 }
 
 .edit-dialog input, .edit-dialog textarea {

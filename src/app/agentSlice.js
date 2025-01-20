@@ -11,15 +11,12 @@ const agentSlice = createSlice({
             state.data.data.services.push(action.payload); // הוספת שירות חדש
         },
         updateServiceStore(state, action) {
-            const updatedService = action.payload;
-            const index = state.data.services.findIndex(service => service._id === updatedService._id);
-            if (index !== -1) {
-                state.data.services[index] = updatedService; // עדכון השירות
-            }
+            const updatedServices = action.payload;
+            state.data.data.services = updatedServices;
         },
         toggleServiceFreezeStore(state, action) {
             const serviceId = action.payload;
-            const service = state.data.services.find(service => service._id === serviceId);
+            const service = state.data.data.services.find(service => service._id === serviceId);
             if (service) {
                 service.active = !service.active; // שינוי מצב הקפאה
             }
