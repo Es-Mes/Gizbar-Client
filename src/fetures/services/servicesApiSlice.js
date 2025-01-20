@@ -24,6 +24,14 @@ const servicesApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Services"],
         }),
+        freezService: build.mutation({
+            query: ({ phone, _id }) => ({
+                url: `/api/agent/${phone}/service/freeze`,
+                method: "PUT",
+                body: _id,
+            }),
+            invalidatesTags: ["Services"],
+        }),
         deleteService: build.mutation({
             query: ({ phone, _id }) => ({
                 url: `/api/agent/${phone}/services/delete/${_id}`,
@@ -38,5 +46,6 @@ export const {
     useGetAllServicesQuery,
     useAddServiceMutation,
     useUpdateServiceMutation,
+    useFreezServiceMutation,
     useDeleteServiceMutation,
 } = servicesApiSlice;

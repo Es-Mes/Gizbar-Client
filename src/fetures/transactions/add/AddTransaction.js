@@ -101,7 +101,7 @@ const AddTransaction = () => {
     };
 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (!selectedService || !selectedCustomer) {
             console.log(`selectedCustomer:${selectedCustomer} selectedService${selectedService}`);
@@ -123,7 +123,7 @@ const AddTransaction = () => {
             ...transactionDetails,
         };
         console.log(transactionData);
-        addTransaction({ phone, transaction: transactionData });
+        await addTransaction({ phone, transaction: transactionData });
         dispatch(addTransactionStore(transactionData));
     };
 

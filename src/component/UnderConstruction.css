@@ -15,13 +15,13 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
-  h1 {
+  .InBuild {
     font-size: 2rem;
     color: #ff5722;
     margin-bottom: 10px;
   }
   
-  p {
+  .InBuildP {
     font-size: 1.2rem;
     color: #333;
   }

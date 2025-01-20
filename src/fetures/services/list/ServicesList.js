@@ -1,29 +1,32 @@
 import React, { useState } from 'react';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב-hook הזה
 import './ServicesList.css'; // קובץ CSS
-import { useUpdateServiceMutation } from '../servicesApiSlice';
-import { updateServiceStore} from '../../../app/agentSlice';
+import { useUpdateServiceMutation, useFreezServiceMutation } from '../servicesApiSlice';
+import { updateServiceStore } from '../../../app/agentSlice';
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
   const services = useSelector((state) => state.agent?.data?.data?.services || []);
-  const [updateService,{ isLoading, isSuccess, isError, error }] = useUpdateServiceMutation()
+  const [updateService, { isLoading, isSuccess, isError, error }] = useUpdateServiceMutation()
   const [editServiceId, setEditServiceId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', description: '', price: '' });
   const [expanded, setExpanded] = useState({}); // שמירת מצב פתיחה של כל שירות
   const dispatch = useDispatch();
 
   // הקפאת שירות
+  const [freezService] = useFreezServiceMutation();
+
   const freezeService = async (id) => {
     try {
-      await axios.put(`/api/agent/${phone}/service/freeze`, { _id: id });
+      await freezService({ phone, _id: id }).unwrap();
       alert('Service has been frozen successfully!');
     } catch (error) {
       console.error('Error freezing service:', error);
       alert('Failed to freeze service.');
     }
   };
+
 
   // פתיחת תיבת עריכה
   const openEditDialog = (service) => {
@@ -41,8 +44,8 @@ const ServicesList = () => {
   // שליחת טופס עריכה
   const submitEditForm = async () => {
     try {
-      const updatedService = ({_id:editServiceId,name:editForm.name,description:editForm.description,price: editForm.price})
-      const data = await updateService ({phone,service:updatedService} ).unwrap() ;
+      const updatedService = ({ _id: editServiceId, name: editForm.name, description: editForm.description, price: editForm.price })
+      const data = await updateService({ phone, service: updatedService }).unwrap();
       console.dir(data, { depth: null, colors: true });
       // if(data){
       // dispatch(updateServiceStore(data)); // עדכון הסטור
