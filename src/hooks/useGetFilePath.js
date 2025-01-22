@@ -2,9 +2,9 @@ const useGetFilePath = () =>{
 
     const getFilePath = (img) =>{
         if(img){
-            return "http://localhost:1234/uploads/" + img
+            return "http://slika/" + img
         }else{
-            return "/logo512.png"
+            return "/SlikaLogo.ico"
         }
     }
 

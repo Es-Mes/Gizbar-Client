@@ -39,6 +39,7 @@ import ServicesList from "./fetures/services/list/ServicesList"
 import SingleService from "./fetures/services/view/SingleService"
 import useAgentData from "./hooks/useAgentData"
 import useAuth from "./hooks/useAuth"
+import useTransactionsData from "./hooks/useTransactionsData"
 import UnderConstruction from "./component/UnderConstruction"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
@@ -47,6 +48,7 @@ import UnderConstruction from "./component/UnderConstruction"
 const App = () => {
     const { phone } = useAuth();
     useAgentData(phone); // הפעלת ה-hook
+    useTransactionsData(phone);
     return <Router>
         <ScrollToTop />
         <Routes>

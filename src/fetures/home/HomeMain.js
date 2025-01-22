@@ -3,9 +3,9 @@ import "./HomeMain.css"
 
 import React from 'react'
 import { useAddUserMutation } from "../users/UsersApiSlice";
-
 import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
+import useTransactionsData from "../../hooks/useTransactionsData";
 import { useSelector } from "react-redux";
 import TransactionsList from "../transactions/list/TransactionsList";
 const HomeMain = () => {
@@ -15,9 +15,23 @@ const HomeMain = () => {
    // if (isLoading) return <p>Loading...</p>;
    // if (error) return <p>Error: {error.message}</p>;
    const agent = useSelector((state) => state.agent.data.data ||{});
+   const transactions = useSelector((state) => state.transactions.data.transactions.data || []);
+   // const copyTransactions = [...transactions];
    console.log(`agent${agent}`);
-   const transactionsAsProvider = agent?.transactionsAsProvider || [];
-   console.log(`transactions:${transactionsAsProvider}`);
+   console.log(JSON.stringify(transactions, null, 2));
+   // console.dir(`transactions${transactions}`, { depth: null, colors: true });
+//    transactions.forEach(transaction => {
+//       console.log(transaction);
+//   });
+   // const transactionsAsProvider = agent?.transactionsAsProvider || [];
+   const transactionsAsProvider = [...transactions].filter(transaction =>
+      transaction.agent == _id
+   );
+   const transactionsAsCustomer = [...transactions].filter(transaction =>
+      transaction.agent !== _id
+   );
+
+   console.log(`agent transactions:${transactionsAsProvider}`);
    const isLoading = useSelector((state) => state.agent?.isLoading);
    const error = useSelector((state) => state.agent?.error);
 

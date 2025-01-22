@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import './TransactionItem.css'
+import React from 'react';
+import './TransactionItem.css';
 
-const TransactionItem = ({ transaction }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-
+const TransactionItem = ({ transaction, isExpanded, onToggleExpand }) => {
     const {
+        _id,
         serviceName,
         price,
         status,
         billingDay,
         description,
-        agent,
         customer,
         alerts,
         typeAlerts,
@@ -33,10 +31,7 @@ const TransactionItem = ({ transaction }) => {
                 <span>₪{price}</span>
                 <span>{statusTranslations[status] || status}</span>
                 <span>{new Date(billingDay).toLocaleDateString('he-IL')}</span>
-                <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className='toggleButton'
-                >
+                <button onClick={onToggleExpand} className='toggleButton'>
                     {isExpanded ? "▲" : "▼"}
                 </button>
             </div>
@@ -44,7 +39,7 @@ const TransactionItem = ({ transaction }) => {
             {/* פרטים נוספים */}
             {isExpanded && (
                 <div className='details'>
-                    <p><strong>לקוח:</strong> {customer}</p>
+                    <p><strong>לקוח:</strong> {customer.full_name}</p>
                     <p><strong>תיאור:</strong> {description}</p>
                     <p><strong>התראות:</strong> {alerts ? "כן" : "לא"}</p>
                     {alerts && (

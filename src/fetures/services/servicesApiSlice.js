@@ -49,11 +49,14 @@ const servicesApiSlice = apiSlice.injectEndpoints({
         
         deleteService: build.mutation({
             query: ({ phone, _id }) => ({
-                url: `/api/agent/${phone}/services/delete/${_id}`,
-                method: "DELETE",
+              url: `/api/agent/${phone}/service/${_id}`, // הוספת ה-_id ל-URL
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
             }),
             invalidatesTags: ["Services"],
-        }),
+          }),
     }),
 });
 

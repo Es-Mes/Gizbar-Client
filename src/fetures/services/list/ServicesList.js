@@ -3,15 +3,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב-hook הזה
 import './ServicesList.css'; // קובץ CSS
-import { useUpdateServiceMutation, useFreezServiceMutation,useUnFreezServiceMutation } from '../servicesApiSlice';
-import { updateServiceStore,toggleServiceFreezeStore } from '../../../app/agentSlice';
+import { useUpdateServiceMutation, useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
+import { updateServiceStore, toggleServiceFreezeStore } from '../../../app/agentSlice';
+
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
   const services = useSelector((state) => state.agent?.data?.data?.services || []);
   const [updateService, { isLoading, isSuccess, isError, error }] = useUpdateServiceMutation()
+  const [deleteService] = useDeleteServiceMutation();
+
   const [editServiceId, setEditServiceId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', description: '', price: '' });
-  const [expanded, setExpanded] = useState({}); // שמירת מצב פתיחה של כל שירות
+  const [expanded, setExpanded] = useState(null); // שמירת מצב פתיחה של כל שירות
   const dispatch = useDispatch();
 
   // הקפאת שירות
@@ -20,31 +23,45 @@ const ServicesList = () => {
   const freezeService = async (id) => {
     try {
       console.log('Sending to API:', { phone, _id: id });
-      const data = await freezService({ phone,  _id: id}).unwrap();
+      const data = await freezService({ phone, _id: id }).unwrap();
       console.dir(data, { depth: null, colors: true });
-      if(data){
+      if (data) {
         dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
         // setEditServiceId(null); // סגירת הטופס
-        }
-      } catch (error) {
-        console.error('Error freezing service:', error?.data || error.message || error);
-        alert('Failed to freeze service.');
+      }
+    } catch (error) {
+      console.error('Error freezing service:', error?.data || error.message || error);
+      alert('Failed to freeze service.');
     }
   };
   const unFreezeService = async (id) => {
     try {
       console.log('Sending to API:', { phone, _id: id });
-      const data = await unFreezService({ phone,  _id: id}).unwrap();
+      const data = await unFreezService({ phone, _id: id }).unwrap();
       console.dir(data, { depth: null, colors: true });
-      if(data){
+      if (data) {
         dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
         // setEditServiceId(null); // סגירת הטופס
-        }
-      } catch (error) {
-        console.error('Error freezing service:', error?.data || error.message || error);
-        alert('Failed to freeze service.');
+      }
+    } catch (error) {
+      console.error('Error freezing service:', error?.data || error.message || error);
+      alert('Failed to freeze service.');
     }
   };
+
+  const handleDeleteService = async (id) => {
+    if (window.confirm('האם אתה בטוח שברצונך למחוק את השירות הזה?')) {
+      try {
+        const data = await deleteService({ phone, _id: id }).unwrap();
+        console.log('Service deleted:', data);
+        alert('השירות נמחק בהצלחה.');
+      } catch (error) {
+        console.error('Error deleting service:', error?.data || error.message || error);
+        alert('מחיקת השירות נכשלה.');
+      }
+    }
+  };
+
 
 
   // פתיחת תיבת עריכה
@@ -66,9 +83,9 @@ const ServicesList = () => {
       const updatedService = ({ _id: editServiceId, name: editForm.name, description: editForm.description, price: editForm.price })
       const data = await updateService({ phone, service: updatedService }).unwrap();
       console.dir(data, { depth: null, colors: true });
-      if(data){
-      dispatch(updateServiceStore(data.data.services)); // עדכון הסטור
-      setEditServiceId(null); // סגירת הטופס
+      if (data) {
+        dispatch(updateServiceStore(data.data.services)); // עדכון הסטור
+        setEditServiceId(null); // סגירת הטופס
       }
     } catch (error) {
       console.error('Error updating service:', error);
@@ -78,7 +95,7 @@ const ServicesList = () => {
 
   // שינוי מצב פתיחה/סגירה
   const toggleExpand = (id) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+    setExpanded((prev) => (prev == id ? null : id));
   };
 
   return (
@@ -130,26 +147,34 @@ const ServicesList = () => {
                         className="toggleButton"
                         onClick={() => toggleExpand(service._id)}
                       >
-                        {expanded[service._id] ? '▼' : '▶'}
+                        {expanded === service._id ? '▼' : '▶'}
                       </button>
                       <h3>{service.name}</h3>
                     </div>
                     <div>
-                      <button
-                        className="toggleButton actions"
-                        onClick={service.active ?(() => freezeService(service._id)) : (() => unFreezeService(service._id))}
-                      >
-                        {service.active ? 'הקפאה' : 'ביטול הקפאה'}
-                      </button>
+
                       <button
                         className="toggleButton actions"
                         onClick={() => openEditDialog(service)}
                       >
                         עריכה
                       </button>
+                      <button
+                        className="toggleButton actions"
+                        onClick={service.active ? (() => freezeService(service._id)) : (() => unFreezeService(service._id))}
+                      >
+                        {service.active ? 'הקפאה' : 'ביטול הקפאה'}
+                      </button>
+                      <button
+                        className="toggleButton actions"
+                        onClick={() => handleDeleteService(service._id)}
+                      >
+                        מחיקה
+                      </button>
+
                     </div>
                   </div>
-                  {expanded[service._id] && (
+                  {expanded === service._id && (
                     <div className="details">
                       <p>{service.description}</p>
                       <p>מחיר: ${service.price}</p>
