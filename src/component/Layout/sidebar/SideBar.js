@@ -40,7 +40,7 @@ const Sidebar = () => {
         </li>
         <li className="menu-item">
           {/* <NavLink className="nav-link" to="/categories/customerBilling"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
+          <NavLink className="nav-link" to="/dash/transactions">
             <FaSackDollar size={25} className="icon" /> הכנסות
           </NavLink>
           <ul className={`submenu ${openIndex === 2 ? "open" : ""}`}>

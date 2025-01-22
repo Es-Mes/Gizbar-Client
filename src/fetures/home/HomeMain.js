@@ -32,8 +32,10 @@ const HomeMain = () => {
    );
 
    console.log(`agent transactions:${transactionsAsProvider}`);
-   const isLoading = useSelector((state) => state.agent?.isLoading);
+   const isLoading = useSelector((state) => state.agent?.isLoading) ;
    const error = useSelector((state) => state.agent?.error);
+   const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading) ;
+   const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
 
 //עסקאות
    const filterRecentTransactions = (transactionsAsProvider) => {
@@ -71,6 +73,8 @@ const HomeMain = () => {
 
    if (isLoading) return <p>Loading...</p>;
    if (error) return <p>Error: {error}</p>;
+   if (isLoadingTransactions) return <p>Loading transactions...</p>;
+   if (errorLoadingTransactions) return <p>Error: {error}</p>;
    console.log(agent);
    return (
       <>

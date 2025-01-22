@@ -34,6 +34,7 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import AddTransaction from "./fetures/transactions/add/AddTransaction"
+import TransactionsAsProvider from "./fetures/transactions/list/TransactionsAsProvider"
 import AddService from "./fetures/services/add/AddService"
 import ServicesList from "./fetures/services/list/ServicesList"
 import SingleService from "./fetures/services/view/SingleService"
@@ -71,7 +72,7 @@ const App = () => {
                                 <Route path=":userId" element={<SingleService />} />
                             </Route>
                             <Route path="transactions" element={<Outlet />}>
-                                {/* <Route index element={<CustomersList />} /> */}
+                                <Route index element={<TransactionsAsProvider />} />
                                 <Route path="add" element={<AddTransaction />} />
                                 {/* <Route path=":userId" element={<SingleCustomer />} /> */}
                             </Route>
