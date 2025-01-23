@@ -1,0 +1,46 @@
+.toggle-view {
+    cursor: pointer; /* סמן עכבר על מילת קישור */
+    color: blue; /* צבע טקסט */
+    text-decoration: underline; /* קו תחתון */
+    margin-right: 10px; /* רווח קטן מהכותרת */
+}
+.transactions_first_page {
+    display: flex;
+    padding-left: 0;
+    gap: 30px;
+    margin: 30px;
+}
+
+.toggle-view:hover {
+    color: darkblue; /* שינוי צבע במעבר עכבר */
+}
+.income-chart-container {
+    margin: 20px 0;
+    text-align: center;
+    width: 35vw;
+}
+#incomeChart {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.chart-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.chart-header button {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.chart-header button:hover {
+    color: #0056b3;
+}
+
+
