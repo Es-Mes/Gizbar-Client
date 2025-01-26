@@ -17,10 +17,12 @@ const TransactionsAsProvider = () => {
     );
 
     const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
+    const [isLastTransactionsSlice, setIsLastTransactionsSlice] = useState(true)
     const [isPendingTransactionsSlice, setIsPendingTransactionsSlice] = useState(true)
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // ניהול השנה הנוכחית ב-state
     const chartRef = useRef(null); // רפרנס לגרף
 
+    //הכנסה לפי חודש
     const getMonthlyIncome = (transactionsAsProvider, year) => {
         const startOfYear = new Date(year, 0, 1); // התחלת השנה
         const endOfYear = new Date(year, 11, 31); // סוף השנה
@@ -37,8 +39,17 @@ const TransactionsAsProvider = () => {
         return monthlyIncome;
     };
 
+    //ממוצע שנתי
+    const calculateAverageIncome = (monthlyIncome) => {
+        const totalIncome = monthlyIncome.reduce((sum, income) => sum + income, 0);
+        const monthsWithIncome = monthlyIncome.filter(income => income > 0).length;
+        return monthsWithIncome > 0 ? (totalIncome / monthsWithIncome).toFixed(2) : 0;
+    };
+
     const monthlyIncome = getMonthlyIncome(transactionsAsProvider, currentYear);
     console.log(monthlyIncome);
+    const averageIncome = calculateAverageIncome(monthlyIncome);
+
 
     useEffect(() => {
         const canvas = document.getElementById('incomeChart');
@@ -84,6 +95,7 @@ const TransactionsAsProvider = () => {
         };
     }, [monthlyIncome, currentYear]); // עדכון הגרף במקרה שהנתונים משתנים
 
+    //עסקאות אחרונות שבוצעו
     const filterRecentTransactions = (transactionsAsProvider) => {
         const today = new Date();
         const threeMonthsAgo = new Date();
@@ -103,8 +115,34 @@ const TransactionsAsProvider = () => {
     };
 
     const recentTransactions = filterRecentTransactions(transactionsAsProvider);
-    const recentTransactionsSlice = recentTransactions.slice(0, 10);
+    const recentTransactionsSlice = recentTransactions.slice(0, 5);
+    
+    //הכנסות אחרונות
+    const filterLastTransactions = (transactionsAsProvider) => {
+        const today = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(today.getMonth() - 3); // לחשב את התאריך של 3 חודשים אחורה
 
+        return [...transactionsAsProvider]
+            .filter(transaction =>
+                transaction.status == "paid" && // רק עסקאות שלא בוטלו
+                new Date(transaction.billingDay) >= threeMonthsAgo  // רק עסקאות מעודכנות ב-3 חודשים האחרונים
+
+            )
+            .sort((a, b) => new Date(b.billingDay) - new Date(a.billingDay)) // מיון לפי תאריך העדכון (מהחדש לישן)
+            // .slice(0, 10) // להחזיר עד 10 עסקאות
+            .map(transaction => ({
+                ...transaction, // שומר את שאר המידע של העסקה
+                agent: undefined, // מחיקת שדה agent
+            }));
+    };
+
+    const lastTransactions = filterLastTransactions(transactionsAsProvider) || [];
+    const lastTransactionsSlice = lastTransactions.slice(0, 5) || [];
+    console.log(`lastTransactions${lastTransactions}`);
+
+
+    //תשלומים קרובים
     const filterPendingTransactions = (transactionsAsProvider) => {
         // קבלת תאריך נוכחי
         const today = new Date();
@@ -118,7 +156,7 @@ const TransactionsAsProvider = () => {
     };
 
     const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
-    const pendingTransactionsSlice = pendingTransactions.slice(0, 10);
+    const pendingTransactionsSlice = pendingTransactions.slice(0, 5);
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -127,7 +165,7 @@ const TransactionsAsProvider = () => {
             <div className="transactions-display">
                 <div>
                     <h2>
-                        עסקאות אחרונות
+                        עסקאות אחרונות שבוצעו
                         <span
                             className="toggle-view"
                             onClick={() => setIsRecentTransactionsSlice(!isRecentTransactionsSlice)}
@@ -135,7 +173,8 @@ const TransactionsAsProvider = () => {
                             {isRecentTransactionsSlice ? "יותר" : "פחות"}
                         </span>
                     </h2>
-                    {isRecentTransactionsSlice ? (
+                    {
+                    isRecentTransactionsSlice ? (
                         <TransactionsList transactions={recentTransactionsSlice} />
                     ) : (
                         <TransactionsList transactions={recentTransactions} />
@@ -143,7 +182,28 @@ const TransactionsAsProvider = () => {
                 </div>
                 <div>
                     <h2>
-                        עסקאות קרובות
+                        הכנסות אחרונות
+                        <span
+                            className="toggle-view"
+                            onClick={() => setIsLastTransactionsSlice(!isLastTransactionsSlice)}
+                        >
+                            {isLastTransactionsSlice ? "יותר" : "פחות"}
+                        </span>
+                    </h2>
+                    {
+                    (lastTransactionsSlice == [] && lastTransactions == []) ? 
+                        (<h2>לא נמצאו עסקאות תואמות</h2>)
+                    :
+                    (isLastTransactionsSlice ? (
+                        <TransactionsList transactions={lastTransactionsSlice} />
+                    ) : (
+                        <TransactionsList transactions={lastTransactions} />
+                    ))
+                    }
+                </div>
+                <div>
+                    <h2>
+                    תשלומים קרובים
                         <span
                             className="toggle-view"
                             onClick={() => setIsPendingTransactionsSlice(!isPendingTransactionsSlice)}
@@ -167,6 +227,9 @@ const TransactionsAsProvider = () => {
                     <button onClick={() => setCurrentYear(currentYear + 1)}>שנה הבאה &gt;</button>
                 </div>
                 <canvas id="incomeChart" />
+                <p className="average-income">
+                    ההכנסה הממוצעת לחודש בשנת {currentYear}: <strong>{averageIncome} ₪</strong>
+                </p>
             </div>
         </div>
     )

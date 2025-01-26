@@ -177,7 +177,7 @@ const ServicesList = () => {
                   {expanded === service._id && (
                     <div className="details">
                       <p>{service.description}</p>
-                      <p>מחיר: ${service.price}</p>
+                      <p>מחיר: ₪ {service.price}</p>
                       <p>סטטוס: {service.active ? 'פעיל' : 'לא פעיל'}</p>
                     </div>
                   )}

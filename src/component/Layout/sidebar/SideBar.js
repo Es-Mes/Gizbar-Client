@@ -11,98 +11,65 @@ import {
   FaPlay,
   FaRegComments,
 } from "react-icons/fa6";
-import "./sidebar.css"; // יצירת קובץ CSS מותאם ל-sidebar
+import "./sidebar.css";
 
 const Sidebar = () => {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(null); // משתנה לניהול תפריטים פתוחים
+  const [activeIndex, setActiveIndex] = useState(null); // משתנה לניהול פריט פעיל
 
   const toggleSubmenu = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+    setOpenIndex(openIndex === index ? null : index); // ניהול פתיחה/סגירה של תפריט משנה
+  };
+
+  const setActive = (index) => {
+    setActiveIndex(index); // שינוי צבע פריט פעיל
+  };
+
+  const calculateMargin = (index) => {
+    // מחזיר מרווח דינמי לפי מספר הפריטים בתת-התפריט
+    const submenu = document.querySelectorAll(".menu-item")[index]?.querySelector(".submenu");
+    if (submenu && openIndex === index) {
+      const itemCount = submenu.children.length; // חישוב מספר הפריטים
+      return `${itemCount * 40}px`; // 40px עבור כל פריט בתת-תפריט
+    }
+    return "15px"; // מרווח ברירת מחדל
   };
 
   return (
     <div className="sidebar-main-menu">
       <ul>
-        <li className="menu-item">
-          <NavLink className="nav-link" to="/dash">
-            <FaHouseChimney size={25} className="icon" /> עמוד הבית
-          </NavLink>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/transactions"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
-            <FaAddressBook size={25} className="icon" /> לקוחות
-          </NavLink>
-          <ul className={`submenu ${openIndex === 1 ? "open" : ""}`}>
-            <li>ניהול לקוחות</li>
-            <li>הוספת לקוח חדש</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/customerBilling"> */}
-          <NavLink className="nav-link" to="/dash/transactions">
-            <FaSackDollar size={25} className="icon" /> הכנסות
-          </NavLink>
-          <ul className={`submenu ${openIndex === 2 ? "open" : ""}`}>
-            <li>דוחות הכנסות</li>
-            <li>הפקת חשבונית</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/paymentRequirements"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
-            <FaMoneyBillTransfer size={25} className="icon" /> הוצאות
-          </NavLink>
-          <ul className={`submenu ${openIndex === 3 ? "open" : ""}`}>
-            <li>תשלומים שוטפים</li>
-            <li>דוחות הוצאות</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/creditClearing"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
-            <FaCreditCard size={25} className="icon" /> סליקת אשראי
-          </NavLink>
-          <ul className={`submenu ${openIndex === 4 ? "open" : ""}`}>
-            <li>חיובים שנכשלו</li>
-            <li>דוחות סליקה</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/standingOrders"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
-            <FaArrowDownShortWide size={25} className="icon" /> הוראות קבע
-          </NavLink>
-          <ul className={`submenu ${openIndex === 5 ? "open" : ""}`}>
-            <li>הוספת הוראה חדשה</li>
-            <li>ניהול הוראות קיימות</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/history"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
-            <FaChartColumn size={25} className="icon" /> היסטוריה
-          </NavLink>
-          <ul className={`submenu ${openIndex === 6 ? "open" : ""}`}>
-            <li>היסטוריית תשלומים</li>
-            <li>היסטוריית פעולות</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          <NavLink className="nav-link" to="/dash/services">
-            <FaPlay size={25} className="icon" /> שירותים
-          </NavLink>
-          <ul className={`submenu ${openIndex === 7 ? "open" : ""}`}>
-            <li>שירותים פעילים</li>
-            <li>הוספת שירות חדש</li>
-          </ul>
-        </li>
-        <li className="menu-item">
-          {/* <NavLink className="nav-link" to="/categories/contact"> */}
-          <NavLink className="nav-link" to="/dash/UnderConstruction">
-            <FaRegComments size={25} className="icon" /> צור קשר
-          </NavLink>
-        </li>
+        {[
+          { title: "עמוד הבית", icon: FaHouseChimney, link: "/dash" },
+          { title: "לקוחות", icon: FaAddressBook, link: "/dash/UnderConstruction", submenu: ["ניהול לקוחות", "הוספת לקוח חדש"] },
+          { title: "הכנסות", icon: FaSackDollar, link: "/dash/transactions", submenu: ["דוחות הכנסות", "הפקת חשבונית"] },
+          { title: "הוצאות", icon: FaMoneyBillTransfer, link: "/dash/UnderConstruction", submenu: ["תשלומים שוטפים", "דוחות הוצאות"] },
+          { title: "סליקת אשראי", icon: FaCreditCard, link: "/dash/UnderConstruction", submenu: ["חיובים שנכשלו", "דוחות סליקה"] },
+          { title: "הוראות קבע", icon: FaArrowDownShortWide, link: "/dash/UnderConstruction", submenu: ["הוספת הוראה חדשה", "ניהול הוראות קיימות"] },
+          { title: "היסטוריה", icon: FaChartColumn, link: "/dash/UnderConstruction", submenu: ["היסטוריית תשלומים", "היסטוריית פעולות"] },
+          { title: "שירותים", icon: FaPlay, link: "/dash/services", submenu: ["שירותים פעילים", "הוספת שירות חדש"] },
+          { title: "צור קשר", icon: FaRegComments, link: "/dash/UnderConstruction" },
+        ].map((menu, index) => (
+          <li
+            key={index}
+            className={`menu-item ${activeIndex === index ? "active" : ""}`}
+            onClick={() => {
+              toggleSubmenu(index);
+              setActive(index);
+            }}
+            style={{ marginBottom: calculateMargin(index) }} // חישוב דינמי של מרווח
+          >
+            <NavLink className="nav-link" to={menu.link}>
+              {React.createElement(menu.icon, { size: 25, className: "icon" })} {menu.title}
+            </NavLink>
+            {menu.submenu && (
+              <ul className={`submenu ${openIndex === index ? "open" : ""}`}>
+                {menu.submenu.map((submenuItem, subIndex) => (
+                  <li key={subIndex}>{submenuItem}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
       </ul>
     </div>
   );

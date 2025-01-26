@@ -66,9 +66,9 @@ const AddTransaction = () => {
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
         console.log(`customerId:${customerId}`);
-        customers.forEach((cust) => {
-            console.log("לקוח ב-customers:", cust._id);
-        });
+        // customers.forEach((cust) => {
+        //     console.log("לקוח ב-customers:", cust._id);
+        // });
         // console.log("customerId type:", typeof customerId);
         customers.forEach((cust) => {
         // console.log("cust._id type:", typeof cust._id);

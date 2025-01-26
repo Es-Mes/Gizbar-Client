@@ -8,7 +8,6 @@
   right: 0; /* יישור לצד ימין */
   top: 70px; /* מיקום מתחת ל-NavBar */
   overflow-y: auto; /* גלילה אנכית */
-  padding: 10px; /* משולב משני ה-CSS */
   box-sizing: border-box; /* שמירה על חישוב גבולות */
   padding-top: 20px; /* מרווח למעלה */
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* הצללה */
@@ -21,12 +20,14 @@
 }
 
 .sidebar-main-menu .menu-item {
-  margin-bottom: 15px; /* תכונה מה-CSS הראשון */
-  padding: 10px 20px; /* תכונה מה-CSS השני */
+  margin-bottom: 15px;
+  padding: 10px 20px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.3s ease; /* אנימציית מעבר */
+  transition: background-color 0.3s ease;
+  position: relative; /* חובה ל-parent בשביל positioning */
+}
+.sidebar-main-menu .menu-item.active {
+  background-color: #555; /* צבע רקע לפריט פעיל */
 }
 
 .sidebar-main-menu .menu-item:hover {
@@ -48,26 +49,43 @@
 }
 
 .sidebar-main-menu .submenu {
-  list-style: none; /* הגדרת סוג הרשימה */
-  padding-left: 20px;
-  margin: 0; /* מאפיין נוסף */
-  display: none; /* מצב ברירת מחדל - מוסתר */
+  position: absolute; /* מחייב את תת-התפריט להתפרס ביחס ל-parent */
+  top: 100%; /* מיקום מתחת ל-item */
+  left: 0; /* יישור לצד שמאל */
+  width: calc(100% + 40px); /* הרחבת רוחב התת-תפריט */
+  margin-left: -20px; /* תיקון מרחק ימין-שמאל ביחס ל-padding של ה-menu-item */
+  list-style: none;
+  background-color: #444;
+  z-index: 10;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  display: none; /* הסתרת ברירת מחדל */
+  padding: 0; /* ללא padding נוסף */
 }
+.sidebar-main-menu .submenu.open {
+  display: block;
+}
+
 
 .sidebar-main-menu .submenu li {
-  padding: 8px 20px;
-  background-color: #555; /* צבע רקע לפריטים פנימיים */
+  padding: 8px 0px;
+  background-color: #394144; /* צבע רקע לפריטים פנימיים */
   transition: background-color 0.3s ease; /* מעבר צבע */
-}
-
-.sidebar-main-menu .submenu li:hover {
+  width: 100%;
+}.sidebar-main-menu .submenu li:hover {
   background-color: #666; /* צבע רקע בעת ריחוף */
 }
 
-.sidebar-main-menu .menu-item.open .submenu {
-  display: block; /* הצגת תת-תפריט */
-}
 .icon{
   color:#fff;
 
 }
+.sidebar-main-menu .menu-item .submenu.open {
+  display: block !important; /* מבטיח שהסגנון יופעל */
+}
+li {
+  margin-right:0;
+}
+.sidebar-main-menu .menu-item.open + .menu-item {
+  margin-top: 60px; /* הזזת השורה הבאה בתפריט */
+}
+
