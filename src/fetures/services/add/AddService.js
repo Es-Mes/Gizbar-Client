@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addServiceStore } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
-import './AddService.css'
+import './AddService.css';
+
 const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
-   
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // const services = useSelector((state) => state.agent?.data?.data?.services || []);
-
-    // console.log(`services: ${services}`);
     const [serviceData, setServiceData] = useState({
         name: "",
         description: "",
-        price: "",
+        type: "global", // ברירת מחדל: שירות גלובלי
+        hourlyPrice: "",
+        globalPrice: "",
     });
+
     const [showSuccessMessage, setShowSuccessMessage] = useState(false); // ניהול הצגת ההודעה
 
     const handleChange = (e) => {
@@ -34,20 +35,20 @@ const AddService = ({ onSuccess }) => {
             return;
         }
 
+        const { type, hourlyPrice, globalPrice, ...rest } = serviceData;
+
+        const price = type === "hourly" ? hourlyPrice : globalPrice;
+
         try {
-            const data = await addService({ phone, service: serviceData }).unwrap();
+            const data = await addService({ phone, service: { ...rest, type, price } }).unwrap();
             console.log(data);
-            console.log(`serviceData: ${serviceData}`);
+
             if (data) {
                 setShowSuccessMessage(true); // הצג הודעת הצלחה
                 const services = data.data.services;
-                console.log(services);
-                const newService = services[services.length -1];
-                dispatch(addServiceStore(newService));//עדכון הסטור בשירות החדש
-
-
-             }
-
+                const newService = services[services.length - 1];
+                dispatch(addServiceStore(newService)); // עדכון הסטור בשירות החדש
+            }
 
             if (onSuccess) {
                 onSuccess(); // קריאה ל־onSuccess אם הוגדר
@@ -61,7 +62,6 @@ const AddService = ({ onSuccess }) => {
             console.error("Error adding service:", err);
         }
     };
-
 
     return (
         <div className="add-service-container">
@@ -86,14 +86,45 @@ const AddService = ({ onSuccess }) => {
                     onChange={handleChange}
                 ></textarea>
 
-                <label htmlFor="price">מחיר:</label>
-                <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    value={serviceData.price}
+                <label htmlFor="type">סוג השירות: <span className="required-asterisk">*</span></label>
+                <select
+                    id="type"
+                    name="type"
+                    value={serviceData.type}
                     onChange={handleChange}
-                />
+                    required
+                >
+                    <option value="global">גלובלי</option>
+                    <option value="hourly">שעתי</option>
+                </select>
+
+                {serviceData.type === "hourly" && (
+                    <>
+                        <label htmlFor="hourlyPrice">מחיר לשעה: <span className="required-asterisk">*</span></label>
+                        <input
+                            type="number"
+                            id="hourlyPrice"
+                            name="hourlyPrice"
+                            value={serviceData.hourlyPrice}
+                            onChange={handleChange}
+                            required
+                        />
+                    </>
+                )}
+
+                {serviceData.type === "global" && (
+                    <>
+                        <label htmlFor="globalPrice">מחיר גלובלי: <span className="required-asterisk">*</span></label>
+                        <input
+                            type="number"
+                            id="globalPrice"
+                            name="globalPrice"
+                            value={serviceData.globalPrice}
+                            onChange={handleChange}
+                            required
+                        />
+                    </>
+                )}
 
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? "מוסיף..." : "הוסף שירות"}

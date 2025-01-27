@@ -10,6 +10,11 @@ const agentSlice = createSlice({
         addServiceStore(state, action) {
             state.data.data.services.push(action.payload); // הוספת שירות חדש
         },
+        deleteServiceStore(state, action) {
+            state.data.data.services = state.data.data.services.filter(
+                (service) => service._id !== action.payload
+            );
+        },
         updateServiceStore(state, action) {
             const updatedServices = action.payload;
             state.data.data.services = updatedServices;
@@ -36,7 +41,7 @@ const agentSlice = createSlice({
     },
 });
 
-export const { setAgentData, addServiceStore, updateServiceStore,
+export const { setAgentData, addServiceStore, deleteServiceStore, updateServiceStore,
     toggleServiceFreezeStore,
     addCustomerStore, addTransactionStore, setLoading, setError } = agentSlice.actions;
 export default agentSlice.reducer;

@@ -4,7 +4,7 @@ import axios from 'axios';
 import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב-hook הזה
 import './ServicesList.css'; // קובץ CSS
 import { useUpdateServiceMutation, useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
-import { updateServiceStore, toggleServiceFreezeStore } from '../../../app/agentSlice';
+import { updateServiceStore, toggleServiceFreezeStore,deleteServiceStore } from '../../../app/agentSlice';
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
@@ -57,6 +57,7 @@ const ServicesList = () => {
       try {
         const data = await deleteService({ phone, _id: id }).unwrap();
         console.log('Service deleted:', data);
+        dispatch(deleteServiceStore(id)); // עדכון הסטור
         alert('השירות נמחק בהצלחה.');
       } catch (error) {
         console.error('Error deleting service:', error?.data || error.message || error);

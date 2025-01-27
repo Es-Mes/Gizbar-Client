@@ -57,7 +57,7 @@ const Sidebar = () => {
         // { title: "הפקת חשבונית", link: "/dash/transactions/income/invoice/create" },
         { title: "דוחות הכנסות", link: "/dash/UnderConstruction" },
         { title: "הפקת חשבונית", link: "/dash/UnderConstruction" },
-        { title: "תשלומים בפיגור", link: "/dash/transactions/income/delayed" },
+        { title: "תשלומים בפיגור", link: "/dash/transactions" },
       ],
     },
     {
