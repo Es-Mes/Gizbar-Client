@@ -42,6 +42,8 @@ import useAgentData from "./hooks/useAgentData"
 import useAuth from "./hooks/useAuth"
 import useTransactionsData from "./hooks/useTransactionsData"
 import UnderConstruction from "./component/UnderConstruction"
+import DelayedTransactions from "./fetures/transactions/list/delayedTransactions"
+import FreezedServices from "./fetures/services/list/FreezedServices"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
@@ -68,13 +70,14 @@ const App = () => {
                             </Route>
                             <Route path="services" element={<Outlet />}>
                                 <Route index element={<ServicesList />} />
+                                <Route path="freezed" element={<FreezedServices />} />
                                 <Route path="add" element={<AddService />} />
                                 <Route path=":userId" element={<SingleService />} />
                             </Route>
-                            <Route path="transactions" element={<Outlet />}>
+                            <Route path="transactions/income" element={<Outlet />}>
                                 <Route index element={<TransactionsAsProvider />} />
                                 <Route path="add" element={<AddTransaction />} />
-                                {/* <Route path=":userId" element={<SingleCustomer />} /> */}
+                                <Route path="delayed" element = {<DelayedTransactions/>}/>
                             </Route>
                             <Route element={<RequireAuth allowRoles={['admin']} />}>
                                 <Route path="users" element={<Outlet />}>

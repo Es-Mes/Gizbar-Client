@@ -52,14 +52,13 @@
   position: absolute; /* מחייב את תת-התפריט להתפרס ביחס ל-parent */
   top: 100%; /* מיקום מתחת ל-item */
   left: 0; /* יישור לצד שמאל */
-  width: calc(100% + 40px); /* הרחבת רוחב התת-תפריט */
-  margin-left: -20px; /* תיקון מרחק ימין-שמאל ביחס ל-padding של ה-menu-item */
+  width: 100%; /* הרחבת רוחב התת-תפריט */
+  padding-right: 20px; /* תיקון מרחק ימין-שמאל ביחס ל-padding של ה-menu-item */
   list-style: none;
   background-color: #444;
   z-index: 10;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   display: none; /* הסתרת ברירת מחדל */
-  padding: 0; /* ללא padding נוסף */
 }
 .sidebar-main-menu .submenu.open {
   display: block;
@@ -67,7 +66,7 @@
 
 
 .sidebar-main-menu .submenu li {
-  padding: 8px 0px;
+  padding: 8px 10px;
   background-color: #394144; /* צבע רקע לפריטים פנימיים */
   transition: background-color 0.3s ease; /* מעבר צבע */
   width: 100%;

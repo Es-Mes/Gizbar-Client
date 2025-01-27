@@ -13,10 +13,10 @@ import Modal from "../../../modals/Modal";
 const AddTransaction = () => {
     const { _id,phone } = useAuth();
     const services = useSelector((state) => state.agent?.data?.data?.services || []);
+    const filterServices = services.filter((service) => {
+     return service.active === true 
+    })
     const customers = useSelector((state) => state.agent?.data?.data?.customers || [])
-    // console.log(`customers  :${customers}`);
-    // console.log(`servisces  :${services}`);
-
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const dispatch = useDispatch();
 
@@ -136,7 +136,7 @@ const AddTransaction = () => {
                 </label>
                 <select onChange={handleServiceChange} required>
                     <option value="">-- בחר שירות --</option>
-                    {services.map((service) => (
+                    {filterServices.map((service) => (
                         <option key={service._id} value={service._id}>
                             {service.name}
                         </option>

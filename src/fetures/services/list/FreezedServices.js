@@ -6,11 +6,11 @@ import './ServicesList.css'; // קובץ CSS
 import { useUpdateServiceMutation, useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
 import { updateServiceStore, toggleServiceFreezeStore } from '../../../app/agentSlice';
 
-const ServicesList = () => {
+const FreezedServices = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
   const services = useSelector((state) => state.agent?.data?.data?.services || []);
   const filterServices = services.filter((service) => {
-    return service.active === true 
+    return service.active === false 
    })
   const [updateService, { isLoading, isSuccess, isError, error }] = useUpdateServiceMutation()
   const [deleteService] = useDeleteServiceMutation();
@@ -195,4 +195,4 @@ const ServicesList = () => {
   );
 };
 
-export default ServicesList;
+export default FreezedServices;

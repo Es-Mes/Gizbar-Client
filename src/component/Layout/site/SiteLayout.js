@@ -26,14 +26,6 @@ const SiteLayout = () => {
                 <NavBar />
             </header>
             <Outlet />
-            {/*      <main>
-    //             <div className="content">
-    //                 <Outlet />
-    //             </div>
-    //             <aside className="menu">
-    //                 <Sidebar/>
-    //             </aside>
-    //         </main> */}
         </div>
     );
 };

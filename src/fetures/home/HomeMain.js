@@ -150,7 +150,7 @@ const HomeMain = () => {
                <Link to="customers/add">הוספת לקוח</Link>
             </button>
             <button>
-               <Link to="transactions/add">הוספת עסקה</Link>
+               <Link to="transactions/income/add">הוספת עסקה</Link>
             </button>
          </div>
 
