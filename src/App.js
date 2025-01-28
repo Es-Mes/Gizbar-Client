@@ -7,20 +7,12 @@ import SingleUser from "./fetures/users/view/SingleUser"
 import CustomersList from "./fetures/customers/List/CustomersList"
 import AddCustomer from "./fetures/customers/add/AddCustomer"
 import SingleCustomer from "./fetures/customers/view/singleCustomer"
-import ProductsList from "./fetures/products/List/ProductsList"
-import AddProduct from "./fetures/products/add/AddProduct"
-import SingleProduct from "./fetures/products/view/SingleProduct"
 import LoginPage from "./fetures/auth/login/LoginPage"
 import RequireAuth from "./fetures/auth/RequireAuth"
 import PersistsLogin from "./fetures/auth/PersistLogin"
-import HomePage from "./fetures/home/HomePage"
-import SingleProductPublic from "./fetures/products/view/singleProductPublic"
 import RegistPage from "./fetures/auth/regist/RegistPage"
 import HomeMain from "./fetures/home/HomeMain"
-import FavouritesList from "./fetures/products/List/FavouritesList"
-import ProductListPublic from "./fetures/products/List/ProductsListPublic"
 import ScrollToTop from './ScrollToTop';
-import PlumaAbout from "./fetures/about/PlumaAbout"
 import Regulation from "./fetures/regulation/Regulations"
 import Posts from "./fetures/posts/Posts"
 import SportLinePost from "./fetures/posts/SportLinePost"
@@ -84,13 +76,6 @@ const App = () => {
                                     <Route index element={<UsersList />} />
                                     <Route path="add" element={<AddUser />} />
                                     <Route path=":userId" element={<SingleUser />} />
-                                </Route>
-                            </Route>
-                            <Route element={<RequireAuth allowRoles={['admin']} />}>
-                                <Route path="products" element={<Outlet />}>
-                                    <Route index element={<ProductsList />} />
-                                    <Route path="add" element={<AddProduct />} />
-                                    <Route path=":productBarcod" element={<SingleProduct />} />
                                 </Route>
                             </Route>
                         </Route>
