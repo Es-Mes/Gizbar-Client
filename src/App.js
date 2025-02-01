@@ -49,10 +49,10 @@ const App = () => {
         <Routes>
             <Route path="login" element={<LoginPage />} />
             <Route path="regist" element={<RegistPage />} />
-            <Route path="/" element={<SiteLayout />} >
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/dash" element={<DashLayout />}>
                 <Route element={<PersistsLogin />}>
-                    <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
-                        <Route path="/dash" element={<DashLayout />}>
+                        <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                             <Route path="UnderConstruction" element={<UnderConstruction />} />
                             <Route index element={<HomeMain />} />
                             <Route path="customers" element={<Outlet />}>
@@ -69,19 +69,18 @@ const App = () => {
                             <Route path="transactions/income" element={<Outlet />}>
                                 <Route index element={<TransactionsAsProvider />} />
                                 <Route path="add" element={<AddTransaction />} />
-                                <Route path="delayed" element = {<DelayedTransactions/>}/>
+                                <Route path="delayed" element={<DelayedTransactions />} />
                             </Route>
-                            <Route element={<RequireAuth allowRoles={['admin']} />}>
+                            {/* <Route element={<RequireAuth allowRoles={['admin']} />}>
                                 <Route path="users" element={<Outlet />}>
                                     <Route index element={<UsersList />} />
                                     <Route path="add" element={<AddUser />} />
                                     <Route path=":userId" element={<SingleUser />} />
                                 </Route>
-                            </Route>
+                            </Route> */}
                         </Route>
                     </Route>
                 </Route>
-            </Route>
         </Routes>
         <ToastContainer />
     </Router>

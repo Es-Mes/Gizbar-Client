@@ -25,7 +25,10 @@ const DashLayout=()=>{
     //     </div>
     // )
     return (
-        <div>
+        <div className="page">
+             <header>
+                <NavBar />
+            </header>
             <main>
                 <div className="content">
                     <Outlet />

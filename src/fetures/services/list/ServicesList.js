@@ -103,94 +103,164 @@ const ServicesList = () => {
   };
 
   return (
-    <div>
+    <div className="service-list-container">
       <h2>רשימת שירותים</h2>
+      <p className="service-icons-info">
+        ⏳ שירות לפי שעה | 📦 שירות גלובלי
+    </p>
       {services.length === 0 ? (
         <p>אין שירותים זמינים.</p>
       ) : (
         <ul className="service-list">
-          {filterServices.map((service) => (
-            <li className="container" key={service._id}>
-              {editServiceId === service._id ? (
-                <div className="edit-dialog container">
-                  <h3>עריכת שירות</h3>
-                  <label>
-                    שם השירות:
-                    <input
-                      type="text"
-                      name="name"
-                      value={editForm.name}
-                      onChange={handleEditChange}
-                    />
-                  </label>
-                  <label>
-                    תיאור:
-                    <textarea
-                      name="description"
-                      value={editForm.description}
-                      onChange={handleEditChange}
-                    ></textarea>
-                  </label>
-                  <label>
-                    מחיר:
-                    <input
-                      type="number"
-                      name="price"
-                      value={editForm.price}
-                      onChange={handleEditChange}
-                    />
-                  </label>
-                  <button onClick={submitEditForm}>שמירה</button>
-                  <button onClick={() => setEditServiceId(null)}>ביטול</button>
+    {filterServices.map((service) => (
+        <li className="service-card" key={service._id}>
+            {editServiceId === service._id ? (
+                <div className="service-edit-dialog">
+                    <h3>עריכת שירות</h3>
+                    <label>
+                        שם השירות:
+                        <input
+                            type="text"
+                            name="name"
+                            value={editForm.name}
+                            onChange={handleEditChange}
+                        />
+                    </label>
+                    <label>
+                        תיאור:
+                        <textarea
+                            name="description"
+                            value={editForm.description}
+                            onChange={handleEditChange}
+                        ></textarea>
+                    </label>
+                    <label>
+                        מחיר:
+                        <input
+                            type="number"
+                            name="price"
+                            value={editForm.price}
+                            onChange={handleEditChange}
+                        />
+                    </label>
+                    <div className="service-actions">
+                        <button onClick={submitEditForm}>שמירה</button>
+                        <button onClick={() => setEditServiceId(null)}>ביטול</button>
+                    </div>
                 </div>
-              ) : (
-                <div>
-                  <div className="basicRow">
+            ) : (
+                <div className="service-body">
                     <div className="service-header">
-                      <button
-                        className="toggleButton"
-                        onClick={() => toggleExpand(service._id)}
-                      >
-                        {expanded === service._id ? '▼' : '▶'}
-                      </button>
-                      <h3>{service.name}</h3>
+                        <h3>
+                            {service.type === 'hourly' ? '⏳' : '📦'} {service.name}
+                        </h3>
+                        <p className="service-price">₪ {service.price} {service.type === 'hourly' ? 'לשעה' : ''}</p>
                     </div>
-                    <div>
-
-                      <button
-                        className="toggleButton actions"
-                        onClick={() => openEditDialog(service)}
-                      >
-                        עריכה
-                      </button>
-                      <button
-                        className="toggleButton actions"
-                        onClick={service.active ? (() => freezeService(service._id)) : (() => unFreezeService(service._id))}
-                      >
-                        {service.active ? 'הקפאה' : 'ביטול הקפאה'}
-                      </button>
-                      <button
-                        className="toggleButton actions"
-                        onClick={() => handleDeleteService(service._id)}
-                      >
-                        מחיקה
-                      </button>
-
+                    <div className="service-details">
+                        <p><strong>תיאור:</strong> {service.description}</p>
+                        <p><strong>סטטוס:</strong> {service.active ? 'פעיל' : 'לא פעיל'}</p>
                     </div>
-                  </div>
-                  {expanded === service._id && (
-                    <div className="details">
-                      <p>{service.description}</p>
-                      <p>מחיר: ₪ {service.price}</p>
-                      <p>סטטוס: {service.active ? 'פעיל' : 'לא פעיל'}</p>
+                    <div className="service-actions-column">
+                        <button className="action-button edit-button" onClick={() => openEditDialog(service)}>
+                            ✏️ עריכה
+                        </button>
+                        <button className="action-button freeze-button" onClick={service.active ? (() => freezeService(service._id)) : (() => unFreezeService(service._id))}>
+                            {service.active ? '❄️ הקפאה' : '✅ ביטול הקפאה'}
+                        </button>
+                        <button className="action-button delete-button" onClick={() => handleDeleteService(service._id)}>
+                            🗑️ מחיקה
+                        </button>
                     </div>
-                  )}
                 </div>
-              )}
-            </li>
-          ))}
+            )}
+        </li>
+    ))}
+</ul>
 
-        </ul>
+
+        // <ul className="service-list">
+        //   {filterServices.map((service) => (
+        //     <li className="container" key={service._id}>
+        //       {editServiceId === service._id ? (
+        //         <div className="edit-dialog container">
+        //           <h3>עריכת שירות</h3>
+        //           <label>
+        //             שם השירות:
+        //             <input
+        //               type="text"
+        //               name="name"
+        //               value={editForm.name}
+        //               onChange={handleEditChange}
+        //             />
+        //           </label>
+        //           <label>
+        //             תיאור:
+        //             <textarea
+        //               name="description"
+        //               value={editForm.description}
+        //               onChange={handleEditChange}
+        //             ></textarea>
+        //           </label>
+        //           <label>
+        //             מחיר:
+        //             <input
+        //               type="number"
+        //               name="price"
+        //               value={editForm.price}
+        //               onChange={handleEditChange}
+        //             />
+        //           </label>
+        //           <button onClick={submitEditForm}>שמירה</button>
+        //           <button onClick={() => setEditServiceId(null)}>ביטול</button>
+        //         </div>
+        //       ) : (
+        //         <div>
+        //           <div className="basicRow">
+        //             <div className="service-header">
+        //               <button
+        //                 className="toggleButton"
+        //                 onClick={() => toggleExpand(service._id)}
+        //               >
+        //                 {expanded === service._id ? '▼' : '▶'}
+        //               </button>
+        //               <h3>{service.name}</h3>
+        //             </div>
+        //             <div>
+
+        //               <button
+        //                 className="toggleButton actions"
+        //                 onClick={() => openEditDialog(service)}
+        //               >
+        //                 עריכה
+        //               </button>
+        //               <button
+        //                 className="toggleButton actions"
+        //                 onClick={service.active ? (() => freezeService(service._id)) : (() => unFreezeService(service._id))}
+        //               >
+        //                 {service.active ? 'הקפאה' : 'ביטול הקפאה'}
+        //               </button>
+        //               <button
+        //                 className="toggleButton actions"
+        //                 onClick={() => handleDeleteService(service._id)}
+        //               >
+        //                 מחיקה
+        //               </button>
+
+        //             </div>
+        //           </div>
+        //           {expanded === service._id && (
+        //             <div className="details">
+        //               <p>{service.description}</p>
+        //               <p>מחיר: ₪ {service.price}</p>
+        //               <p>סטטוס: {service.active ? 'פעיל' : 'לא פעיל'}</p>
+        //             </div>
+        //           )}
+        //         </div>
+        //       )}
+        //     </li>
+        //   ))}
+
+        // </ul>
       )}
     </div>
   );

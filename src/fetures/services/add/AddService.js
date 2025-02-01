@@ -51,7 +51,9 @@ const AddService = ({ onSuccess }) => {
             }
 
             if (onSuccess) {
-                onSuccess(); // קריאה ל־onSuccess אם הוגדר
+                const services = data.data.services;
+                const newService = services[services.length - 1];
+                onSuccess(newService); // קריאה ל־onSuccess אם הוגדר
             } else {
                 setTimeout(() => {
                     setShowSuccessMessage(false); // הסתר את ההודעה
@@ -87,7 +89,19 @@ const AddService = ({ onSuccess }) => {
                 ></textarea>
 
                 <label htmlFor="type">סוג השירות: <span className="required-asterisk">*</span></label>
-                <select
+                {[{type:'global',name:'גלובלי'},{type:'hourly',name:'לפי שעה'}].map((type) => (
+                    <div key={type.type}>
+                    <input
+                        type="radio"
+                        name="type"
+                        value={type.type}
+                        checked={serviceData.type === type.type}
+                        onChange={handleChange}
+                    />
+                    {type.name}
+                </div>
+                ))}
+                {/* <select
                     id="type"
                     name="type"
                     value={serviceData.type}
@@ -96,7 +110,7 @@ const AddService = ({ onSuccess }) => {
                 >
                     <option value="global">גלובלי</option>
                     <option value="hourly">שעתי</option>
-                </select>
+                </select> */}
 
                 {serviceData.type === "hourly" && (
                     <>

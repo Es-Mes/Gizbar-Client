@@ -1,39 +1,38 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
-// import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
+import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
 import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
 import { addTransactionStore } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
-
+import "./AddTransaction.css"
 const AddTransaction = () => {
-    const { _id,phone } = useAuth();
+    const { _id, phone } = useAuth();
     const services = useSelector((state) => state.agent?.data?.data?.services || []);
-    const filterServices = services.filter((service) => {
-     return service.active === true 
-    })
-    const customers = useSelector((state) => state.agent?.data?.data?.customers || [])
+    const filterServices = services.filter((service) => service.active === true);
+    const customers = useSelector((state) => state.agent?.data?.data?.customers || []);
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const dispatch = useDispatch();
-
-    // const { refetch: refetchServices } = useGetAllServicesQuery({ phone });
 
     const navigate = useNavigate();
     const [addTransaction, { isLoading, isSuccess, isError, error }] =
         useAddTransactionMutation();
 
-
+    const [currentStep, setCurrentStep] = useState(1);
     const [selectedService, setSelectedService] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [transactionDetails, setTransactionDetails] = useState({
         description: "",
-        price: "",
+        price: "0",
+        pricePerHour: "",
+        serviceType: "global",
+        hours: 0,
         billingDay: "",
-        status: "pendingCharge",
         alerts: false,
         typeAlerts: "email and phone",
         alertsLevel: "once",
@@ -41,41 +40,65 @@ const AddTransaction = () => {
 
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
     const [isServiceModalOpen, setServiceModalOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
+
+    useEffect(() => {
+        if (isSuccess) {
+            setMessage("העסקה נוספה בהצלחה!");
+            setMessageType("success");
+            setTimeout(() => navigate("/dash"), 2000);
+        } else if (isError) {
+            setMessage("שגיאה בהוספת העסקה. נסה שוב.");
+            setMessageType("error");
+        }
+    }, [isSuccess, isError, navigate]);
 
     useEffect(() => {
         if (isSuccess) {
             navigate("/dash");
         }
     }, [isSuccess, navigate]);
-    // useEffect(() => {
-    //     console.log("Customers updated:", customers);
-    // }, [customers]);
+    //עדכון המחיר הגלובלי
+    useEffect(() => {
+        if (selectedService) {
+            setTransactionDetails((prev) => ({
+                ...prev,
+                price: selectedService.type === "global"
+                    ? Number(selectedService.price) || 0
+                    : Number(prev.pricePerHour) * Number(prev.hours) || 0
+            }));
+        }
+    }, [selectedService, transactionDetails.hours]);
 
-    // useEffect(() => {
-    //     console.log("Services updated:", services);
-    // }, [services]);
 
     const handleServiceChange = (event) => {
         const serviceId = event.target.value;
-        console.log(`service id:${serviceId}`);
         const service = services.find((srv) => srv._id === serviceId);
         setSelectedService(service);
-        console.log();
+        if (service) {
+            setTransactionDetails((prev) => ({
+                ...prev,
+                price: service.type === "global" ? service.price : "0",
+                pricePerHour: service.type === "hourly" ? service.price : "0",
+                description: service.description,
+                serviceType: service.type,
+            }));
+        }
     };
 
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
-        console.log(`customerId:${customerId}`);
-        // customers.forEach((cust) => {
-        //     console.log("לקוח ב-customers:", cust._id);
-        // });
-        // console.log("customerId type:", typeof customerId);
-        customers.forEach((cust) => {
-        // console.log("cust._id type:", typeof cust._id);
-        });
         const customer = customers.find((cust) => cust._id === customerId);
-        console.log(`selectedCustomer:${customer}`);
         setSelectedCustomer(customer);
+        if (customer) {
+            // setTransactionDetails((prev) => ({
+            //     ...prev,
+            // customerName: customer.full_name,
+            // customerPhone: customer.phone,
+            // customerAddress: customer.address,
+            // }));
+        }
     };
 
     const handleInputChange = (event) => {
@@ -83,7 +106,6 @@ const AddTransaction = () => {
         const fieldValue = type === "checkbox" ? checked : value;
 
         setTransactionDetails((prev) => {
-            // אם סוג השדה הוא "alerts" (התראות)
             if (name === "alerts") {
                 return {
                     ...prev,
@@ -92,7 +114,6 @@ const AddTransaction = () => {
                     alertsLevel: fieldValue ? "once" : "",
                 };
             }
-            // עדכון רגיל לכל שאר השדות
             return {
                 ...prev,
                 [name]: fieldValue,
@@ -100,11 +121,13 @@ const AddTransaction = () => {
         });
     };
 
-
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (!transactionDetails.billingDay) {
+            alert("יש לבחור תאריך חיוב");
+            return;
+        }
         if (!selectedService || !selectedCustomer) {
-            console.log(`selectedCustomer:${selectedCustomer} selectedService${selectedService}`);
             alert("בחר שירות ולקוח!");
             return;
         }
@@ -115,149 +138,209 @@ const AddTransaction = () => {
             alert("בחר סוג ורמת התראות!");
             return;
         }
+
+        const calculatedPrice =
+            selectedService.type === "global"
+                ? Number(selectedService.price) || 0
+                : Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours) || 0;
+
         const transactionData = {
-            agent:_id,
             customer: selectedCustomer._id,
             service: selectedService._id,
-            serviceName: selectedService.name,
+            price: calculatedPrice,
             ...transactionDetails,
         };
-        console.log(transactionData);
+
+        console.log("transactionData before sending:", transactionData);
         await addTransaction({ phone, transaction: transactionData });
         dispatch(addTransactionStore(transactionData));
+    };
+
+
+    const nextStep = () => {
+        if (currentStep === 1 && !selectedService) {
+            alert("יש לבחור שירות לפני המעבר לשלב הבא.");
+            return;
+        }
+        if (currentStep === 1 && selectedService.type === "hourly" && transactionDetails.hours < 1) {
+            alert("יש לבחור מספר שעות לפני המעבר לשלב הבא.");
+            return;
+        }
+        if (currentStep === 2 && !selectedCustomer) {
+            alert("יש לבחור לקוח לפני המעבר לשלב הבא.");
+            return;
+        }
+        setCurrentStep((prev) => prev + 1);
+    };
+
+    const prevStep = () => {
+        setCurrentStep((prev) => prev - 1);
     };
 
     return (
         <div className="add-transaction-container">
             <h1>הוסף עסקה</h1>
-            <form className="add-transaction-form" onSubmit={handleSubmit}>
-                {/* בחירת שירות */}
-                <label>בחר שירות: <span className="required-asterisk">*</span>
-                </label>
-                <select onChange={handleServiceChange} required>
-                    <option value="">-- בחר שירות --</option>
-                    {filterServices.map((service) => (
-                        <option key={service._id} value={service._id}>
-                            {service.name}
-                        </option>
-                    ))}
-                </select>
-                <button type="button" onClick={() => setServiceModalOpen(true)}>
-                    הוסף שירות חדש
-                </button>
+            {currentStep === 1 && (
+                <div className="stepBox">
+                    <label>בחר שירות: <span className="required-asterisk">*</span></label>
+                    <select onChange={handleServiceChange} required>
+                        <option value="">-- בחר שירות --</option>
+                        {filterServices.map((service) => (
+                            <option key={service._id} value={service._id}>
+                                {service.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
+                        הוסף שירות חדש
+                    </button>
+                    {selectedService && (
+                        <div>
+                            <p>סוג שירות: {selectedService.type}</p>
+                            <p>תיאור: {selectedService.description}</p>
+                            <p>מחיר: {selectedService.type === "global" ? selectedService.price : `${selectedService.price} לשעה`}</p>
+                            {(selectedService.type === "hourly") &&
+                                (<div>
+                                    <label>מספר שעות עבודה:<span className="required-asterisk">*</span></label>
+                                    <input
+                                        type="Number"
+                                        name="hours"
+                                        value={transactionDetails.hours}
+                                        onChange={handleInputChange}
+                                        required></input>
+                                </div>)}
+                        </div>
+                    )}
+                </div>
+            )}
 
-                {/* בחירת לקוח */}
-                <label>בחר לקוח: <span className="required-asterisk">*</span>
-                </label>
-                <select onChange={handleCustomerChange} required>
-                    <option value="">-- בחר לקוח --</option>
-                    {customers.map((customer) => (
-                        <option key={customer._id} value={customer._id}>
-                            {customer.full_name}
-                        </option>
-                    ))}
-                </select>
-                <button type="button" onClick={() => setCustomerModalOpen(true)}>
-                    הוסף לקוח חדש
-                </button>
+            {currentStep === 2 && (
+                <div className="stepBox">
+                    <label>בחר לקוח: <span className="required-asterisk">*</span></label>
+                    <select onChange={handleCustomerChange} required>
+                        <option value="">-- בחר לקוח --</option>
+                        {customers.map((customer) => (
+                            <option key={customer._id} value={customer._id}>
+                                {customer.full_name}
+                            </option>
+                        ))}
+                    </select>
+                    <button type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
+                        הוסף לקוח חדש
+                    </button>
+                    {selectedCustomer && (
+                        <div>
+                            <p>שם: {selectedCustomer.full_name}</p>
+                            <p>טלפון: {selectedCustomer.phone}</p>
+                            <p>כתובת: {selectedCustomer.address}</p>
+                        </div>
+                    )}
+                </div>
+            )}
 
-                {/* מילוי פרטים נוספים */}
-                <label>תיאור:</label>
-                <textarea
-                    name="description"
-                    value={transactionDetails.description}
-                    onChange={handleInputChange}
-                />
-                <label>מחיר: <span className="required-asterisk">*</span>
-                </label>
-                <input
-                    type="number"
-                    name="price"
-                    value={transactionDetails.price}
-                    onChange={handleInputChange}
-                    required
-                />
-                <label>תאריך חיוב: <span className="required-asterisk">*</span>
-                </label>
-                <input
-                    type="date"
-                    name="billingDay"
-                    value={transactionDetails.billingDay}
-                    onChange={handleInputChange}
-                    required
-                />
-
-                {/* שדה התראות */}
-                <label>
-                    <input
-                        type="checkbox"
-                        name="alerts"
-                        checked={transactionDetails.alerts}
+            {currentStep === 3 && (
+                <div className="stepBox">
+                    <p>סך הכול לתשלום: {transactionDetails.price || (transactionDetails.pricePerHour * transactionDetails.hours)}</p>
+                    <label>תיאור:</label>
+                    <textarea
+                        name="description"
+                        value={transactionDetails.description}
                         onChange={handleInputChange}
                     />
-                    הפעל התראות
-                </label>
+                    <label>תאריך חיוב: <span className="required-asterisk">*</span></label>
+                    <input
+                        type="date"
+                        name="billingDay"
+                        value={transactionDetails.billingDay}
+                        onChange={handleInputChange}
+                        required
+                    />
 
-                {/* סוג ההתראות ורמת ההתראות */}
-                {transactionDetails.alerts && (
-                    <>
-                        <label>סוג התראות:</label>
-                        <select
-                            name="typeAlerts"
-                            value={transactionDetails.typeAlerts}
+                    <label>הפעל התראות
+                        <input
+                            type="checkbox"
+                            name="alerts"
+                            checked={transactionDetails.alerts}
                             onChange={handleInputChange}
-                            required
-                        >
-                            <option value="email only">אימייל בלבד</option>
-                            <option value="phone only">טלפון בלבד</option>
-                            <option value="email and phone">
-                                אימייל וטלפון
-                            </option>
-                        </select>
+                        />
 
-                        <label>רמת התראות:</label>
-                        <select
-                            name="alertsLevel"
-                            value={transactionDetails.alertsLevel}
-                            onChange={handleInputChange}
-                            required
-                        >
-                            <option value="once">פעם אחת</option>
-                            <option value="weekly">שבועי</option>
-                            <option value="nudnik">נודניק</option>
-                        </select>
-                    </>
+                    </label>
+
+                    {transactionDetails.alerts && (
+                        <div className="stepBox">
+                            <label>סוג התראות:</label>
+                            {['email only', 'phone only', 'email and phone', 'human'].map((type) => (
+                                <div key={type}>
+                                    <input
+                                        type="radio"
+                                        name="typeAlerts"
+                                        value={type}
+                                        checked={transactionDetails.typeAlerts === type}
+                                        onChange={handleInputChange}
+                                    />
+                                    {type}
+                                </div>
+                            ))}
+
+                            <label>רמת התראות:</label>
+                            {['once', 'weekly', 'nudnik'].map((level) => (
+                                <div key={level}>
+                                    <input
+                                        type="radio"
+                                        name="alertsLevel"
+                                        value={level}
+                                        checked={transactionDetails.alertsLevel === level}
+                                        onChange={handleInputChange}
+                                    />
+                                    {level}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            <div className="navigation-buttons">
+                {currentStep > 1 && <button onClick={prevStep}>חזור</button>}
+                {currentStep < 3 && <button onClick={() => nextStep()}>הבא</button>}
+                {currentStep === 3 && (
+                    <button type="submit" onClick={handleSubmit}>
+                        סיים
+                    </button>
                 )}
+                {message && <p className={`message ${messageType}`}>{message}</p>}
+            </div>
 
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? "שולח..." : "שלח עסקה"}
-                </button>
-            </form>
-            {isSuccess && <p className="success-message">העסקה נקלטה בהצלחה!</p>}
-            {isError && <p className="error-message">{error?.data?.message}</p>}
 
-            {/* מודל הוספת לקוח */}
-            <Modal
-                isOpen={isCustomerModalOpen}
-                onClose={() => setCustomerModalOpen(false)}
-            >
+            <Modal isOpen={isCustomerModalOpen} onClose={() => setCustomerModalOpen(false)}>
                 <AddCustomer
-                    onSuccess={() => {
-                        refetchCustomers(); // רענון הלקוחות
+                    onSuccess={(newCustomer) => {
+
+                        refetchCustomers();
+                        setSelectedCustomer(newCustomer); // עדכון אוטומטי של הלקוח הנבחר
                         setCustomerModalOpen(false);
-                    }} />
+                        // קריאה יזומה לפונקציה שמטפלת בבחירת לקוח
+                        handleCustomerChange({ target: { value: newCustomer._id } });
+                    }}
+                />
             </Modal>
 
-            {/* מודל הוספת שירות */}
-            <Modal
-                isOpen={isServiceModalOpen}
-                onClose={() => setServiceModalOpen(false)}
-            >
+
+
+            <Modal isOpen={isServiceModalOpen} onClose={() => setServiceModalOpen(false)}>
                 <AddService
-                    onSuccess={() => {
-                        setServiceModalOpen(false); // סגור את המודל
-                    }} />
+                    onSuccess={(newService) => {
+                        console.log(newService);
+                        // Handle successful service addition if necessary
+                        setSelectedService(newService); // עדכון השירות הנבחר
+
+                        setServiceModalOpen(false);
+                        // קריאה יזומה לפונקציה שמטפלת בבחירת שירות
+                        handleServiceChange({ target: { value: newService._id } });
+                    }}
+                />
             </Modal>
+
         </div>
     );
 };
