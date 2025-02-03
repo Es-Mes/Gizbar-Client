@@ -178,10 +178,13 @@ const AddTransaction = () => {
     };
 
     return (
-        <div className="add-transaction-container">
-            <h1>הוסף עסקה</h1>
+        <div className="add-transaction-card">
+            <div className="transaction-header">
+                <h3>הוספת עסקה</h3>
+                <button className="close-button" onClick={() => navigate("/dash")}>&times;</button>
+            </div>
             {currentStep === 1 && (
-                <div className="stepBox">
+                <div className="transaction-body">
                     <label>בחר שירות: <span className="required-asterisk">*</span></label>
                     <select onChange={handleServiceChange} required>
                         <option value="">-- בחר שירות --</option>
@@ -191,8 +194,8 @@ const AddTransaction = () => {
                             </option>
                         ))}
                     </select>
-                    <button type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
-                        הוסף שירות חדש
+                    <button className="add-button" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
+                        +
                     </button>
                     {selectedService && (
                         <div>
@@ -215,7 +218,7 @@ const AddTransaction = () => {
             )}
 
             {currentStep === 2 && (
-                <div className="stepBox">
+                <div className="transaction-body">
                     <label>בחר לקוח: <span className="required-asterisk">*</span></label>
                     <select onChange={handleCustomerChange} required>
                         <option value="">-- בחר לקוח --</option>
@@ -225,8 +228,8 @@ const AddTransaction = () => {
                             </option>
                         ))}
                     </select>
-                    <button type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
-                        הוסף לקוח חדש
+                    <button className="add-button" type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
+                        +
                     </button>
                     {selectedCustomer && (
                         <div>
@@ -239,8 +242,9 @@ const AddTransaction = () => {
             )}
 
             {currentStep === 3 && (
-                <div className="stepBox">
-                    <p>סך הכול לתשלום: {transactionDetails.price || (transactionDetails.pricePerHour * transactionDetails.hours)}</p>
+                <div className="transaction-body">
+                    <label>סכום עסקה:</label>
+                    <p className="transaction-price">{transactionDetails.price || (transactionDetails.pricePerHour * transactionDetails.hours)} ₪</p>
                     <label>תיאור:</label>
                     <textarea
                         name="description"
@@ -301,10 +305,10 @@ const AddTransaction = () => {
             )}
 
             <div className="navigation-buttons">
-                {currentStep > 1 && <button onClick={prevStep}>חזור</button>}
-                {currentStep < 3 && <button onClick={() => nextStep()}>הבא</button>}
+                {currentStep > 1 && <button className="navigation-buttons" onClick={prevStep}>חזור</button>}
+                {currentStep < 3 && <button className="navigation-buttons" onClick={() => nextStep()}>הבא</button>}
                 {currentStep === 3 && (
-                    <button type="submit" onClick={handleSubmit}>
+                    <button className="submit-button" type="submit" onClick={handleSubmit}>
                         סיים
                     </button>
                 )}
