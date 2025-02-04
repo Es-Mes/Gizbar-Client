@@ -9,7 +9,7 @@ Chart.register(...registerables); // הרשמת כל האפשרויות של Cha
 
 const TransactionsAsProvider = () => {
     const { _id, phone } = useAuth()
-    const transactions = useSelector((state) => state.transactions.data.transactions.data || []);
+    const transactions = useSelector((state) => state.transactions.data.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
     const transactionsAsProvider = [...transactions].filter(transaction =>

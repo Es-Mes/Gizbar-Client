@@ -36,6 +36,7 @@ import useTransactionsData from "./hooks/useTransactionsData"
 import UnderConstruction from "./component/UnderConstruction"
 import DelayedTransactions from "./fetures/transactions/list/delayedTransactions"
 import FreezedServices from "./fetures/services/list/FreezedServices"
+import AllTransactions from "./fetures/transactions/list/AllTransactions"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
@@ -68,6 +69,7 @@ const App = () => {
                             </Route>
                             <Route path="transactions/income" element={<Outlet />}>
                                 <Route index element={<TransactionsAsProvider />} />
+                                <Route path="all" element={<AllTransactions/>}/>
                                 <Route path="add" element={<AddTransaction />} />
                                 <Route path="delayed" element={<DelayedTransactions />} />
                             </Route>

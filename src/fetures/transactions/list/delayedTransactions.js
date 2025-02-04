@@ -6,7 +6,7 @@ import "./delayedTransactions.css"
 
 const DelayedTransactions = () => {
     const { _id } = useAuth();
-    const transactions = useSelector((state) => state.transactions.data.transactions.data || []);
+    const transactions = useSelector((state) => state.transactions.data.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
 

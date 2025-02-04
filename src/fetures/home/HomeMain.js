@@ -323,7 +323,7 @@ const HomeMain = () => {
                <Link to="transactions/income/add">עסקה חדשה +</Link>
             </button>
             <button>
-               <Link to="transactions/income">לכל העסקאות ></Link>
+               <Link to="transactions/income/all">לכל העסקאות ></Link>
             </button>
          </div>
 
