@@ -9,22 +9,17 @@ import useAuth from "../../hooks/useAuth";
 import useTransactionsData from "../../hooks/useTransactionsData";
 import { useSelector } from "react-redux";
 import TransactionsList from "../transactions/list/TransactionsList";
+import { useMemo } from "react";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
    const agent = useSelector((state) => state.agent.data.data || {});
-   const transactions = useSelector((state) => state.transactions.data.transactions.data || []);
+   const transactions = useSelector((state) => state.transactions.data.transactions || []);
+   const transactionsAsCustomer = useSelector((state) => state.customerTransactions.data.transactions.data  || []);
    const isLoading = useSelector((state) => state.agent?.isLoading);
    const error = useSelector((state) => state.agent?.error);
    const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
    const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
    console.log(`agent${agent}`);
-   const transactionsAsProvider = [...transactions].filter(transaction =>
-      transaction.agent === _id
-   );
-   const transactionsAsCustomer = [...transactions].filter(transaction =>
-      transaction.agent !== _id
-   );
-
    //הכנסות בחודש הנוכחי 
 
    const [monthIncome, setMonthIncome] = useState(0);
@@ -38,13 +33,18 @@ const HomeMain = () => {
    const [currentMonth, setCurrentMonth] = useState('');
    const [selectedOption, setSelectedOption] = useState("agent")
 
+   const transactionsAsProvider = useMemo(() => [...transactions].reverse(), [transactions]);
+
+   const transactionsToDisplay = (selectedOption === "agent") ? [...transactions].slice().reverse() : [...transactionsAsCustomer].slice().reverse()
+
+
    useEffect(() => {
       const today = new Date();
       const firstDayInThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const monthName = today.toLocaleString('default', { month: 'long' });
       setCurrentMonth(monthName);
 
-      console.log(`firstDayInThisMonth: ${firstDayInThisMonth}`);
+      // console.log(`firstDayInThisMonth: ${firstDayInThisMonth}`);
       // עסקאות סך הכל לחודש זה כולל עתידיות ושלא נגבו
       const thisMonthTransactions = transactionsAsProvider.filter((transaction) => {
          const billingDate = new Date(transaction.billingDay);
@@ -61,7 +61,7 @@ const HomeMain = () => {
                paymentDate >= firstDayInThisMonth &&
                paymentDate < today;
          });
-      console.log(`thisMonthTransactionsAsProvider${thisMonthTransactionsAsProvider}`);
+      // console.log(`thisMonthTransactionsAsProvider${thisMonthTransactionsAsProvider}`);
 
       // חישוב סך ההכנסות עד כה החודש
 
@@ -73,15 +73,15 @@ const HomeMain = () => {
                billingDate.getMonth() === firstDayInThisMonth.getMonth() &&
                billingDate >= today;
          });
-      console.log(`thisMonthExpectedTransactionsAsProvider${thisMonthExpectedTransactionsAsProvider}`);
+      // console.log(`thisMonthExpectedTransactionsAsProvider${thisMonthExpectedTransactionsAsProvider}`);
 
 
-      const filterDelayedTransactions = (transactionsAsProvider) => {
+      const filterDelayedTransactions = (transactions) => {
          const today = new Date();
          const requireDateAgo = new Date();
 
          requireDateAgo.setMonth(today.getMonth() - 1);
-         return [...transactionsAsProvider]
+         return [...transactions]
             .filter(
                (transaction) =>
                   transaction.status === "notPaid" && // רק עסקאות שלא שולמו
@@ -98,27 +98,32 @@ const HomeMain = () => {
       setTotalIncome(thisMonthTransactionsAsProvider.reduce((acc, transaction) => {
          return acc + transaction.price;
       }, 0));
-      setMonthIncome(totalIncome);
+      setMonthIncome(thisMonthTransactionsAsProvider.reduce((acc, transaction) => acc + transaction.price, 0));
 
       //  חישוב סך ההכנסות עתידיות החודש
       setTotalExpectedIncome(thisMonthExpectedTransactionsAsProvider.reduce((acc, transaction) => {
          return acc + transaction.price;
       }, 0));
+
+      
       setMonthExpectedIncome(totalExpectedIncome);
-      console.log(`monthExpectedIncome: ${totalExpectedIncome}`);
+      // console.log(`monthExpectedIncome: ${totalExpectedIncome}`);
 
       //עדכון מספר הלקוחות והשירותים לחודש זה
       setServicesCount(thisMonthTransactions.length);
       setCustomersCount(new Set(thisMonthTransactions.map((t) => t.customerId)).size);
       setDelayedTransactionsIncome(delayedTransactions.filter(t => t.status === "notPaid").reduce((acc, transaction) => acc + transaction.price, 0));
 
-   }, [transactionsAsProvider]);  // useEffect יפעל רק אם transactionsAsProvider משתנה
-
+   }, [transactions]);  // useEffect יפעל רק אם transactionsAsProvider משתנה
 
    //עסקאות
-   const filterRecentTransactions = (transactionsAsProvider) => {
+   const filterRecentTransactions = (transactionsToDisplay) => {
+      // console.log(`transactionsToDisplay${transactionsToDisplay}`)
+      if(transactionsToDisplay == null){
+         return [];
+      }
       const today = new Date();
-      return [...transactionsAsProvider]
+      return [...transactionsToDisplay]
          .filter(transaction =>
             transaction.status !== "canceld"  // רק עסקאות שלא בוטלו
             // new Date(transaction.billingDay) <= today // תאריך גבייה מאוחר מהיום
@@ -130,13 +135,17 @@ const HomeMain = () => {
             agent: undefined, // מחיקת שדה agent
          }));
    };
-   const recentTransactions = filterRecentTransactions(transactionsAsProvider);
+   const recentTransactions = filterRecentTransactions(transactionsToDisplay);
 
-   const filterPendingTransactions = (transactionsAsProvider) => {
+
+   const filterPendingTransactions = (transactionsToDisplay) => {
+      if(transactionsToDisplay == null){
+         return [];
+      }
       // קבלת תאריך נוכחי
       const today = new Date();
 
-      return [...transactionsAsProvider]
+      return [...transactionsToDisplay]
          .filter(transaction =>
             transaction.status === "pendingCharge" && // רק עסקאות שלא נגבו
             new Date(transaction.billingDay) > today // תאריך גבייה מאוחר מהיום
@@ -146,7 +155,8 @@ const HomeMain = () => {
    };
 
 
-   const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
+   const pendingTransactions = filterPendingTransactions(transactionsToDisplay);
+   // console.log(`pendingTransactions${pendingTransactions}`)
 
    //איסוף מידע עבור הגרפים
    //לעדכן סופית!!!!!
@@ -318,7 +328,7 @@ const HomeMain = () => {
          </div>
 
          <div className="transactions-display">
-            <div>
+            
                <div className="transaction-header head">
                   <button
                      className={`toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
@@ -334,7 +344,7 @@ const HomeMain = () => {
                      סוכן
                   </button>
                </div>
-
+            <div>
                <h2>עסקאות אחרונות</h2>
                <TransactionsList transactions={recentTransactions} />
             </div>

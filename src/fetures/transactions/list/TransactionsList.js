@@ -8,6 +8,10 @@ const TransactionsList = ({ transactions }) => {
         setExpandedTransactionId((prevId) => (prevId === id ? null : id));
     };
 
+    if(transactions == []){
+        return <> אין עסקאות העונות על התנאים</>
+    }
+
     return (
         <div>
             {transactions.map((transaction) => (
