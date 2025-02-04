@@ -56,14 +56,6 @@ body{
 .QuickActions button:hover {
     background-color: #0056b3;
 }
-
-/* 
-.transaction-header {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-   */
    .head{
     border-top: 2px solid #007bff; 
     padding-top: 10px;
