@@ -33,7 +33,10 @@ const HomeMain = () => {
    const [customersCount, setCustomersCount] = useState(0);
    const [totalIncome, setTotalIncome] = useState(0);
    const [totalExpectedIncome, setTotalExpectedIncome] = useState(0);
-   const [delayedTransactionsIncome, setDelayedTransactionsIncome] = useState(0); const [currentMonth, setCurrentMonth] = useState('');
+   const [delayedTransactionsCount, setDelayedTransactionsCount] = useState(0);
+   const [delayedTransactionsIncome, setDelayedTransactionsIncome] = useState(0);
+   const [currentMonth, setCurrentMonth] = useState('');
+   const [selectedOption, setSelectedOption] = useState("agent")
 
    useEffect(() => {
       const today = new Date();
@@ -91,7 +94,7 @@ const HomeMain = () => {
             }));
       };
       const delayedTransactions = filterDelayedTransactions(thisMonthTransactions)
-
+      setDelayedTransactionsCount(delayedTransactions.length)
       setTotalIncome(thisMonthTransactionsAsProvider.reduce((acc, transaction) => {
          return acc + transaction.price;
       }, 0));
@@ -111,7 +114,7 @@ const HomeMain = () => {
 
    }, [transactionsAsProvider]);  // useEffect יפעל רק אם transactionsAsProvider משתנה
 
-  
+
    //עסקאות
    const filterRecentTransactions = (transactionsAsProvider) => {
       const today = new Date();
@@ -145,8 +148,13 @@ const HomeMain = () => {
 
    const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
 
-   //איסוף מידע עבור הכנסות
+   //איסוף מידע עבור הגרפים
+   //לעדכן סופית!!!!!
    const yearlyMonthIncome = [1200, 1800, 2400, 3000, 3500, 4000, 4200, 4800, 5000, 5200, 5800, monthIncome]
+   const yearlyMonthCustomers = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, customersCount]
+   const yearlyMonthServicies = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, servicesCount]
+   const yearlyMonthDelayed = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5,delayedTransactionsCount]
+
    const data = {
       labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
       datasets: [
@@ -159,9 +167,40 @@ const HomeMain = () => {
       ],
    };
 
-   
-   
-  //גרף ההכנסות לחודש זה
+   const customersData = {
+      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
+      datasets: [
+         {
+            label: "לקוחות לחודש",
+            data: yearlyMonthCustomers,
+            borderColor: "#007bff",
+            backgroundColor: "rgba(0, 123, 255, 0.5)",
+         },
+      ],
+   };
+   const serviciesData = {
+      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
+      datasets: [
+         {
+            label: "שירותים לחודש",
+            data: yearlyMonthServicies,
+            borderColor: "#007bff",
+            backgroundColor: "rgba(0, 123, 255, 0.5)",
+         },
+      ],
+   };
+   const dellayedData = {
+      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
+      datasets: [
+         {
+            label: "עסקאות בפיגור לחודש",
+            data: yearlyMonthDelayed,
+            borderColor: "#007bff",
+            backgroundColor: "rgba(0, 123, 255, 0.5)",
+         },
+      ],
+   };
+
 
    const options = {
       responsive: true,
@@ -180,41 +219,42 @@ const HomeMain = () => {
       },
    };
 
+   //גרף ההכנסות לחודש זה
    const incomeData = {
-      labels: ["התחלה", "עד היום", "צפוי החודש"],
+      labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
       datasets: [
-        {
-          label: "סך הכול הכנסות החודש",
-          data: [0, totalIncome, totalIncome + totalExpectedIncome],
-          borderColor: ["#007bff", "#28a745", "#dc3545"],
-          backgroundColor: "transparent",
-          segment: {
-            borderColor: (ctx) => {
-              const index = ctx.p1DataIndex; // מזהה את החלק בקו
-              return index === 0 ? "#007bff" : index === 1 ? "#28a745" : "#dc3545";
+         {
+            label: "סך הכול הכנסות החודש",
+            data: [totalIncome, totalIncome + totalExpectedIncome, totalIncome + totalExpectedIncome + delayedTransactionsIncome],
+            borderColor: ["#007bff", "#28a745", "#dc3545"],
+            backgroundColor: "transparent",
+            segment: {
+               borderColor: (ctx) => {
+                  const index = ctx.p1DataIndex; // מזהה את החלק בקו
+                  return index === 0 ? "#007bff" : index === 1 ? "#28a745" : "#dc3545";
+               },
             },
-          },
-          borderWidth: 3,
-          tension: 0.4, // עקומה עדינה יותר
-          pointRadius: 5,
-          pointBackgroundColor: ["#007bff", "#28a745", "#dc3545"],
-        },
+            borderWidth: 3,
+            tension: 0.4, // עקומה עדינה יותר
+            pointRadius: 5,
+            pointBackgroundColor: ["#007bff", "#28a745", "#dc3545"],
+         },
       ],
-    };
-    
-    const optionsBigGraph = {
+   };
+
+   const optionsBigGraph = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
-        tooltip: { enabled: true, mode: "nearest", intersect: false },
+         legend: { display: false },
+         tooltip: { enabled: true, mode: "nearest", intersect: false },
       },
       scales: {
-        x: { display: true },
-        y: { display: true },
+         x: { display: false },
+         y: { display: false },
       },
-    };
-    
+   };
+
 
 
    if (isLoading) return <p>Loading...</p>;
@@ -223,57 +263,78 @@ const HomeMain = () => {
    if (errorLoadingTransactions) return <p>Error: {error}</p>;
    return (
       <>
+         <h2>לוח בקרה חודש {currentMonth}</h2>
          <div className="dashboard">
-         <div className="dashboard-card-large">
-          <h4>סיכום הכנסות {currentMonth}</h4>
-          <div className="chart-container">
-            <Line data={incomeData} options={options} />
-          </div>
-        </div>
-            <div className="dashboard-card">
-               <h4>הכנסות</h4>
-               <h2>{monthIncome} ₪</h2>
+            <div className="dashboard-card-large">
+               <h4>סיכום הכנסות חודש {currentMonth}</h4>
                <div className="chart-container">
-                  <Line data={data} options={options} />
+                  <Line data={incomeData} options={options} />
+               </div>
+               <div className="income-summary">
+                  <p style={{ color: "#007bff" }}>הכנסות עד היום: {totalIncome} ₪</p>
+                  <p style={{ color: "#28a745" }}>הכנסות צפויות: {totalExpectedIncome} ₪</p>
+                  <p style={{ color: "#dc3545" }}>תשלומים שלא נגבו: {delayedTransactionsIncome} ₪</p>
                </div>
             </div>
-            <div className="dashboard-card">
-               <h4>שירותים</h4>
-               <h2>{servicesCount}</h2>
-            </div>
-            <div className="dashboard-card">
-               <h4>לקוחות</h4>
-               <h2>{customersCount}</h2>
-            </div>
-            <div className="dashboard-card">
-               <h4>עסקאות שלא נגבו</h4>
-               <h2>{customersCount}</h2>
+            <div className="dashboardBox">
+               <div className="dashboard-card">
+                  <h4>הכנסות</h4>
+                  <h2>{monthIncome} ₪</h2>
+                  <div className="chart-container">
+                     <Line data={data} options={options} />
+                  </div>
+               </div>
+               <div className="dashboard-card">
+                  <h4>שירותים</h4>
+                  <h2>{servicesCount}</h2>
+                  <div className="chart-container">
+                     <Line data={serviciesData} options={options} />
+                  </div>
+               </div>
+               <div className="dashboard-card">
+                  <h4>לקוחות</h4>
+                  <h2>{customersCount}</h2>
+                  <div className="chart-container">
+                     <Line data={customersData} options={options} />
+                  </div>
+               </div>
+               <div className="dashboard-card">
+                  <h4>עסקאות שלא נגבו</h4>
+                  <h2>{customersCount}</h2>
+                  <div className="chart-container">
+                     <Line data={dellayedData} options={options} />
+                  </div>
+               </div>
             </div>
          </div>
-         {/* <div className="income-display">
-            <h2> סיכום הכנסות חודש {currentMonth}</h2>
-            <div className="income-details">
-               <p>כבר בחשבון  : {monthIncome} ₪</p>
-               <p>הכנסות צפויות: {monthExpectedIncome} ₪</p>
-               <p>סך הכול : {monthExpectedIncome + monthIncome} ₪</p>
-
-            </div>
-         </div> */}
 
          <div className="QuickActions">
             <button>
-               <Link to="services/add">הוספת שירות</Link>
+               <Link to="transactions/income/add">עסקה חדשה +</Link>
             </button>
             <button>
-               <Link to="customers/add">הוספת לקוח</Link>
-            </button>
-            <button>
-               <Link to="transactions/income/add">הוספת עסקה</Link>
+               <Link to="transactions/income">לכל העסקאות ></Link>
             </button>
          </div>
 
          <div className="transactions-display">
             <div>
+               <div className="transaction-header head">
+                  <button
+                     className={`toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
+                     onClick={() => setSelectedOption('customer')}
+                  >
+                     לקוח
+                  </button>
+                  <h1>עסקאות חודש {currentMonth}</h1>
+                  <button
+                     className={`toggle-button ${selectedOption === 'agent' ? 'active' : ''}`}
+                     onClick={() => setSelectedOption('agent')}
+                  >
+                     סוכן
+                  </button>
+               </div>
+
                <h2>עסקאות אחרונות</h2>
                <TransactionsList transactions={recentTransactions} />
             </div>

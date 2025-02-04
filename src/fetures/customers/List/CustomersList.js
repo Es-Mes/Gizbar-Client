@@ -33,6 +33,9 @@ const CustomersList = () => {
                 <Link to="/dash/users/add" className="users-list-add-btn">
                     הוספת משתמש
                 </Link>
+                <button>
+               <Link to="customers/add">הוספת לקוח</Link>
+            </button>
             </div>
             <table className="users-list-table">
                 <thead className="tHeads">

@@ -13,10 +13,9 @@ body{
     text-align: right;  /* עיצוב טקסט מימין לשמאל */
  }
  
- .income-display h2 {
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: #333;
+ .income-display h2,
+ .transactions-display h2 {
+    margin-bottom: 20px;
  }
  
  .income-details {
@@ -28,50 +27,22 @@ body{
     margin: 5px 0;
  }
  
- .transactions-display {
-    max-width: 40vw;
- }
- 
-.HomeOpenImage{
-max-width: 95%;
-}
-.categoryIcon{
-    max-width: 2vw;
-    max-height: 2vh;
-}
-img{
-    max-width: 500px;
-    max-height:50px;
-}
-.HomeCategorys{
-     max-width: 90vw;
-     min-height: 30vh;
-}
-.carouselImg{
-    min-width: 20vw;
-    min-height: 25vw;
-}
 .transactions-display{
-    max-width: 40vw;
+    max-width: 100%;
+    margin: 20px;
 
 }
-
-
 .QuickActions {
-    position: fixed;
-    bottom: 280px; /* הרחיק מהפינה התחתונה */
-    left: 90px; /* הרחיק מהפינה השמאלית */
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* ריווח גדול יותר בין הכפתורים */
+   display: flex;
+   justify-content: end;
 }
-
 .QuickActions button {
-    background-color: var(--blue);
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     padding: 10px;
+    margin-left: 15px;
     cursor: pointer;
     font-size: 14px;
     text-align: center;
@@ -86,16 +57,63 @@ img{
     background-color: #0056b3;
 }
 
+/* 
+.transaction-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+   */
+   .head{
+    border-top: 2px solid #007bff; 
+    padding-top: 10px;
+    margin-top: 10px;
+  }
+  .head h1{
+    color: (var(--text));
+  }
+  .toggle-button {
+    border: 2px solid #007bff;
+    background-color: transparent;
+    color: #007bff;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0 10px;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  .toggle-button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .toggle-button:not(.active):hover {
+    background-color:  white;
+  }
+
+
+    
+
 .dashboard {
-    width: 80%;
+    height: 300px;
     margin: 20px auto;
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    gap: 15px;
+}
+.dashboardBox{
+width: 50%;
+display: flex;
+flex-direction: column;
+flex-wrap: wrap;
+justify-content: space-between;
 }
 
 .dashboard-card {
-    width: 20%;
+    height: 48%;
+    width: 48%;
+    overflow: hidden;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -122,13 +140,19 @@ img{
 }
 
 .dashboard-card-large {
-    width: 40%;
+    flex:1;
+    overflow: hidden;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    max-width: 50%;
+}
+.income-summary{
+    text-align: right;
+    margin-top: -20px;
 }
 
 .dashboard-card-large:hover {
@@ -144,7 +168,17 @@ img{
 
 
 .chart-container {
+    position: relative;
     width: 100%;
-    height: 50px;
+    height: calc(100% - 40px); /* גובה הגרף בתוך הכרטיס, מותאם לפי הצורך */
+    max-height: 200px;
     margin-top: 10px;
+    overflow: auto; 
+}
+
+
+.chart-container canvas {
+    height: 100% !important;
+    width: 100% !important;
+    display: block;
 }

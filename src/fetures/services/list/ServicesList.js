@@ -5,6 +5,7 @@ import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב
 import './ServicesList.css'; // קובץ CSS
 import { useUpdateServiceMutation, useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
 import { updateServiceStore, toggleServiceFreezeStore,deleteServiceStore } from '../../../app/agentSlice';
+import { Link } from '@mui/material';
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
@@ -105,6 +106,9 @@ const ServicesList = () => {
   return (
     <div className="service-list-container">
       <h2>רשימת שירותים</h2>
+      <button>
+               <Link to="services/add">הוספת שירות</Link>
+      </button>
       <p className="service-icons-info">
         ⏳ שירות לפי שעה | 📦 שירות גלובלי
     </p>
