@@ -13,13 +13,6 @@ import PersistsLogin from "./fetures/auth/PersistLogin"
 import RegistPage from "./fetures/auth/regist/RegistPage"
 import HomeMain from "./fetures/home/HomeMain"
 import ScrollToTop from './ScrollToTop';
-import Regulation from "./fetures/regulation/Regulations"
-import Posts from "./fetures/posts/Posts"
-import SportLinePost from "./fetures/posts/SportLinePost"
-import WinterPost from "./fetures/posts/WinterPost"
-import SafePost from "./fetures/posts/SafePost"
-import CarriagePost from "./fetures/posts/CarriagePost"
-import BadPost from "./fetures/posts/BadPost"
 import UsersListDemo from "./fetures/users/List/UsersListDemo"
 
 import { ToastContainer } from "react-toastify"
@@ -37,6 +30,7 @@ import UnderConstruction from "./component/UnderConstruction"
 import DelayedTransactions from "./fetures/transactions/list/delayedTransactions"
 import FreezedServices from "./fetures/services/list/FreezedServices"
 import AllTransactions from "./fetures/transactions/list/AllTransactions"
+import useCustomerTransactionsData from "./hooks/useCustomerTransactionsData"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
@@ -45,6 +39,7 @@ const App = () => {
     const { phone } = useAuth();
     useAgentData(phone); // הפעלת ה-hook
     useTransactionsData(phone);
+    useCustomerTransactionsData(phone)
     return <Router>
         <ScrollToTop />
         <Routes>
@@ -53,36 +48,36 @@ const App = () => {
             <Route path="/" element={<LoginPage />} />
             <Route path="/dash" element={<DashLayout />}>
                 <Route element={<PersistsLogin />}>
-                        <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
-                            <Route path="UnderConstruction" element={<UnderConstruction />} />
-                            <Route index element={<HomeMain />} />
-                            <Route path="customers" element={<Outlet />}>
-                                <Route index element={<CustomersList />} />
-                                <Route path="add" element={<AddCustomer />} />
-                                <Route path=":userId" element={<SingleCustomer />} />
-                            </Route>
-                            <Route path="services" element={<Outlet />}>
-                                <Route index element={<ServicesList />} />
-                                <Route path="freezed" element={<FreezedServices />} />
-                                <Route path="add" element={<AddService />} />
-                                <Route path=":userId" element={<SingleService />} />
-                            </Route>
-                            <Route path="transactions/income" element={<Outlet />}>
-                                <Route index element={<TransactionsAsProvider />} />
-                                <Route path="all" element={<AllTransactions/>}/>
-                                <Route path="add" element={<AddTransaction />} />
-                                <Route path="delayed" element={<DelayedTransactions />} />
-                            </Route>
-                            {/* <Route element={<RequireAuth allowRoles={['admin']} />}>
+                    <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
+                        <Route path="UnderConstruction" element={<UnderConstruction />} />
+                        <Route index element={<HomeMain />} />
+                        <Route path="customers" element={<Outlet />}>
+                            <Route index element={<CustomersList />} />
+                            <Route path="add" element={<AddCustomer />} />
+                            <Route path=":userId" element={<SingleCustomer />} />
+                        </Route>
+                        <Route path="services" element={<Outlet />}>
+                            <Route index element={<ServicesList />} />
+                            <Route path="freezed" element={<FreezedServices />} />
+                            <Route path="add" element={<AddService />} />
+                            <Route path=":userId" element={<SingleService />} />
+                        </Route>
+                        <Route path="transactions/income" element={<Outlet />}>
+                            <Route index element={<TransactionsAsProvider />} />
+                            <Route path="all" element={<AllTransactions />} />
+                            <Route path="add" element={<AddTransaction />} />
+                            <Route path="delayed" element={<DelayedTransactions />} />
+                        </Route>
+                        {/* <Route element={<RequireAuth allowRoles={['admin']} />}>
                                 <Route path="users" element={<Outlet />}>
                                     <Route index element={<UsersList />} />
                                     <Route path="add" element={<AddUser />} />
                                     <Route path=":userId" element={<SingleUser />} />
                                 </Route>
                             </Route> */}
-                        </Route>
                     </Route>
                 </Route>
+            </Route>
         </Routes>
         <ToastContainer />
     </Router>

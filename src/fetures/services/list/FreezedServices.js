@@ -7,7 +7,7 @@ import './ServicesList.css';
 
 const FreezedServices = () => {
     const { phone } = useAuth();
-    const services = useSelector((state) => state.agent?.data?.data?.services || []);
+    const services = useSelector((state) => state.agent?.data?.services || []);
     const filterServices = services.filter(service => !service.active);
     const [updateService] = useUpdateServiceMutation();
     const [deleteService] = useDeleteServiceMutation();
@@ -53,7 +53,7 @@ const FreezedServices = () => {
         try {
             const updatedService = { _id: editServiceId, ...editForm };
             const data = await updateService({ phone, service: updatedService }).unwrap();
-            dispatch(updateServiceStore(data.data.services));
+            dispatch(updateServiceStore(data.services));
             setEditServiceId(null);
         } catch (error) {
             alert('עדכון השירות נכשל.');

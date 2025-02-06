@@ -11,16 +11,17 @@ import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
+import { addNewTransaction, setError } from "../../../app/transactionsSlice";
 const AddTransaction = ({ onSuccess }) => {
     const { _id, phone } = useAuth();
-    const services = useSelector((state) => state.agent?.data?.data?.services || []);
+    const services = useSelector((state) => state.agent?.data?.services || []);
     const filterServices = services.filter((service) => service.active === true);
-    const customers = useSelector((state) => state.agent?.data?.data?.customers || []);
+    const customers = useSelector((state) => state.agent?.data?.customers || []);
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
-    const [addTransaction, { isLoading, isSuccess, isError, error }] =
+    const [addTransaction, { isLoading, isSuccess, isError, error, data }] =
         useAddTransactionMutation();
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -29,13 +30,13 @@ const AddTransaction = ({ onSuccess }) => {
     const [transactionDetails, setTransactionDetails] = useState({
         description: "",
         price: "0",
-        pricePerHour: "",
+        // pricePerHour: "",
         serviceType: "global",
-        hours: 0,
+        // hours: 0,
         billingDay: "",
         alerts: false,
-        typeAlerts: "email and phone",
-        alertsLevel: "once",
+        // typeAlerts: "email and phone",
+        // alertsLevel: "once",
     });
 
     const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
@@ -50,6 +51,9 @@ const AddTransaction = ({ onSuccess }) => {
             setMessageType("success");
             setTimeout(() => navigate("/dash"), 2000);
         } else if (isError) {
+            setMessage("");
+            console.log('error', error)
+            console.log('data', data)
             setMessage("שגיאה בהוספת העסקה. נסה שוב.");
             setMessageType("error");
         }
@@ -81,7 +85,7 @@ const AddTransaction = ({ onSuccess }) => {
             setTransactionDetails((prev) => ({
                 ...prev,
                 price: service.type === "global" ? service.price : "0",
-                pricePerHour: service.type === "hourly" ? service.price : "0",
+                // pricePerHour: service.type === "hourly" ? service.price : null,
                 description: service.description,
                 serviceType: service.type,
             }));
@@ -151,11 +155,26 @@ const AddTransaction = ({ onSuccess }) => {
             price: calculatedPrice,
             ...transactionDetails,
         };
+        try {
+            console.log("transactionData before sending:", transactionData);
+            const transaction = await addTransaction({ phone, transaction: transactionData });
+            console.log(transaction);
 
-        console.log("transactionData before sending:", transactionData);
-        await addTransaction({ phone, transaction: transactionData });
-        dispatch(addTransactionStore(transactionData));
-        onSuccess(transactionData)
+            if (transaction) {
+                if (!transaction.error) {
+                    dispatch(addNewTransaction(transaction.data));
+                } else {
+                    dispatch(setError(transaction.message));
+                }
+            }
+
+
+            onSuccess(transaction)
+
+        } catch (err) {
+            console.error("Error adding transaction:", err);
+        }
+
     };
 
 

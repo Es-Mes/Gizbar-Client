@@ -14,9 +14,9 @@ import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
-   const agent = useSelector((state) => state.agent.data.data || {});
+   const agent = useSelector((state) => state.agent.data || {});
    const transactions = useSelector((state) => state.transactions.data.transactions || []);
-   const transactionsAsCustomer = useSelector((state) => state.customerTransactions.data.transactions.data || []);
+   const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
    console.log('transactions ', transactions);
    console.log('transactionsAsCustomer ', transactionsAsCustomer);
 

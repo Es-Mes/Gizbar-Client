@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch } from "react-redux";
-import { addServiceStore } from "../../../app/agentSlice";
+import { setAgentData, setError } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddService.css';
 
@@ -44,10 +44,14 @@ const AddService = ({ onSuccess }) => {
             console.log(data);
 
             if (data) {
-                setShowSuccessMessage(true); // הצג הודעת הצלחה
-                const services = data.data.services;
-                const newService = services[services.length - 1];
-                dispatch(addServiceStore(newService)); // עדכון הסטור בשירות החדש
+                if (!data.error) {
+                    setShowSuccessMessage(true); // הצג הודעת הצלחה
+                    // const services = data.services;
+                    // const newService = services[services.length - 1];
+                    dispatch(setAgentData(data.data)); // עדכון הסטור בשירות החדש
+                } else {
+                    dispatch(setError(data.message));
+                }
             }
 
             if (onSuccess) {
@@ -59,6 +63,7 @@ const AddService = ({ onSuccess }) => {
                     setShowSuccessMessage(false); // הסתר את ההודעה
                     navigate("/dash"); // נווט לעמוד השירותים
                 }, 2000); // עיכוב של 2 שניות (2000ms)
+
             }
         } catch (err) {
             console.error("Error adding service:", err);
@@ -89,17 +94,17 @@ const AddService = ({ onSuccess }) => {
                 ></textarea>
 
                 <label htmlFor="type">סוג השירות: <span className="required-asterisk">*</span></label>
-                {[{type:'global',name:'גלובלי'},{type:'hourly',name:'לפי שעה'}].map((type) => (
+                {[{ type: 'global', name: 'גלובלי' }, { type: 'hourly', name: 'לפי שעה' }].map((type) => (
                     <div key={type.type}>
-                    <input
-                        type="radio"
-                        name="type"
-                        value={type.type}
-                        checked={serviceData.type === type.type}
-                        onChange={handleChange}
-                    />
-                    {type.name}
-                </div>
+                        <input
+                            type="radio"
+                            name="type"
+                            value={type.type}
+                            checked={serviceData.type === type.type}
+                            onChange={handleChange}
+                        />
+                        {type.name}
+                    </div>
                 ))}
                 {/* <select
                     id="type"

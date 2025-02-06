@@ -11,6 +11,10 @@ const transactionsSlice = createSlice({
             const updatedTransactions = action.payload;
             state.data.transactions = updatedTransactions;
         },
+        addNewTransaction(state, action) {
+            const newTransection = action.payload;
+            state.data.transactions.push(newTransection)
+        },
         setLoading(state, action) {
             state.isLoading = action.payload;
         },
@@ -20,5 +24,5 @@ const transactionsSlice = createSlice({
     },
 });
 
-export const { getTransactionsData,setTransactionsData, setLoading, setError } = transactionsSlice.actions;
+export const { getTransactionsData, setTransactionsData, addNewTransaction, setLoading, setError } = transactionsSlice.actions;
 export default transactionsSlice.reducer;

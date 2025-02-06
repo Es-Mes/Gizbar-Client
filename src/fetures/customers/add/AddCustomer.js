@@ -6,13 +6,13 @@ import { addCustomerStore } from "../../../app/agentSlice";
 import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
-const AddCustomer = ({onSuccess}) => {
+const AddCustomer = ({ onSuccess }) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
     const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const customers = useSelector((state) => state.agent?.data?.data?.customers || []);
+    const customers = useSelector((state) => state.agent?.data?.customers || []);
 
     const [customerData, setCustomerData] = useState({
         full_name: "",
@@ -37,12 +37,12 @@ const AddCustomer = ({onSuccess}) => {
         }
 
         try {
-            const data = await addCustomer({ phone, customer: customerData }).unwrap();   
+            const data = await addCustomer({ phone, customer: customerData }).unwrap();
             console.log(data);
-            if(data){
+            if (data) {
                 setShowSuccessMessage(true); // הצג הודעת הצלחה         
                 // עדכון הסטור עם הלקוח החדש
-                dispatch(addCustomerStore(data.data));
+                dispatch(addCustomerStore(data));
             }
 
 

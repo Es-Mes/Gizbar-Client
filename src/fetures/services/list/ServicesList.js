@@ -11,7 +11,7 @@ import Modal from "../../../modals/Modal";
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
-  const services = useSelector((state) => state.agent?.data?.data?.services || []);
+  const services = useSelector((state) => state.agent?.data?.services || []);
   const filterServices = services.filter((service) => {
     return service.active === true
   })

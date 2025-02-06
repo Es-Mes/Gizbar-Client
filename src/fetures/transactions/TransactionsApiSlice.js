@@ -8,9 +8,9 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["Transactions"],
         }),
-        getAllTransactionsAsCustomer:build.query({
-            query: ({phone}) => ({
-                url:`/api/agent/${phone}/transactionsAsCustomer`
+        getAllTransactionsAsCustomer: build.query({
+            query: ({ phone }) => ({
+                url: `/api/agent/${phone}/transactionsAsCustomer`
             }),
             providesTags: ["Transactions"],
         }),
