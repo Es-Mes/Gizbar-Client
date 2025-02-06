@@ -294,43 +294,51 @@ const HomeMain = () => {
             </div>
             <div className="dashboardBox">
                <div className="dashboard-card">
-                  <h4>הכנסות</h4>
-                  <h2>{monthIncome} ₪</h2>
-                  <div className="chart-container">
-                     <Line data={data} options={options} />
-                  </div>
+                  <Link to="transactions/income">
+                     <h4>הכנסות</h4>
+                     <h2>{monthIncome} ₪</h2>
+                     <div className="chart-container">
+                        <Line data={data} options={options} />
+                     </div>
+                  </Link>
                </div>
                <div className="dashboard-card">
-                  <h4>שירותים</h4>
-                  <h2>{servicesCount}</h2>
-                  <div className="chart-container">
-                     <Line data={serviciesData} options={options} />
-                  </div>
+                  <Link to={"services"}>
+                     <h4>שירותים</h4>
+                     <h2>{servicesCount}</h2>
+                     <div className="chart-container">
+                        <Line data={serviciesData} options={options} />
+                     </div>
+                  </Link>
                </div>
                <div className="dashboard-card">
+                  {/* <Link to={"customers"}> */}
                   <h4>לקוחות</h4>
                   <h2>{customersCount}</h2>
                   <div className="chart-container">
                      <Line data={customersData} options={options} />
                   </div>
+                  {/* </Link> */}
                </div>
                <div className="dashboard-card">
+                  {/* <Link to={''}> */}
                   <h4>עסקאות שלא נגבו</h4>
                   <h2>{customersCount}</h2>
                   <div className="chart-container">
                      <Line data={dellayedData} options={options} />
                   </div>
+                  {/* </Link> */}
                </div>
             </div>
          </div>
 
          <div className="QuickActions">
             <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
-               עסקה חדשה +
+               עסקה חדשה
                {/* <Link to="transactions/income/add">עסקה חדשה +</Link> */}
             </button>
             <button>
-               <Link to="transactions/income/all">לכל העסקאות ></Link>
+               <Link to="transactions/income/all">לכל העסקאות</Link>
             </button>
          </div>
 

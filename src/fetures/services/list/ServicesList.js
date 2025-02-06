@@ -4,18 +4,21 @@ import axios from 'axios';
 import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב-hook הזה
 import './ServicesList.css'; // קובץ CSS
 import { useUpdateServiceMutation, useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
-import { updateServiceStore, toggleServiceFreezeStore,deleteServiceStore } from '../../../app/agentSlice';
+import { updateServiceStore, toggleServiceFreezeStore, deleteServiceStore } from '../../../app/agentSlice';
 import { Link, NavLink } from "react-router-dom"
+import AddService from "../../services/add/AddService";
+import Modal from "../../../modals/Modal";
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
   const services = useSelector((state) => state.agent?.data?.data?.services || []);
   const filterServices = services.filter((service) => {
-    return service.active === true 
-   })
+    return service.active === true
+  })
   const [updateService, { isLoading, isSuccess, isError, error }] = useUpdateServiceMutation()
   const [deleteService] = useDeleteServiceMutation();
 
+  const [isServiceModalOpen, setServiceModalOpen] = useState(false);
   const [editServiceId, setEditServiceId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', description: '', price: '' });
   const [expanded, setExpanded] = useState(null); // שמירת מצב פתיחה של כל שירות
@@ -106,80 +109,81 @@ const ServicesList = () => {
   return (
     <div className="service-list-container">
       <h2>רשימת שירותים</h2>
-      <button className = "addButton">
-          <Link to="add">הוספת שירות</Link>
+      <button className="addButton" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
+        הוספת שירות
+        {/* <Link to="add">הוספת שירות</Link> */}
       </button>
       <p className="service-icons-info">
         ⏳ שירות לפי שעה | 📦 שירות גלובלי
-    </p>
+      </p>
       {services.length === 0 ? (
         <p>אין שירותים זמינים.</p>
       ) : (
         <ul className="service-list">
-    {filterServices.map((service) => (
-        <li className="service-card" key={service._id}>
-            {editServiceId === service._id ? (
+          {filterServices.map((service) => (
+            <li className="service-card" key={service._id}>
+              {editServiceId === service._id ? (
                 <div className="service-edit-dialog">
-                    <h3>עריכת שירות</h3>
-                    <label>
-                        שם השירות:
-                        <input
-                            type="text"
-                            name="name"
-                            value={editForm.name}
-                            onChange={handleEditChange}
-                        />
-                    </label>
-                    <label>
-                        תיאור:
-                        <textarea
-                            name="description"
-                            value={editForm.description}
-                            onChange={handleEditChange}
-                        ></textarea>
-                    </label>
-                    <label>
-                        מחיר:
-                        <input
-                            type="number"
-                            name="price"
-                            value={editForm.price}
-                            onChange={handleEditChange}
-                        />
-                    </label>
-                    <div className="service-actions">
-                        <button onClick={submitEditForm}>שמירה</button>
-                        <button onClick={() => setEditServiceId(null)}>ביטול</button>
-                    </div>
+                  <h3>עריכת שירות</h3>
+                  <label>
+                    שם השירות:
+                    <input
+                      type="text"
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleEditChange}
+                    />
+                  </label>
+                  <label>
+                    תיאור:
+                    <textarea
+                      name="description"
+                      value={editForm.description}
+                      onChange={handleEditChange}
+                    ></textarea>
+                  </label>
+                  <label>
+                    מחיר:
+                    <input
+                      type="number"
+                      name="price"
+                      value={editForm.price}
+                      onChange={handleEditChange}
+                    />
+                  </label>
+                  <div className="service-actions">
+                    <button onClick={submitEditForm}>שמירה</button>
+                    <button onClick={() => setEditServiceId(null)}>ביטול</button>
+                  </div>
                 </div>
-            ) : (
+              ) : (
                 <div className="service-body">
-                    <div className="service-header">
-                        <h3>
-                            {service.type === 'hourly' ? '⏳' : '📦'} {service.name}
-                        </h3>
-                        <p className="service-price">₪ {service.price} {service.type === 'hourly' ? 'לשעה' : ''}</p>
-                    </div>
-                    <div className="service-details">
-                        <p><strong>תיאור:</strong> {service.description}</p>
-                        <p><strong>סטטוס:</strong> {service.active ? 'פעיל' : 'לא פעיל'}</p>
-                    </div>
-                    <div className="service-actions-column">
-                        <button className="action-button edit-button" onClick={() => openEditDialog(service)}>
-                            ✏️ עריכה
-                        </button>
-                        <button className="action-button freeze-button" onClick={service.active ? (() => freezeService(service._id)) : (() => unFreezeService(service._id))}>
-                            {service.active ? '❄️ הקפאה' : '✅ ביטול הקפאה'}
-                        </button>
-                        <button className="action-button delete-button" onClick={() => handleDeleteService(service._id)}>
-                            🗑️ מחיקה
-                        </button>
-                    </div>
+                  <div className="service-header">
+                    <h3>
+                      {service.type === 'hourly' ? '⏳' : '📦'} {service.name}
+                    </h3>
+                    <p className="service-price">₪ {service.price} {service.type === 'hourly' ? 'לשעה' : ''}</p>
+                  </div>
+                  <div className="service-details">
+                    <p><strong>תיאור:</strong> {service.description}</p>
+                    <p><strong>סטטוס:</strong> {service.active ? 'פעיל' : 'לא פעיל'}</p>
+                  </div>
+                  <div className="service-actions-column">
+                    <button className="action-button edit-button" onClick={() => openEditDialog(service)}>
+                      ✏️ עריכה
+                    </button>
+                    <button className="action-button freeze-button" onClick={service.active ? (() => freezeService(service._id)) : (() => unFreezeService(service._id))}>
+                      {service.active ? '❄️ הקפאה' : '✅ ביטול הקפאה'}
+                    </button>
+                    <button className="action-button delete-button" onClick={() => handleDeleteService(service._id)}>
+                      🗑️ מחיקה
+                    </button>
+                  </div>
                 </div>
-            )}
-        </li>
-    ))}
-</ul>
+              )}
+            </li>
+          ))}
+        </ul>
 
 
         // <ul className="service-list">
@@ -266,6 +270,16 @@ const ServicesList = () => {
 
         // </ul>
       )}
+
+      <Modal isOpen={isServiceModalOpen} onClose={() => setServiceModalOpen(false)}>
+        <AddService
+          onSuccess={(newService) => {
+            console.log(newService);
+            // Handle successful service addition if necessary
+            setServiceModalOpen(false);
+          }}
+        />
+      </Modal>
     </div>
   );
 };
