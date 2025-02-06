@@ -11,7 +11,7 @@ import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
-const AddTransaction = () => {
+const AddTransaction = ({ onSuccess }) => {
     const { _id, phone } = useAuth();
     const services = useSelector((state) => state.agent?.data?.data?.services || []);
     const filterServices = services.filter((service) => service.active === true);
@@ -38,6 +38,7 @@ const AddTransaction = () => {
         alertsLevel: "once",
     });
 
+    const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
     const [isServiceModalOpen, setServiceModalOpen] = useState(false);
     const [message, setMessage] = useState("");
@@ -154,6 +155,7 @@ const AddTransaction = () => {
         console.log("transactionData before sending:", transactionData);
         await addTransaction({ phone, transaction: transactionData });
         dispatch(addTransactionStore(transactionData));
+        onSuccess(transactionData)
     };
 
 
@@ -273,30 +275,39 @@ const AddTransaction = () => {
                     {transactionDetails.alerts && (
                         <div className="stepBox">
                             <label>סוג התראות:</label>
-                            {['email only', 'phone only', 'email and phone', 'human'].map((type) => (
+                            {[
+                                { value: 'email only', name: 'מייל בלבד' },
+                                { value: 'phone only', name: 'טלפון בלבד' },
+                                { value: 'email and phone', name: 'מייל וטלפון' },
+                                { value: 'human', name: 'אנושי' },
+                            ].map((type) => (
                                 <div key={type}>
                                     <input
                                         type="radio"
                                         name="typeAlerts"
-                                        value={type}
+                                        value={type.value}
                                         checked={transactionDetails.typeAlerts === type}
                                         onChange={handleInputChange}
                                     />
-                                    {type}
+                                    {type.name}
                                 </div>
                             ))}
 
                             <label>רמת התראות:</label>
-                            {['once', 'weekly', 'nudnik'].map((level) => (
+                            {[
+                                { value: 'once', name: 'פעם אחת' },
+                                { value: 'weekly', name: 'שבועי' },
+                                { value: 'nudnik', name: 'נודניק' }
+                            ].map((level) => (
                                 <div key={level}>
                                     <input
                                         type="radio"
                                         name="alertsLevel"
-                                        value={level}
+                                        value={level.value}
                                         checked={transactionDetails.alertsLevel === level}
                                         onChange={handleInputChange}
                                     />
-                                    {level}
+                                    {level.name}
                                 </div>
                             ))}
                         </div>

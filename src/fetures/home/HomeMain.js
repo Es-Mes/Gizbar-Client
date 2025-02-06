@@ -10,18 +10,24 @@ import useTransactionsData from "../../hooks/useTransactionsData";
 import { useSelector } from "react-redux";
 import TransactionsList from "../transactions/list/TransactionsList";
 import { useMemo } from "react";
+import AddTransaction from "../transactions/add/AddTransaction";
+import Modal from "../../modals/Modal";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
    const agent = useSelector((state) => state.agent.data.data || {});
    const transactions = useSelector((state) => state.transactions.data.transactions || []);
-   const transactionsAsCustomer = useSelector((state) => state.customerTransactions.data.transactions.data  || []);
+   const transactionsAsCustomer = useSelector((state) => state.customerTransactions.data.transactions.data || []);
+   console.log('transactions ', transactions);
+   console.log('transactionsAsCustomer ', transactionsAsCustomer);
+
    const isLoading = useSelector((state) => state.agent?.isLoading);
    const error = useSelector((state) => state.agent?.error);
    const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
    const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
-   console.log(`agent${agent}`);
+   console.log('agent ', agent);
    //הכנסות בחודש הנוכחי 
 
+   const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
    const [monthIncome, setMonthIncome] = useState(0);
    const [monthExpectedIncome, setMonthExpectedIncome] = useState(0);
    const [servicesCount, setServicesCount] = useState(0);
@@ -105,7 +111,7 @@ const HomeMain = () => {
          return acc + transaction.price;
       }, 0));
 
-      
+
       setMonthExpectedIncome(totalExpectedIncome);
       // console.log(`monthExpectedIncome: ${totalExpectedIncome}`);
 
@@ -117,13 +123,13 @@ const HomeMain = () => {
    }, [transactions]);  // useEffect יפעל רק אם transactionsAsProvider משתנה
 
    //עסקאות
-   const filterRecentTransactions = (transactionsToDisplay) => {
-      // console.log(`transactionsToDisplay${transactionsToDisplay}`)
-      if(transactionsToDisplay == null){
+   const filterRecentTransactions = (transactions) => {
+      // console.log(`transactions${transactions}`)
+      if (transactions == null) {
          return [];
       }
       const today = new Date();
-      return [...transactionsToDisplay]
+      return [...transactions]
          .filter(transaction =>
             transaction.status !== "canceld"  // רק עסקאות שלא בוטלו
             // new Date(transaction.billingDay) <= today // תאריך גבייה מאוחר מהיום
@@ -139,7 +145,7 @@ const HomeMain = () => {
 
 
    const filterPendingTransactions = (transactionsToDisplay) => {
-      if(transactionsToDisplay == null){
+      if (transactionsToDisplay == null) {
          return [];
       }
       // קבלת תאריך נוכחי
@@ -163,7 +169,7 @@ const HomeMain = () => {
    const yearlyMonthIncome = [1200, 1800, 2400, 3000, 3500, 4000, 4200, 4800, 5000, 5200, 5800, monthIncome]
    const yearlyMonthCustomers = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, customersCount]
    const yearlyMonthServicies = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, servicesCount]
-   const yearlyMonthDelayed = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5,delayedTransactionsCount]
+   const yearlyMonthDelayed = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, delayedTransactionsCount]
 
    const data = {
       labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
@@ -319,8 +325,9 @@ const HomeMain = () => {
          </div>
 
          <div className="QuickActions">
-            <button>
-               <Link to="transactions/income/add">עסקה חדשה +</Link>
+            <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
+               עסקה חדשה +
+               {/* <Link to="transactions/income/add">עסקה חדשה +</Link> */}
             </button>
             <button>
                <Link to="transactions/income/all">לכל העסקאות ></Link>
@@ -328,22 +335,22 @@ const HomeMain = () => {
          </div>
 
          <div className="transactions-display">
-            
-               <div className="transaction-header head">
-                  <button
-                     className={`toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
-                     onClick={() => setSelectedOption('customer')}
-                  >
-                     לקוח
-                  </button>
-                  <h1>עסקאות חודש {currentMonth}</h1>
-                  <button
-                     className={`toggle-button ${selectedOption === 'agent' ? 'active' : ''}`}
-                     onClick={() => setSelectedOption('agent')}
-                  >
-                     סוכן
-                  </button>
-               </div>
+
+            <div className="transaction-header head">
+               <button
+                  className={`toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
+                  onClick={() => setSelectedOption('customer')}
+               >
+                  לקוח
+               </button>
+               <h1>עסקאות חודש {currentMonth}</h1>
+               <button
+                  className={`toggle-button ${selectedOption === 'agent' ? 'active' : ''}`}
+                  onClick={() => setSelectedOption('agent')}
+               >
+                  סוכן
+               </button>
+            </div>
             <div>
                <h2>עסקאות אחרונות</h2>
                <TransactionsList transactions={recentTransactions} />
@@ -354,6 +361,14 @@ const HomeMain = () => {
             </div>
          </div>
 
+         <Modal isOpen={isTransactionModalOpen} onClose={() => setTransactionModalOpen(false)}>
+            <AddTransaction
+               onSuccess={(newTransection) => {
+                  console.log(newTransection);
+                  // Handle successful service addition if necessary
+               }}
+            />
+         </Modal>
 
       </>
 

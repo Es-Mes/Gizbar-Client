@@ -21,6 +21,19 @@ const TransactionItem = ({ transaction }) => {
         canceled: "בוטל",
     };
 
+    const types_alerts = {
+        'phone only': 'טלפון בלבד',
+        'email only': 'מייל בלבד',
+        'email and phone': 'טלפון ומייל',
+        'human': 'תזכורת אנושית'
+    }
+
+    const alerts_level = {
+        once: 'פעם אחת',
+        weekly: 'שבועי',
+        nudnik: 'נודניק,'
+    }
+
     return (
         <div className='transaction-card'>
             <div className='transaction-header'>
@@ -35,8 +48,8 @@ const TransactionItem = ({ transaction }) => {
                 <p><strong>התראות:</strong> {alerts ? "כן" : "לא"}</p>
                 {alerts && (
                     <div className='alerts-info'>
-                        <p><strong>סוג התראות:</strong> {typeAlerts}</p>
-                        <p><strong>רמת התראות:</strong> {alertsLevel}</p>
+                        <p><strong>סוג התראות:</strong> {types_alerts[typeAlerts]}</p>
+                        <p><strong>רמת התראות:</strong> {alerts_level[alertsLevel]}</p>
                     </div>
                 )}
             </div>
