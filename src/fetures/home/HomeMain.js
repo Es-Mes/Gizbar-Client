@@ -12,19 +12,17 @@ import TransactionsList from "../transactions/list/TransactionsList";
 import { useMemo } from "react";
 import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
+import ExpensesList from "../expenses/list/ExpensesList";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
    const agent = useSelector((state) => state.agent.data || {});
    const transactions = useSelector((state) => state.transactions.data.transactions || []);
    const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
-   console.log('transactions ', transactions);
-   console.log('transactionsAsCustomer ', transactionsAsCustomer);
-
    const isLoading = useSelector((state) => state.agent?.isLoading);
    const error = useSelector((state) => state.agent?.error);
    const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
    const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
-   console.log('agent ', agent);
+   // console.log('agent ', agent);
    //הכנסות בחודש הנוכחי 
 
    const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
@@ -136,10 +134,6 @@ const HomeMain = () => {
          )
          // .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
          .slice(0, 5) // חמש הראשונות
-         .map(transaction => ({
-            ...transaction, // שומר את שאר המידע של העסקה
-            agent: undefined, // מחיקת שדה agent
-         }));
    };
    const recentTransactions = filterRecentTransactions(transactionsToDisplay);
 
@@ -361,11 +355,21 @@ const HomeMain = () => {
             </div>
             <div>
                <h2>עסקאות אחרונות</h2>
-               <TransactionsList transactions={recentTransactions} />
+               {
+                  selectedOption === 'agent' ?
+                     <TransactionsList transactions={recentTransactions} />
+                     :
+                     <ExpensesList transactions={recentTransactions} />
+               }
             </div>
             <div>
                <h2>עסקאות קרובות</h2>
-               <TransactionsList transactions={pendingTransactions} />
+               {
+                  selectedOption === 'agent' ?
+                     <TransactionsList transactions={pendingTransactions} />
+                     :
+                     <ExpensesList transactions={pendingTransactions} />
+               }
             </div>
          </div>
 
@@ -379,8 +383,6 @@ const HomeMain = () => {
          </Modal>
 
       </>
-
-
    );
 };
 

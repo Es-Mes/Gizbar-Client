@@ -15,7 +15,7 @@ import "./sidebar.css";
 
 const Sidebar = () => {
   const [openIndex, setOpenIndex] = useState(null); // משתנה לניהול תפריטים פתוחים
-  const [activeIndex, setActiveIndex] = useState(null); // משתנה לניהול פריט פעיל
+  const [activeIndex, setActiveIndex] = useState(0); // משתנה לניהול פריט פעיל
 
   const toggleSubmenu = (index) => {
     setOpenIndex(openIndex === index ? null : index); // ניהול פתיחה/סגירה של תפריט משנה
@@ -114,12 +114,14 @@ const Sidebar = () => {
         { title: "הוספת שירות חדש", link: "/dash/services/add" },
       ],
     },
-    { title: "צור קשר",
-     icon: FaRegComments, 
-     link: "/dash/UnderConstruction" },
+    {
+      title: "צור קשר",
+      icon: FaRegComments,
+      link: "/dash/UnderConstruction"
+    },
 
   ];
-  
+
 
   return (
     <div className="sidebar-main-menu">
@@ -142,8 +144,8 @@ const Sidebar = () => {
                 {menu.submenu.map((submenuItem, subIndex) => (
                   <li key={subIndex}>
                     <NavLink className="nav-link"
-                     to={submenuItem.link}
-                     onClick={(e)=>e.stopPropagation()}>
+                      to={submenuItem.link}
+                      onClick={(e) => e.stopPropagation()}>
                       {submenuItem.title}
                     </NavLink>
                   </li>

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import TransactionItem from '../view/TransactionItem';
 
 const TransactionsList = ({ transactions }) => {
-    const [expandedTransactionId, setExpandedTransactionId] = useState(null);
+    // const [expandedTransactionId, setExpandedTransactionId] = useState(null);
 
-    const toggleExpand = (id) => {
-        setExpandedTransactionId((prevId) => (prevId === id ? null : id));
-    };
+    // const toggleExpand = (id) => {
+    //     setExpandedTransactionId((prevId) => (prevId === id ? null : id));
+    // };
 
-    if(transactions == []){
-        return <> אין עסקאות העונות על התנאים</>
+    if (transactions == []) {
+        return <p> אין עסקאות העונות על התנאים</p>
     }
 
     return (
@@ -18,8 +18,8 @@ const TransactionsList = ({ transactions }) => {
                 <TransactionItem
                     key={transaction._id}
                     transaction={transaction}
-                    isExpanded={transaction._id === expandedTransactionId}
-                    onToggleExpand={() => toggleExpand(transaction._id)}
+                // isExpanded={transaction._id === expandedTransactionId}
+                // onToggleExpand={() => toggleExpand(transaction._id)}
                 />
             ))}
         </div>

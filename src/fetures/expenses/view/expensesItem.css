@@ -1,0 +1,78 @@
+.transaction-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.transaction-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.transaction-header h3 {
+    font-size: 18px;
+    color: #007bff;
+    margin: 0;
+}
+
+.expenses-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #a72828;
+}
+
+.transaction-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.transaction-body p {
+    margin: 5px 0;
+    flex: 1 1 45%;
+    /* מציג שני פריטים בשורה */
+}
+
+.alerts-info {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .transaction-card {
+        padding: 12px;
+    }
+
+    .transaction-header h3 {
+        font-size: 16px;
+    }
+
+    .transaction-price {
+        font-size: 16px;
+    }
+
+    .transaction-body {
+        flex-direction: column;
+    }
+
+    .transaction-body p {
+        flex: 1 1 100%;
+    }
+}
