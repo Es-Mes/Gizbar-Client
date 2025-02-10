@@ -1,0 +1,103 @@
+/* עיצוב מודרני עבור רשימת הלקוחות */
+
+.customers-list {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.customers-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.customers-list-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.customers-list-add-btn,
+.customers-list-top button {
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.customers-list-add-btn:hover,
+.customers-list-top button:hover {
+    background: #0056b3;
+}
+
+.customers-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tHeads {
+    background: #007bff;
+    color: white;
+    text-align: left;
+}
+
+.tHeads td {
+    padding: 15px;
+    font-weight: bold;
+}
+
+.customers-list-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.customers-list-table tr:hover {
+    background: #f1f1f1;
+}
+
+.btn-customer-list {
+    text-align: center;
+}
+
+.customers-list-btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.customers-list-view {
+    background: #28a745;
+    color: white;
+}
+
+.customers-list-view:hover {
+    background: #1e7e34;
+}
+
+.delete-byn-list {
+    cursor: pointer;
+    background: #dc3545;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+.delete-byn-list:hover {
+    background: #c82333;
+}

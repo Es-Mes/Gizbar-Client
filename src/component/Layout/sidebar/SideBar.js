@@ -40,7 +40,7 @@ const Sidebar = () => {
     {
       title: "לקוחות",
       icon: FaAddressBook,
-      link: "/dash/UnderConstruction",
+      link: "/dash/customers",
       submenu: [
         { title: "ניהול לקוחות", link: "/dash/UnderConstruction" },
         { title: "הוספת לקוח חדש", link: "/dash/UnderConstruction" },

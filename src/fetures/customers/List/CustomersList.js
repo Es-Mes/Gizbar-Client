@@ -1,90 +1,135 @@
 import "./CustomersList.css"
+// import "./new.css"
 import Search from "../../../component/search/Search"
-import {useGetAllCustomersQuery,useDeleteCustomerMutation} from "../customersApiSlice"
+import { useDeleteCustomerMutation } from "../customersApiSlice"
 import { Link, useSearchParams } from "react-router-dom"
-import { MdDelete,MdDeleteOutline,MdViewList,MdViewColumn} from "react-icons/md"
-import { GrView } from "react-icons/gr";
+import { MdDelete, MdDeleteOutline, MdViewList, MdViewColumn } from "react-icons/md"
+import { GrView, GrEdit } from "react-icons/gr";
+import { useDispatch, useSelector } from "react-redux"
+import useAuth from "../../../hooks/useAuth"
+import { deleteCustomerData } from "../../../app/customersSlice"
+import { useState } from "react"
+import Modal from "../../../modals/Modal"
+import EditCustomer from "../edit/EditCustomer"
 
 const CustomersList = () => {
-    // const users = [{ _id: 1, name: "name", userName: "userName", email: "email", phone: "phone", roles: "roles" }
-    // ]
-    const {data:users,isError, error,isLoading}=useGetAllCustomersQuery()
-    const [deleteUser,{isSuccess:isDeleteSuccess}]=useDeleteCustomerMutation()
-   
-    const deleteClick=(user)=>{
-        if(window.confirm("?בטוח שברצונך למחוק את המשתמש")){
-            deleteUser({_id:user._id})
+    const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
+
+    const dispatch = useDispatch()
+    const customers = useSelector((state) => state.customers?.customers || []);
+    // console.log(customers);
+
+    const [isEditModelOpen, setEditModelOpen] = useState(false)
+    const [selectedCustomer, setSelectedCustomer] = useState(null)
+    // const { data: custmers, isError, error, isLoading } = useGetAllCustomersQuery()
+    const [deleteCustomer, { isSuccess: isDeleteSuccess }] = useDeleteCustomerMutation()
+
+    const openEditModel = (customer) => {
+        setSelectedCustomer(customer);
+        setEditModelOpen(true);
+    }
+    const deleteClick = async (customer) => {
+        if (window.confirm("?בטוח שברצונך למחוק את הלקוח")) {
+            console.log(customer);
+
+            const data = await deleteCustomer({ phone, _id: customer._id })
+            console.log('data : ', data);
+
+            if (data.data) {
+                if (!data.error) {
+                    dispatch(deleteCustomerData(customer._id));
+                }
+            } else {
+                if (data.error.status === 403) {
+                    window.alert("אין אפשרות למחוק לקוח שיש לו עסקאות.")
+                }
+            }
+
         }
     }
 
-    const [searchParams]=useSearchParams()
-    const q=searchParams.get("q")
+    const [searchParams] = useSearchParams()
+    const q = searchParams.get("")
 
-    if(isLoading)return<h1>loading...</h1>
-    if(isError)return<h1>{JSON.stringify(error)}</h1>
+    // if (isLoading) return <h1>loading...</h1>
+    // if (isError) return <h1>{JSON.stringify(error)}</h1>
 
-    const filteredData=!q?[...users]:users.filter(u=>u.name.indexOf(q)>-1)
+    const filteredData = !q ? [...customers] : customers.filter(c => c.full_name.indexOf(q) > -1)
 
     return (
-        <div className="users-list">
-             <h2 className="users-title">משתמשים במערכת</h2>
-            <div className="users-list-top">
-                <Search placeholder={"חיפוש לפי שם משתמש"} />
-                <Link to="/dash/users/add" className="users-list-add-btn">
+        <div className="customers-list">
+            <h2 className="customers-title">לקוחות</h2>
+            <div className="customers-list-top">
+                <Search placeholder={"חיפוש לפי שם לקוח"} />
+                {/* <Link to="/dash/customers/add" className="customers-list-add-btn">
                     הוספת משתמש
-                </Link>
+                </Link> */}
                 <button>
-               <Link to="customers/add">הוספת לקוח</Link>
-            </button>
+                    <Link to="add">הוספת לקוח</Link>
+                </button>
             </div>
-            <table className="users-list-table">
+            <table className="customers-list-table">
                 <thead className="tHeads">
                     <tr>
                         <td className="td-no-border">שם</td>
-                        <td className="td-no-border">שם משתמש</td>
-                        <td className="td-no-border">אימייל</td>
                         <td className="td-no-border">טלפון</td>
-                        <td className="td-no-border">הרשאה</td>
+                        <td className="td-no-border">אימייל</td>
+                        <td className="td-no-border">כתובת</td>
+                        <td className="td-no-border">עיר</td>
                         <td className="td-no-border">צפייה</td>
+                        <td className="td-no-border">עריכה</td>
                         <td className="td-no-border">מחיקה</td>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredData.map(user => (
-                        <tr key={user._id}>
+                    {filteredData.map(customer => (
+                        <tr key={customer._id}>
                             <td>
-                                <div className="users-list-user">
-                                    {user.name}
+                                <div className="customers-list-customer">
+                                    {customer.full_name}
                                 </div>
                             </td>
                             <td>
-                                {user.userName}
+                                {customer.phone}
                             </td>
                             <td>
-                                {user.email}
+                                {customer.email}
                             </td>
                             <td>
-                                {user.phone}
+                                {customer.address}
                             </td>
                             <td>
-                                {user.roles}
+                                {customer.city}
                             </td>
-                            <td className="btn-user-list">
-                            <Link to={`/dash/users/${user._id}`} className="users-list-btn users-list-view"><GrView  size={20} color="black"/></Link>
+                            <td className="btn-customer-list">
+                                {/* <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view"> */}
+                                <GrView size={20} color="green" />
+                                {/* </Link> */}
                             </td>
-                            <td className="btn-user-list delete-byn-list" onClick={()=>{deleteClick(user)}}>
-                            <MdDelete size={20} color="black"/>
+                            <td className="btn-customer-list edit_btn" onClick={() => openEditModel(customer)}>
+                                {/* <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view"> */}
+                                <GrEdit size={20} color="teal" />
+                                {/* </Link> */}
+                            </td>
+                            <td className="btn-customer-list delete-byn-list" onClick={() => deleteClick(customer)}>
+                                <MdDelete size={20} color="red" />
                             </td>
 
                             {/* <td className="td-no-border">
-                                <div className="users-list-btns">
-                                <Link to={`/dash/users/${user._id}`} className="users-list-btn users-list-view">תצוגה</Link>
-                                <button onClick={()=>{deleteClick(user)}} className="users-list-btn users-list-delete">מחיקה</button></div>
+                                <div className="customers-list-btns">
+                                <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view">תצוגה</Link>
+                                <button onClick={()=>{deleteClick(customer)}} className="customers-list-btn customers-list-delete">מחיקה</button></div>
                             </td> */}
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <Modal isOpen={isEditModelOpen} onClose={() => setEditModelOpen(false)}>
+                <EditCustomer
+                    customer={selectedCustomer}
+                    onSuccess={() => setEditModelOpen(false)} />
+            </Modal>
+
         </div>
     )
 }

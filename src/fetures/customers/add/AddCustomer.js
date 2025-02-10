@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddCustomerMutation } from "../customersApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { addCustomerStore } from "../../../app/agentSlice";
+import { addNewCustomer } from "../../../app/customersSlice";
 import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
@@ -12,7 +12,7 @@ const AddCustomer = ({ onSuccess }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const customers = useSelector((state) => state.agent?.data?.customers || []);
+    // const customers = useSelector((state) => state.agent?.data?.customers || []);
 
     const [customerData, setCustomerData] = useState({
         full_name: "",
@@ -40,9 +40,11 @@ const AddCustomer = ({ onSuccess }) => {
             const data = await addCustomer({ phone, customer: customerData }).unwrap();
             console.log(data);
             if (data) {
-                setShowSuccessMessage(true); // הצג הודעת הצלחה         
-                // עדכון הסטור עם הלקוח החדש
-                dispatch(addCustomerStore(data));
+                if (!data.error) {
+                    setShowSuccessMessage(true); // הצג הודעת הצלחה         
+                    // עדכון הסטור עם הלקוח החדש
+                    dispatch(addNewCustomer(data.data));
+                }
             }
 
 

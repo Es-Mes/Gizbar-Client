@@ -39,7 +39,6 @@ const AddTransaction = ({ onSuccess }) => {
         // alertsLevel: "once",
     });
 
-    const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
     const [isServiceModalOpen, setServiceModalOpen] = useState(false);
     const [message, setMessage] = useState("");

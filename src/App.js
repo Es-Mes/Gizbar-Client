@@ -23,8 +23,9 @@ import TransactionsAsProvider from "./fetures/transactions/list/TransactionsAsPr
 import AddService from "./fetures/services/add/AddService"
 import ServicesList from "./fetures/services/list/ServicesList"
 import SingleService from "./fetures/services/view/SingleService"
-import useAgentData from "./hooks/useAgentData"
 import useAuth from "./hooks/useAuth"
+import useAgentData from "./hooks/useAgentData"
+import useCustomersData from "./hooks/useCustomersData"
 import useTransactionsData from "./hooks/useTransactionsData"
 import UnderConstruction from "./component/UnderConstruction"
 import DelayedTransactions from "./fetures/transactions/list/delayedTransactions"
@@ -40,6 +41,7 @@ const App = () => {
     useAgentData(phone); // הפעלת ה-hook
     useTransactionsData(phone);
     useCustomerTransactionsData(phone)
+    useCustomersData(phone)
     return <Router>
         <ScrollToTop />
         <Routes>
@@ -53,7 +55,8 @@ const App = () => {
                         <Route index element={<HomeMain />} />
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
-                            <Route path="add" element={<AddCustomer />} />
+                            <Route path="add" element={<UsersListDemo />} />
+                            {/* <Route path="add" element={<AddCustomer />} /> */}
                             <Route path=":userId" element={<SingleCustomer />} />
                         </Route>
                         <Route path="services" element={<Outlet />}>
