@@ -26,12 +26,6 @@ const agentSlice = createSlice({
                 service.active = !service.active; // שינוי מצב הקפאה
             }
         },
-        addCustomerStore(state, action) {
-            state.data.customers.push(action.payload); // הוספת לקוח חדש
-        },
-        addTransactionStore(state, action) {
-            state.data.transactionsAsProvider.push(action.payload); // הוספת עסקה  חדשה
-        },
         setLoading(state, action) {
             state.isLoading = action.payload;
         },
@@ -41,7 +35,13 @@ const agentSlice = createSlice({
     },
 });
 
-export const { setAgentData, addServiceStore, deleteServiceStore, updateServiceStore,
+export const {
+    setAgentData,
+    addServiceStore,
+    deleteServiceStore,
+    updateServiceStore,
     toggleServiceFreezeStore,
-    addCustomerStore, addTransactionStore, setLoading, setError } = agentSlice.actions;
+    setLoading,
+    setError
+} = agentSlice.actions;
 export default agentSlice.reducer;

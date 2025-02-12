@@ -28,10 +28,10 @@ const AddTransaction = ({ onSuccess }) => {
     const [selectedService, setSelectedService] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [transactionDetails, setTransactionDetails] = useState({
-        description: "",
-        price: "0",
+        // description: "",
+        // price: 0,
         // pricePerHour: "",
-        serviceType: "global",
+        // serviceType: "global",
         // hours: 0,
         billingDay: "",
         alerts: false,
@@ -44,6 +44,10 @@ const AddTransaction = ({ onSuccess }) => {
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
 
+    const types = {
+        global: 'גלובלי',
+        hourly: 'לפי שעה'
+    }
     useEffect(() => {
         if (isSuccess) {
             setMessage("העסקה נוספה בהצלחה!");
@@ -63,18 +67,19 @@ const AddTransaction = ({ onSuccess }) => {
             navigate("/dash");
         }
     }, [isSuccess, navigate]);
-    //עדכון המחיר הגלובלי
-    useEffect(() => {
-        if (selectedService) {
-            setTransactionDetails((prev) => ({
-                ...prev,
-                price: selectedService.type === "global"
-                    ? Number(selectedService.price) || 0
-                    : Number(prev.pricePerHour) * Number(prev.hours) || 0
-            }));
-        }
-    }, [selectedService, transactionDetails.hours]);
 
+    //עדכון המחיר הגלובלי
+    const updatePrice = () => {
+        console.log('transaction details before update price: ', transactionDetails);
+
+        setTransactionDetails((prev) => ({
+            ...prev,
+            price: selectedService.serviceType === "global"
+                ? Number(prev.price) || 0
+                : Number(prev.pricePerHour) * Number(prev.hours) || 0
+        }));
+        console.log('transaction details after update price: ', transactionDetails);
+    }
 
     const handleServiceChange = (event) => {
         const serviceId = event.target.value;
@@ -83,25 +88,32 @@ const AddTransaction = ({ onSuccess }) => {
         if (service) {
             setTransactionDetails((prev) => ({
                 ...prev,
-                price: service.type === "global" ? service.price : "0",
-                // pricePerHour: service.type === "hourly" ? service.price : null,
-                description: service.description,
+                service: service._id,
                 serviceType: service.type,
+                description: service.description
             }));
-        }
-    };
-
+            if (service.type === 'hourly') {
+                setTransactionDetails((prev) => ({
+                    ...prev,
+                    pricePerHour: service.price
+                }));
+            } else {
+                setTransactionDetails((prev) => ({
+                    ...prev,
+                    price: service.price
+                }));
+            }
+        };
+    }
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
         const customer = customers.find((cust) => cust._id === customerId);
         setSelectedCustomer(customer);
         if (customer) {
-            // setTransactionDetails((prev) => ({
-            //     ...prev,
-            // customerName: customer.full_name,
-            // customerPhone: customer.phone,
-            // customerAddress: customer.address,
-            // }));
+            setTransactionDetails((prev) => ({
+                ...prev,
+                customer: customer._id
+            }));
         }
     };
 
@@ -110,18 +122,24 @@ const AddTransaction = ({ onSuccess }) => {
         const fieldValue = type === "checkbox" ? checked : value;
 
         setTransactionDetails((prev) => {
+            let updatedDetails = {
+                ...prev,
+                [name]: fieldValue,
+            };
+
+            if (selectedService?.type === "hourly" && (name === "hours" || name === "pricePerHour")) {
+                updatedDetails.price = Number(updatedDetails.pricePerHour) * Number(updatedDetails.hours) || 0;
+            }
+
             if (name === "alerts") {
-                return {
-                    ...prev,
+                updatedDetails = {
+                    ...updatedDetails,
                     alerts: fieldValue,
                     typeAlerts: fieldValue ? "email and phone" : "",
                     alertsLevel: fieldValue ? "once" : "",
                 };
-            }
-            return {
-                ...prev,
-                [name]: fieldValue,
             };
+            return updatedDetails;
         });
     };
 
@@ -143,32 +161,29 @@ const AddTransaction = ({ onSuccess }) => {
             return;
         }
 
-        const calculatedPrice =
-            selectedService.type === "global"
-                ? Number(selectedService.price) || 0
-                : Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours) || 0;
-
-        const transactionData = {
-            customer: selectedCustomer._id,
-            service: selectedService._id,
-            price: calculatedPrice,
-            ...transactionDetails,
-        };
         try {
-            console.log("transactionData before sending:", transactionData);
-            const transaction = await addTransaction({ phone, transaction: transactionData });
+            console.log("transactionData before sending:", transactionDetails);
+            const transaction = await addTransaction({ phone, transaction: transactionDetails }).unwrap();
+
             console.log(transaction);
 
-            if (transaction) {
-                if (!transaction.error) {
-                    dispatch(addNewTransaction(transaction.data));
-                } else {
-                    dispatch(setError(transaction.message));
-                }
+            if (transaction && !transaction.error) {
+                const customerDetails = customers.find(c => c._id === transaction.data.customer) || null;
+
+                const transactionWhithCustomer = {
+                    ...transaction.data,
+                    customer: customerDetails
+                };
+                console.log(transactionWhithCustomer);
+
+                dispatch(addNewTransaction(transactionWhithCustomer));
+            } else {
+                dispatch(setError(transaction.message));
             }
 
 
-            onSuccess(transaction)
+
+            onSuccess()
 
         } catch (err) {
             console.error("Error adding transaction:", err);
@@ -186,6 +201,14 @@ const AddTransaction = ({ onSuccess }) => {
             alert("יש לבחור מספר שעות לפני המעבר לשלב הבא.");
             return;
         }
+        if (currentStep === 1) {
+            // updatePrice()
+            console.log(transactionDetails);
+            if (!transactionDetails.price) {
+                alert("יש להכניס מחיר לפני המעבר לשלב הבא.");
+                return;
+            }
+        }
         if (currentStep === 2 && !selectedCustomer) {
             alert("יש לבחור לקוח לפני המעבר לשלב הבא.");
             return;
@@ -201,12 +224,12 @@ const AddTransaction = ({ onSuccess }) => {
         <div className="add-transaction-card">
             <div className="transaction-header">
                 <h3>הוספת עסקה</h3>
-                <button className="close-button" onClick={() => navigate("/dash")}>&times;</button>
+                {/* <button className="close-button" onClick={() => navigate("/dash")}>&times;</button> */}
             </div>
             {currentStep === 1 && (
                 <div className="transaction-body">
-                    <label>בחר שירות: <span className="required-asterisk">*</span></label>
-                    <select onChange={handleServiceChange} required>
+                    <label htmlFor="service">בחר שירות: <span className="required-asterisk">*</span></label>
+                    <select id="service" onChange={handleServiceChange} required>
                         <option value="">-- בחר שירות --</option>
                         {filterServices.map((service) => (
                             <option key={service._id} value={service._id}>
@@ -215,22 +238,51 @@ const AddTransaction = ({ onSuccess }) => {
                         ))}
                     </select>
                     <button className="add-button" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
-                        +
+                        + הוסף שירות חדש
                     </button>
                     {selectedService && (
                         <div>
-                            <p>סוג שירות: {selectedService.type}</p>
-                            <p>תיאור: {selectedService.description}</p>
-                            <p>מחיר: {selectedService.type === "global" ? selectedService.price : `${selectedService.price} לשעה`}</p>
-                            {(selectedService.type === "hourly") &&
+                            <label >סוג שירות: {types[selectedService.type]}</label>
+                            {/* <label htmlFor="description">תיאור:</label>
+                            <input
+                                type="text"
+                                id="description"
+                                name="description"
+                                value={transactionDetails.description || selectedService.description}
+                                onChange={handleInputChange}
+                            /> */}
+                            {(selectedService.type === 'global') &&
                                 (<div>
-                                    <label>מספר שעות עבודה:<span className="required-asterisk">*</span></label>
+                                    <label htmlFor="price">מחיר:<span className="required-asterisk">*</span></label>
                                     <input
                                         type="Number"
+                                        id="price"
+                                        name="price"
+                                        value={transactionDetails.price || selectedService.price}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>)}
+                            {(selectedService.type === "hourly") &&
+                                (<div>
+                                    <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
+                                    <input
+                                        type="Number"
+                                        id="pricePerHour"
+                                        name="pricePerHour"
+                                        value={transactionDetails.pricePerHour || selectedService.price}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                    <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
+                                    <input
+                                        type="Number"
+                                        id="hours"
                                         name="hours"
                                         value={transactionDetails.hours}
                                         onChange={handleInputChange}
-                                        required></input>
+                                        required
+                                    />
                                 </div>)}
                         </div>
                     )}
@@ -239,8 +291,8 @@ const AddTransaction = ({ onSuccess }) => {
 
             {currentStep === 2 && (
                 <div className="transaction-body">
-                    <label>בחר לקוח: <span className="required-asterisk">*</span></label>
-                    <select onChange={handleCustomerChange} required>
+                    <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
+                    <select id="customer" onChange={handleCustomerChange} required>
                         <option value="">-- בחר לקוח --</option>
                         {customers.map((customer) => (
                             <option key={customer._id} value={customer._id}>
@@ -249,7 +301,7 @@ const AddTransaction = ({ onSuccess }) => {
                         ))}
                     </select>
                     <button className="add-button" type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
-                        +
+                        + הוסף לקוח חדש
                     </button>
                     {selectedCustomer && (
                         <div>
@@ -264,25 +316,28 @@ const AddTransaction = ({ onSuccess }) => {
             {currentStep === 3 && (
                 <div className="transaction-body">
                     <label>סכום עסקה:</label>
-                    <p className="transaction-price">{transactionDetails.price || (transactionDetails.pricePerHour * transactionDetails.hours)} ₪</p>
-                    <label>תיאור:</label>
+                    <p className="transaction-price">{transactionDetails.price} ₪</p>
+                    <label htmlFor="description">תיאור:</label>
                     <textarea
+                        id="description"
                         name="description"
                         value={transactionDetails.description}
                         onChange={handleInputChange}
                     />
-                    <label>תאריך חיוב: <span className="required-asterisk">*</span></label>
+                    <label htmlFor="billingDay">תאריך חיוב: <span className="required-asterisk">*</span></label>
                     <input
                         type="date"
+                        id="billingDay"
                         name="billingDay"
                         value={transactionDetails.billingDay}
                         onChange={handleInputChange}
                         required
                     />
 
-                    <label>הפעל התראות
+                    <label htmlFor="alerts">הפעל התראות
                         <input
                             type="checkbox"
+                            id="alerts"
                             name="alerts"
                             checked={transactionDetails.alerts}
                             onChange={handleInputChange}
@@ -299,12 +354,12 @@ const AddTransaction = ({ onSuccess }) => {
                                 { value: 'email and phone', name: 'מייל וטלפון' },
                                 { value: 'human', name: 'אנושי' },
                             ].map((type) => (
-                                <div key={type}>
+                                <div key={type.value}>
                                     <input
                                         type="radio"
                                         name="typeAlerts"
                                         value={type.value}
-                                        checked={transactionDetails.typeAlerts === type}
+                                        checked={transactionDetails.typeAlerts === type.value}
                                         onChange={handleInputChange}
                                     />
                                     {type.name}
@@ -317,12 +372,12 @@ const AddTransaction = ({ onSuccess }) => {
                                 { value: 'weekly', name: 'שבועי' },
                                 { value: 'nudnik', name: 'נודניק' }
                             ].map((level) => (
-                                <div key={level}>
+                                <div key={level.value}>
                                     <input
                                         type="radio"
                                         name="alertsLevel"
                                         value={level.value}
-                                        checked={transactionDetails.alertsLevel === level}
+                                        checked={transactionDetails.alertsLevel === level.value}
                                         onChange={handleInputChange}
                                     />
                                     {level.name}

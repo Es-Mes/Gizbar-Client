@@ -306,13 +306,13 @@ const HomeMain = () => {
                   </Link>
                </div>
                <div className="dashboard-card">
-                  {/* <Link to={"customers"}> */}
-                  <h4>לקוחות</h4>
-                  <h2>{customersCount}</h2>
-                  <div className="chart-container">
-                     <Line data={customersData} options={options} />
-                  </div>
-                  {/* </Link> */}
+                  <Link to={"customers"}>
+                     <h4>לקוחות</h4>
+                     <h2>{customersCount}</h2>
+                     <div className="chart-container">
+                        <Line data={customersData} options={options} />
+                     </div>
+                  </Link>
                </div>
                <div className="dashboard-card">
                   {/* <Link to={''}> */}
@@ -375,8 +375,8 @@ const HomeMain = () => {
 
          <Modal isOpen={isTransactionModalOpen} onClose={() => setTransactionModalOpen(false)}>
             <AddTransaction
-               onSuccess={(newTransection) => {
-                  console.log(newTransection);
+               onSuccess={() => {
+                  setTransactionModalOpen(false);
                   // Handle successful service addition if necessary
                }}
             />

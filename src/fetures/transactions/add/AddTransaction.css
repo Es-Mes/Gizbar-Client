@@ -5,7 +5,8 @@
     padding: 20px;
     max-width: 600px;
     margin: 20px auto;
-    text-align: right; /* יישור לימין */
+    text-align: right;
+    /* יישור לימין */
 }
 
 .transaction-header {
@@ -15,6 +16,11 @@
     border-bottom: 2px solid #007bff;
     padding-bottom: 10px;
     margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 22px;
+    color: #333;
 }
 
 .transaction-header h3 {
@@ -28,36 +34,47 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: red;
+    color: #007bff;
 }
 
 .transaction-body {
     display: flex;
-    flex-direction: row;
-    gap: 10px;
-    font-size: 16px;
-    text-align: right; /* יישור לימין */
+    flex-direction: column;
+    gap: 15px;
+    /* font-size: 16px; */
+    /* text-align: right;  */
 }
 
 .transaction-body label {
     font-weight: bold;
-    display: flex;
-    align-items: center;
+    color: #333;
+    /* display: flex;
+    align-items: center; */
 }
 
 .transaction-body select,
 .transaction-body input,
 .transaction-body textarea {
-    width: calc(100% - 40px);
+    /* width: calc(100% - 40px); */
     padding: 10px;
-    border: 1px solid var(--bg);
-    border-radius: 5px;
-    font-size: 1rem;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s;
+
+    /* box-sizing: border-box; */
 }
-.transaction-body select{
+
+/* .transaction-body select{
     width: calc(80% - 40px);
 
+} */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
 }
 
 .add-container {
@@ -67,7 +84,65 @@
     gap: 10px;
 }
 
-.add-button,
+.add-button {
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.add-button:hover {
+    background: #218838;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+.submit-button {
+    background: #ff9800;
+}
+
+.submit-button:hover {
+    background: #e68900;
+}
+
+.message {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.message.success {
+    color: green;
+}
+
+.message.error {
+    color: red;
+}
+
+/* .add-button,
 .navigation-buttons button{
     background-color: #007bff;
     color: white;
@@ -82,8 +157,8 @@
 
 .add-button:hover {
     background-color: #0056b3;
-}
-
+} */
+/* 
 .transaction-price {
     font-size: 18px;
     font-weight: bold;
@@ -110,4 +185,4 @@
 
 .submit-button:hover {
     background-color: #218838;
-}
+} */

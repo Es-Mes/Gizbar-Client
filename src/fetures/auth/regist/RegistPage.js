@@ -57,6 +57,7 @@ export const RegistPage = () => {
     }
     const data = new FormData(e.target)
     const userObj = Object.fromEntries(data.entries())
+    delete userObj.confirmPassword;
     regist(userObj)
   }
 
@@ -206,7 +207,9 @@ export const RegistPage = () => {
             <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
               {error && error.data?.message}
             </Alert>}
-          <button type='submit' style={{ backgroundColor: fullData ? 'var(--green)' : "var(--blue)", color: !fullData && "white" }}>רישום</button>
+          <button type='submit' disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--green)' : "var(--blue)", color: !fullData && "white" }}>
+            {isLoading ? 'בתהליך...' : 'רישום'}
+          </button>
         </form>
       </div>
     </div>

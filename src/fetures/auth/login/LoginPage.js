@@ -23,7 +23,7 @@ export const LoginPage = () => {
       //this is the token!!
       console.log(data);
       // if (roles === "user")
-        // navigate("/")
+      // navigate("/")
       navigate("/dash")
     }
 
@@ -50,34 +50,36 @@ export const LoginPage = () => {
         {/* <input type='text' required name='phone' id='phone' placeholder="פלאפון" /> */}
         {/* <input type='password' required name='password' id='password' placeholder='ססמא' /> */}
         <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              placeholder="טלפון"
-              required
-            />
+          <div className="required-wrapper">
+            <span className="required-asterisk">*</span>
           </div>
-          <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="סיסמה"
-              required
-            />
+          <input
+            type="text"
+            name="phone"
+            id="phone"
+            placeholder="טלפון"
+            required
+          />
+        </div>
+        <div className="field">
+          <div className="required-wrapper">
+            <span className="required-asterisk">*</span>
           </div>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="סיסמה"
+            required
+          />
+        </div>
         {isError &&
-          <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px'}}>
+          <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
             {error && error.data?.message}
           </Alert>}
-        <button type='submit'>כניסה</button>
+        <button type='submit' disabled={isLoading}>
+          {isLoading ? 'בתהליך...' : 'כניסה'}
+        </button>
       </form>
       <div className="toRegist">
         <h1 className="h1ToRegist">חדש באתר?</h1>

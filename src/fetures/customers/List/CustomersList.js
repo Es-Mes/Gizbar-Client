@@ -11,6 +11,7 @@ import { deleteCustomerData } from "../../../app/customersSlice"
 import { useState } from "react"
 import Modal from "../../../modals/Modal"
 import EditCustomer from "../edit/EditCustomer"
+import AddCustomer from "../add/AddCustomer"
 
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
@@ -21,12 +22,17 @@ const CustomersList = () => {
 
     const [isEditModelOpen, setEditModelOpen] = useState(false)
     const [selectedCustomer, setSelectedCustomer] = useState(null)
+    const [isAddModelOpen, setAddModelOpen] = useState(false)
     // const { data: custmers, isError, error, isLoading } = useGetAllCustomersQuery()
     const [deleteCustomer, { isSuccess: isDeleteSuccess }] = useDeleteCustomerMutation()
 
     const openEditModel = (customer) => {
         setSelectedCustomer(customer);
         setEditModelOpen(true);
+    }
+
+    const addCustomerClick = () => {
+        setAddModelOpen(true);
     }
     const deleteClick = async (customer) => {
         if (window.confirm("?בטוח שברצונך למחוק את הלקוח")) {
@@ -64,8 +70,10 @@ const CustomersList = () => {
                 {/* <Link to="/dash/customers/add" className="customers-list-add-btn">
                     הוספת משתמש
                 </Link> */}
-                <button>
-                    <Link to="add">הוספת לקוח</Link>
+                <button onClick={addCustomerClick}>
+                    {/* <Link to="add"> */}
+                    הוספת לקוח
+                    {/* </Link> */}
                 </button>
             </div>
             <table className="customers-list-table">
@@ -128,6 +136,10 @@ const CustomersList = () => {
                 <EditCustomer
                     customer={selectedCustomer}
                     onSuccess={() => setEditModelOpen(false)} />
+            </Modal>
+            <Modal isOpen={isAddModelOpen} onClose={() => setAddModelOpen(false)}>
+                <AddCustomer
+                    onSuccess={() => setAddModelOpen(false)} />
             </Modal>
 
         </div>
