@@ -37,7 +37,7 @@ const ServicesList = () => {
       console.dir(data, { depth: null, colors: true });
       if (data) {
         dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
-        // setEditServiceId(null); // סגירת הטופס
+        setFilterServices(services.filter((service) => service.active === showFreeze));
       }
     } catch (error) {
       console.error('Error freezing service:', error?.data || error.message || error);
@@ -51,7 +51,7 @@ const ServicesList = () => {
       console.dir(data, { depth: null, colors: true });
       if (data) {
         dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
-        // setEditServiceId(null); // סגירת הטופס
+        setFilterServices(services.filter((service) => service.active === showFreeze));
       }
     } catch (error) {
       console.error('Error freezing service:', error?.data || error.message || error);
