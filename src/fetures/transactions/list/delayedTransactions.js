@@ -6,7 +6,7 @@ import "./delayedTransactions.css"
 
 const DelayedTransactions = () => {
     const { _id } = useAuth();
-    const transactions = useSelector((state) => state.transactions.data.transactions || []);
+    const transactions = useSelector((state) => state.transactions.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
 
@@ -19,8 +19,8 @@ const DelayedTransactions = () => {
     const filterDelayedTransactions = (transactionsAsProvider, requireDate) => {
         const today = new Date();
         const requireDateAgo = new Date();
-         // לחשב את התאריך הרצוי אחורה
-         if (requireDate === 0) {
+        // לחשב את התאריך הרצוי אחורה
+        if (requireDate === 0) {
             // במקרה של 0, החזר את כל העסקאות
             return [...transactionsAsProvider].filter(
                 (transaction) =>

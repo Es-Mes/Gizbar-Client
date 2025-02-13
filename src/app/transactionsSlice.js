@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const transactionsSlice = createSlice({
     name: "transactions",
-    initialState: { data: { transactions: [] }, isLoading: false, error: null },
+    initialState: { transactions: [], isLoading: false, error: null },
     reducers: {
         getTransactionsData(state, action) {
             state.data = action.payload;

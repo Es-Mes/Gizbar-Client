@@ -15,8 +15,8 @@ import Modal from "../../modals/Modal";
 import ExpensesList from "../expenses/list/ExpensesList";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
-   const agent = useSelector((state) => state.agent.data || {});
-   const transactions = useSelector((state) => state.transactions.data.transactions || []);
+   const agent = useSelector((state) => state.agent.agent || {});
+   const transactions = useSelector((state) => state.transactions.transactions || []);
    const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
    const isLoading = useSelector((state) => state.agent?.isLoading);
    const error = useSelector((state) => state.agent?.error);
