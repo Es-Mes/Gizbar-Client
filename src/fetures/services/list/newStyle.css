@@ -27,7 +27,7 @@ h2 {
 
 .btn-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 10px;
     margin-bottom: 20px;
     align-items: center;
@@ -46,7 +46,6 @@ h2 {
     font-size: 16px;
     transition: 0.3s;
     display: block;
-    margin: 10px auto;
     white-space: nowrap;
 }
 
