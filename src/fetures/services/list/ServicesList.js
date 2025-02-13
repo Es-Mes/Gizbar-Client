@@ -21,7 +21,7 @@ const ServicesList = () => {
   const [isEditModelOpen, setEditModelOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const dispatch = useDispatch();
-  const [filterServices, setFilterServices] = useState(services.filter((service) => service.active !== showFreeze))
+  const [filterServices, setFilterServices] = useState(services.filter((service) => service.active === true))
 
   console.log("showFreeze :", showFreeze);
   console.log(filterServices);
@@ -100,7 +100,7 @@ const ServicesList = () => {
         </button>
         <button className='showActive' type='button' onClick={() => {
           setShowFreeze(!showFreeze);
-          setFilterServices(services.filter((service) => service.active !== showFreeze));
+          setFilterServices(services.filter((service) => service.active === showFreeze));
         }}>
           {showFreeze ? 'הצג שירותים פעילים' : 'הצג שירותים מוקפאים'}
         </button>
