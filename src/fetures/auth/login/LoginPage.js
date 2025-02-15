@@ -1,6 +1,7 @@
 import "./loginPage.css"
 import { useLoginMutation } from "../authApiSlice"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"
 import { NavLink } from "react-router-dom/dist/umd/react-router-dom.development"
 import useAuth from "../../../hooks/useAuth"
@@ -14,6 +15,8 @@ export const LoginPage = () => {
   const [login, { isError, error, isLoading, isSuccess, data }] = useLoginMutation()
   const navigate = useNavigate()
   let userObj = {}
+
+  const [showPassword, setShowPassword] = useState(false); // ניהול תצוגת הסיסמה
 
   useEffect(() => {
     if (isSuccess) {
@@ -66,13 +69,22 @@ export const LoginPage = () => {
           <div className="required-wrapper">
             <span className="required-asterisk">*</span>
           </div>
-          <input
-            type="password"
+          <div className="password-wrapper">
+            <input
+            type={showPassword ? "text" : "password"}
             name="password"
             id="password"
             placeholder="סיסמה"
             required
           />
+          <span
+              className="eye-icon"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          
         </div>
         {isError &&
           <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>

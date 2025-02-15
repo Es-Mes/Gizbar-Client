@@ -1,8 +1,10 @@
 import { Link, NavLink } from "react-router-dom"
-import { Line } from "react-chartjs-2";
+import { Line,Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import Chart from "chart.js/auto"; 
+
 import "./HomeMain.css"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useRef } from 'react'
 import { useAddUserMutation } from "../users/UsersApiSlice";
 import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
@@ -22,6 +24,8 @@ const HomeMain = () => {
    const error = useSelector((state) => state.agent?.error);
    const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
    const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
+   const chartRef = useRef(null);
+
    // console.log('agent ', agent);
    //הכנסות בחודש הנוכחי 
 
@@ -160,10 +164,38 @@ const HomeMain = () => {
 
    //איסוף מידע עבור הגרפים
    //לעדכן סופית!!!!!
-   const yearlyMonthIncome = [1200, 1800, 2400, 3000, 3500, 4000, 4200, 4800, 5000, 5200, 5800, monthIncome]
-   const yearlyMonthCustomers = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, customersCount]
-   const yearlyMonthServicies = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, servicesCount]
-   const yearlyMonthDelayed = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, delayedTransactionsCount]
+   // const yearlyMonthIncome = [1200, 1800, 2400, 3000, 3500, 4000, 4200, 4800, 5000, 5200, 5800, monthIncome]
+   // const yearlyMonthCustomers = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, customersCount]
+   // const yearlyMonthServicies = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, servicesCount]
+   // const yearlyMonthDelayed = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, delayedTransactionsCount]
+
+   const yearlyMonthIncome = useMemo(() => {
+      const months = new Array(12).fill(0);
+      const currentMonthIndex = new Date().getMonth();
+      months[currentMonthIndex] = monthIncome; // עדכון ההכנסה של החודש הנוכחי
+      return months;
+  }, [monthIncome]);
+
+  const yearlyMonthCustomers = useMemo(() => {
+   const months = new Array(12).fill(0);
+   const currentMonthIndex = new Date().getMonth();
+   months[currentMonthIndex] = customersCount;
+   return months;
+}, [customersCount]);
+
+const yearlyMonthServicies = useMemo(() => {
+   const months = new Array(12).fill(0);
+   const currentMonthIndex = new Date().getMonth();
+   months[currentMonthIndex] = servicesCount;
+   return months;
+}, [servicesCount]);
+
+const yearlyMonthDelayed = useMemo(() => {
+   const months = new Array(12).fill(0);
+   const currentMonthIndex = new Date().getMonth();
+   months[currentMonthIndex] = delayedTransactionsCount;
+   return months;
+}, [delayedTransactionsCount]);
 
    const data = {
       labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
@@ -230,40 +262,52 @@ const HomeMain = () => {
    };
 
    //גרף ההכנסות לחודש זה
-   const incomeData = {
-      labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
-      datasets: [
-         {
-            label: "סך הכול הכנסות החודש",
-            data: [totalIncome, totalIncome + totalExpectedIncome, totalIncome + totalExpectedIncome + delayedTransactionsIncome],
-            borderColor: ["#007bff", "#28a745", "#dc3545"],
-            backgroundColor: "transparent",
-            segment: {
-               borderColor: (ctx) => {
-                  const index = ctx.p1DataIndex; // מזהה את החלק בקו
-                  return index === 0 ? "#007bff" : index === 1 ? "#28a745" : "#dc3545";
-               },
-            },
-            borderWidth: 3,
-            tension: 0.4, // עקומה עדינה יותר
-            pointRadius: 5,
-            pointBackgroundColor: ["#007bff", "#28a745", "#dc3545"],
-         },
-      ],
-   };
+   // const incomeData = {
+   //    labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
+   //    datasets: [
+   //       {
+   //          label: "סך הכול הכנסות החודש",
+   //          data: [totalIncome, totalIncome + totalExpectedIncome, totalIncome + totalExpectedIncome + delayedTransactionsIncome],
+   //          borderColor: ["#007bff", "#28a745", "#dc3545"],
+   //          backgroundColor: "transparent",
+   //          segment: {
+   //             borderColor: (ctx) => {
+   //                const index = ctx.p1DataIndex; // מזהה את החלק בקו
+   //                return index === 0 ? "#007bff" : index === 1 ? "#28a745" : "#dc3545";
+   //             },
+   //          },
+   //          borderWidth: 3,
+   //          tension: 0.4, // עקומה עדינה יותר
+   //          pointRadius: 5,
+   //          pointBackgroundColor: ["#007bff", "#28a745", "#dc3545"],
+   //       },
+   //    ],
+   // };
 
-   const optionsBigGraph = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-         legend: { display: false },
-         tooltip: { enabled: true, mode: "nearest", intersect: false },
-      },
-      scales: {
-         x: { display: false },
-         y: { display: false },
-      },
-   };
+   useEffect(() => {
+      if (chartRef.current) {
+         const ctx = chartRef.current.getContext("2d");
+         new Chart(ctx, {
+            type: "pie",
+            data: {
+               labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
+               datasets: [
+                  {
+                     label: "סך הכול הכנסות החודש",
+                     data: [totalIncome, totalExpectedIncome, delayedTransactionsIncome],
+                     backgroundColor: ["#007bff", "#28a745", "#dc3545"],
+                  },
+               ],
+            },
+            options: {
+               responsive: true,
+               plugins: { legend: { position: "top" } },
+            },
+         });
+      }
+   }, [totalIncome, totalExpectedIncome, delayedTransactionsIncome]); // תלות בנתונים
+
+
 
 
 
@@ -278,13 +322,14 @@ const HomeMain = () => {
             <div className="dashboard-card-large">
                <h4>סיכום הכנסות חודש {currentMonth}</h4>
                <div className="chart-container">
-                  <Line data={incomeData} options={options} />
+                  {/* <Line data={incomeData} options={options} /> */}
+                  <canvas ref={chartRef}></canvas>
                </div>
-               <div className="income-summary">
+               {/* <div className="income-summary">
                   <p style={{ color: "#007bff" }}>הכנסות עד היום: {totalIncome} ₪</p>
                   <p style={{ color: "#28a745" }}>הכנסות צפויות: {totalExpectedIncome} ₪</p>
                   <p style={{ color: "#dc3545" }}>תשלומים שלא נגבו: {delayedTransactionsIncome} ₪</p>
-               </div>
+               </div> */}
             </div>
             <div className="dashboardBox">
                <div className="dashboard-card">
