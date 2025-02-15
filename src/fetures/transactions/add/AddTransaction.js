@@ -14,7 +14,7 @@ import "./AddTransaction.css"
 import { addNewTransaction, setError } from "../../../app/transactionsSlice";
 const AddTransaction = ({ onSuccess }) => {
     const { _id, phone } = useAuth();
-    const services = useSelector((state) => state.agent?.data?.services || []);
+    const services = useSelector((state) => state.agent?.agent?.services || []);
     const filterServices = services.filter((service) => service.active === true);
     const customers = useSelector((state) => state.agent?.data?.customers || []);
     const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });

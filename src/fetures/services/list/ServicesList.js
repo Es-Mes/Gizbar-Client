@@ -27,7 +27,7 @@ const ServicesList = () => {
   console.log(filterServices);
 
   useEffect(() => {
-    setFilterServices(services.filter((service) => service.active === showFreeze));
+    setFilterServices(services.filter((service) => service.active !== showFreeze));
   }, [showFreeze, services]);
 
   // הקפאת שירות

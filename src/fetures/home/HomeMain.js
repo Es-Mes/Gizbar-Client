@@ -1,10 +1,11 @@
 import { Link, NavLink } from "react-router-dom"
-import { Line,Pie } from "react-chartjs-2";
+import { Line, Pie } from "react-chartjs-2";
 import "chart.js/auto";
-import Chart from "chart.js/auto"; 
+import Chart from "chart.js/auto";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import "./HomeMain.css"
-import React, { useState, useEffect,useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAddUserMutation } from "../users/UsersApiSlice";
 import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
@@ -25,6 +26,7 @@ const HomeMain = () => {
    const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
    const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
    const chartRef = useRef(null);
+   Chart.register(ChartDataLabels);
 
    // console.log('agent ', agent);
    //הכנסות בחודש הנוכחי 
@@ -174,28 +176,28 @@ const HomeMain = () => {
       const currentMonthIndex = new Date().getMonth();
       months[currentMonthIndex] = monthIncome; // עדכון ההכנסה של החודש הנוכחי
       return months;
-  }, [monthIncome]);
+   }, [monthIncome]);
 
-  const yearlyMonthCustomers = useMemo(() => {
-   const months = new Array(12).fill(0);
-   const currentMonthIndex = new Date().getMonth();
-   months[currentMonthIndex] = customersCount;
-   return months;
-}, [customersCount]);
+   const yearlyMonthCustomers = useMemo(() => {
+      const months = new Array(12).fill(0);
+      const currentMonthIndex = new Date().getMonth();
+      months[currentMonthIndex] = customersCount;
+      return months;
+   }, [customersCount]);
 
-const yearlyMonthServicies = useMemo(() => {
-   const months = new Array(12).fill(0);
-   const currentMonthIndex = new Date().getMonth();
-   months[currentMonthIndex] = servicesCount;
-   return months;
-}, [servicesCount]);
+   const yearlyMonthServicies = useMemo(() => {
+      const months = new Array(12).fill(0);
+      const currentMonthIndex = new Date().getMonth();
+      months[currentMonthIndex] = servicesCount;
+      return months;
+   }, [servicesCount]);
 
-const yearlyMonthDelayed = useMemo(() => {
-   const months = new Array(12).fill(0);
-   const currentMonthIndex = new Date().getMonth();
-   months[currentMonthIndex] = delayedTransactionsCount;
-   return months;
-}, [delayedTransactionsCount]);
+   const yearlyMonthDelayed = useMemo(() => {
+      const months = new Array(12).fill(0);
+      const currentMonthIndex = new Date().getMonth();
+      months[currentMonthIndex] = delayedTransactionsCount;
+      return months;
+   }, [delayedTransactionsCount]);
 
    const data = {
       labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
@@ -254,6 +256,9 @@ const yearlyMonthDelayed = useMemo(() => {
             mode: "nearest",
             intersect: false,
          },
+         datalabels: {
+            display: false // מסיר לגמרי את המספרים מהגרף
+         }
       },
       scales: {
          x: { display: false }, // ביטול ציר X
@@ -261,33 +266,19 @@ const yearlyMonthDelayed = useMemo(() => {
       },
    };
 
+
+   const chartInstance = useRef(null); // נוסיף משתנה לשמור את התרשים
+
    //גרף ההכנסות לחודש זה
-   // const incomeData = {
-   //    labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
-   //    datasets: [
-   //       {
-   //          label: "סך הכול הכנסות החודש",
-   //          data: [totalIncome, totalIncome + totalExpectedIncome, totalIncome + totalExpectedIncome + delayedTransactionsIncome],
-   //          borderColor: ["#007bff", "#28a745", "#dc3545"],
-   //          backgroundColor: "transparent",
-   //          segment: {
-   //             borderColor: (ctx) => {
-   //                const index = ctx.p1DataIndex; // מזהה את החלק בקו
-   //                return index === 0 ? "#007bff" : index === 1 ? "#28a745" : "#dc3545";
-   //             },
-   //          },
-   //          borderWidth: 3,
-   //          tension: 0.4, // עקומה עדינה יותר
-   //          pointRadius: 5,
-   //          pointBackgroundColor: ["#007bff", "#28a745", "#dc3545"],
-   //       },
-   //    ],
-   // };
+
 
    useEffect(() => {
       if (chartRef.current) {
+         if (chartInstance.current) {
+            chartInstance.current.destroy(); // הורס את התרשים הישן לפני יצירת אחד חדש
+         }
          const ctx = chartRef.current.getContext("2d");
-         new Chart(ctx, {
+         chartInstance.current = new Chart(ctx, {
             type: "pie",
             data: {
                labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
@@ -301,7 +292,20 @@ const yearlyMonthDelayed = useMemo(() => {
             },
             options: {
                responsive: true,
-               plugins: { legend: { position: "top" } },
+               maintainAspectRatio: true, // לשמור על עיגול
+               plugins: {
+                  legend: {
+                     display: true,
+                     position: "left",
+                  },
+                  tooltip: {
+                     enabled: true
+                  },
+                  datalabels: {
+                     display: false // מסיר לגמרי את המספרים מהגרף
+                  }
+                  
+               }
             },
          });
       }

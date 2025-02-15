@@ -157,20 +157,62 @@ justify-content: space-between;
     color: #333;
     margin-bottom: 10px;
 }
-
-
-.chart-container {
+.dashboard-card .chart-container {
     position: relative;
     width: 100%;
-    height: calc(100% - 40px); /* גובה הגרף בתוך הכרטיס, מותאם לפי הצורך */
+    height: calc(100% - 40px); 
     max-height: 200px;
     margin-top: 10px;
     overflow: auto; 
 }
 
+.dashboard-card-large .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 350px; /* מונע מהגרף להיות גדול מדי */
+    aspect-ratio: 1 / 1; /* מבטיח שהגרף יהיה עגול */
+    margin: auto; /* שומר על מיקום מרכזי */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .dashboard {
+        flex-direction: row;
+    }
+    
+    .dashboard-card-large {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .dashboard-card-large .chart-container {
+       margin-top: -70px;
+       /* height:400px; */
+    }
+
+    .income-summary {
+        flex-grow: 1;
+        max-width: 50%;
+        text-align: left;
+    }
+}
+
+
+
+/* 
 
 .chart-container canvas {
     height: 100% !important;
     width: 100% !important;
     display: block;
-}
+} */
