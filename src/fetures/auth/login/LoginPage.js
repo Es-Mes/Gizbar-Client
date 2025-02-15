@@ -35,6 +35,7 @@ export const LoginPage = () => {
     userObj = Object.fromEntries(data.entries())
     console.log(userObj.phone)
     login(userObj)
+    // document.getElementById("loginForm").requestSubmit(); // ניסוי לשליחה ידנית
   }
 
   const handleGoHome = () => {
@@ -43,7 +44,7 @@ export const LoginPage = () => {
 
   return (
     <div className='login-page'>
-      <form onSubmit={handleSubmit} className='login-page-form'>
+      <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
         <button onClick={handleGoHome} className="exit"><Link to='/' />x</button>
         <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
         <h1>כניסת משתמשים</h1>
@@ -77,7 +78,7 @@ export const LoginPage = () => {
           <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
             {error && error.data?.message}
           </Alert>}
-        <button type='submit' disabled={isLoading}>
+        <button type="submit" disabled={isLoading}>
           {isLoading ? 'בתהליך...' : 'כניסה'}
         </button>
       </form>

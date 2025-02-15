@@ -207,7 +207,7 @@ export const RegistPage = () => {
             <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
               {error && error.data?.message}
             </Alert>}
-          <button type='submit' disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--green)' : "var(--blue)", color: !fullData && "white" }}>
+          <button type="submit" disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--green)' : "var(--blue)", color: !fullData && "white" }}>
             {isLoading ? 'בתהליך...' : 'רישום'}
           </button>
         </form>
