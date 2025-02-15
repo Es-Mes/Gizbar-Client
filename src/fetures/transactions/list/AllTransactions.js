@@ -7,7 +7,7 @@ import { useMemo } from "react";
 
 const AllTransactions = () => {
     const { _id } = useAuth();
-    const transactions = useSelector((state) => state.transactions.data.transactions || []);
+    const transactions = useSelector((state) => state.transactions.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
 

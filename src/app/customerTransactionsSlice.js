@@ -4,9 +4,6 @@ const customerTransactionsSlice = createSlice({
     name: "customerTransactions",
     initialState: { transactions: [], isLoading: false, error: null },
     reducers: {
-        getCustomerTransactionsData(state, action) {
-            state.transactions = action.payload;
-        },
         setCustomerTransactionsData(state, action) {
             const updatedTransactions = action.payload;
             state.transactions = updatedTransactions;
@@ -20,5 +17,5 @@ const customerTransactionsSlice = createSlice({
     },
 });
 
-export const { getCustomerTransactionsData, setCustomerTransactionsData, setLoading, setError } = customerTransactionsSlice.actions;
+export const { setCustomerTransactionsData, setLoading, setError } = customerTransactionsSlice.actions;
 export default customerTransactionsSlice.reducer;

@@ -3,8 +3,7 @@ import "./CustomersList.css"
 import Search from "../../../component/search/Search"
 import { useDeleteCustomerMutation } from "../customersApiSlice"
 import { Link, useSearchParams } from "react-router-dom"
-import { MdDelete, MdDeleteOutline, MdViewList, MdViewColumn } from "react-icons/md"
-import { GrView, GrEdit } from "react-icons/gr";
+import { GrView, GrEdit, GrFormTrash } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux"
 import useAuth from "../../../hooks/useAuth"
 import { deleteCustomerData } from "../../../app/customersSlice"
@@ -120,7 +119,7 @@ const CustomersList = () => {
                                 {/* </Link> */}
                             </td>
                             <td className="btn-customer-list delete-byn-list" onClick={() => deleteClick(customer)}>
-                                <MdDelete size={20} color="red" />
+                                <GrFormTrash size={20} color="red" />
                             </td>
 
                             {/* <td className="td-no-border">

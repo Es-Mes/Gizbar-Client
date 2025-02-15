@@ -9,11 +9,11 @@ Chart.register(...registerables); // הרשמת כל האפשרויות של Cha
 
 const TransactionsAsProvider = () => {
     const { _id, phone } = useAuth()
-    const transactions = useSelector((state) => state.transactions.data.transactions || []);
+    const transactions = useSelector((state) => state.transactions.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
     const transactionsAsProvider = [...transactions].filter(transaction =>
-        transaction.agent == _id
+        transaction.agent === _id
     );
 
     const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
@@ -116,7 +116,7 @@ const TransactionsAsProvider = () => {
 
     const recentTransactions = filterRecentTransactions(transactionsAsProvider);
     const recentTransactionsSlice = recentTransactions.slice(0, 5);
-    
+
     //הכנסות אחרונות
     const filterLastTransactions = (transactionsAsProvider) => {
         const today = new Date();
@@ -125,7 +125,7 @@ const TransactionsAsProvider = () => {
 
         return [...transactionsAsProvider]
             .filter(transaction =>
-                transaction.status == "paid" && // רק עסקאות שלא בוטלו
+                transaction.status === "paid" && // רק עסקאות שלא בוטלו
                 new Date(transaction.billingDay) >= threeMonthsAgo  // רק עסקאות מעודכנות ב-3 חודשים האחרונים
 
             )
@@ -174,11 +174,11 @@ const TransactionsAsProvider = () => {
                         </span>
                     </h2>
                     {
-                    isRecentTransactionsSlice ? (
-                        <TransactionsList transactions={recentTransactionsSlice} />
-                    ) : (
-                        <TransactionsList transactions={recentTransactions} />
-                    )}
+                        isRecentTransactionsSlice ? (
+                            <TransactionsList transactions={recentTransactionsSlice} />
+                        ) : (
+                            <TransactionsList transactions={recentTransactions} />
+                        )}
                 </div>
                 <div>
                     <h2>
@@ -191,19 +191,19 @@ const TransactionsAsProvider = () => {
                         </span>
                     </h2>
                     {
-                    (lastTransactionsSlice == [] && lastTransactions == []) ? 
-                        (<h2>לא נמצאו עסקאות תואמות</h2>)
-                    :
-                    (isLastTransactionsSlice ? (
-                        <TransactionsList transactions={lastTransactionsSlice} />
-                    ) : (
-                        <TransactionsList transactions={lastTransactions} />
-                    ))
+                        (lastTransactionsSlice == [] && lastTransactions == []) ?
+                            (<h2>לא נמצאו עסקאות תואמות</h2>)
+                            :
+                            (isLastTransactionsSlice ? (
+                                <TransactionsList transactions={lastTransactionsSlice} />
+                            ) : (
+                                <TransactionsList transactions={lastTransactions} />
+                            ))
                     }
                 </div>
                 <div>
                     <h2>
-                    תשלומים קרובים
+                        תשלומים קרובים
                         <span
                             className="toggle-view"
                             onClick={() => setIsPendingTransactionsSlice(!isPendingTransactionsSlice)}

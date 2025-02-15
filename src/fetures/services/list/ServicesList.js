@@ -1,6 +1,6 @@
 // import './ServicesList.css'; // קובץ CSS
 import './newStyle.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב-hook הזה
 import { useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
@@ -13,7 +13,7 @@ import EditService from '../edit/EditService';
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
-  const services = useSelector((state) => state.agent?.data?.services || []);
+  const services = useSelector((state) => state.agent?.agent?.services || []);
 
   const [deleteService] = useDeleteServiceMutation();
   const [showFreeze, setShowFreeze] = useState(false)
@@ -26,6 +26,10 @@ const ServicesList = () => {
   console.log("showFreeze :", showFreeze);
   console.log(filterServices);
 
+  useEffect(() => {
+    setFilterServices(services.filter((service) => service.active === showFreeze));
+  }, [showFreeze, services]);
+
   // הקפאת שירות
   const [freezService] = useFreezServiceMutation();
   const [unFreezService] = useUnFreezServiceMutation();
@@ -37,7 +41,6 @@ const ServicesList = () => {
       console.dir(data, { depth: null, colors: true });
       if (data) {
         dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
-        setFilterServices(services.filter((service) => service.active === showFreeze));
       }
     } catch (error) {
       console.error('Error freezing service:', error?.data || error.message || error);
@@ -51,7 +54,6 @@ const ServicesList = () => {
       console.dir(data, { depth: null, colors: true });
       if (data) {
         dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
-        setFilterServices(services.filter((service) => service.active === showFreeze));
       }
     } catch (error) {
       console.error('Error freezing service:', error?.data || error.message || error);
@@ -100,7 +102,6 @@ const ServicesList = () => {
         </button>
         <button className='showActive' type='button' onClick={() => {
           setShowFreeze(!showFreeze);
-          setFilterServices(services.filter((service) => service.active === showFreeze));
         }}>
           {showFreeze ? 'הצג שירותים פעילים' : 'הצג שירותים מוקפאים'}
         </button>
