@@ -1,4 +1,4 @@
-.transaction-card {
+/* .transaction-card {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -44,7 +44,7 @@
 .transaction-body p {
     margin: 5px 0;
     flex: 1 1 45%;
-    /* מציג שני פריטים בשורה */
+    
 }
 
 .alerts-info {
@@ -75,4 +75,94 @@
     .transaction-body p {
         flex: 1 1 100%;
     }
+} */
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+.transaction-table th, .transaction-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.transaction-table th {
+    background-color: #8b7bda;
+    color: white;
+    font-size: 16px;
+}
+
+.transaction-table tr:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.transaction-table td {
+    font-size: 15px;
+    color: #333;
+}
+
+/* עריכת שדות */
+.transaction-table input, 
+.transaction-table select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+    width: 90%;
+}
+
+.transaction-table select {
+    cursor: pointer;
+}
+
+/* כפתורי פעולה */
+.transaction-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.transaction-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.transaction-actions .save-btn {
+    color: green;
+}
+
+.transaction-actions .cancel-btn {
+    color: red;
+}
+
+.transaction-actions .edit-btn {
+    color: teal;
+    transition: transform 0.2s ease-in-out;
+}
+
+.transaction-actions .edit-btn:hover {
+    transform: scale(1.1);
+}
+
+/* טבלה רספונסיבית */
+@media (max-width: 768px) {
+    .transaction-table {
+        font-size: 14px;
+    }
+
+    .transaction-table th, .transaction-table td {
+        padding: 8px;
+    }
+}
+

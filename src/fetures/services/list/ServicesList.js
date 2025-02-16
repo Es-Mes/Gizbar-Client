@@ -110,7 +110,7 @@ const ServicesList = () => {
       <table className='services-list-table'>
         <thead className='tHead'>
           <tr>
-            <th>שם השירות</th>
+            <th>שם הלקוח</th>
             <th>תיאור השירות</th>
             <th>סוג השירות</th>
             <th>סטטוס</th>

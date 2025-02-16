@@ -6,6 +6,7 @@
 }
 .transactions_first_page {
     display: flex;
+    flex-direction: column;
     padding-left: 0;
     gap: 30px;
     margin: 30px;
@@ -17,7 +18,7 @@
 .income-chart-container {
     margin: 20px 0;
     text-align: center;
-    width: 35vw;
+    width: 100%;
 }
 #incomeChart {
     max-width: 600px;

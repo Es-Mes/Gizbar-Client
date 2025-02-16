@@ -83,6 +83,9 @@ const TransactionsAsProvider = () => {
                             beginAtZero: true,
                         },
                     },
+                    datalabels: {
+                        display: false // מסיר לגמרי את המספרים מהגרף
+                    }
                 },
             });
         }
@@ -162,6 +165,18 @@ const TransactionsAsProvider = () => {
     if (error) return <p>Error: {error}</p>;
     return (
         <div className='transactions_first_page'>
+            {/* גרף ההכנסות */}
+            <div className="income-chart-container">
+                <div className="chart-header">
+                    <button onClick={() => setCurrentYear(currentYear - 1)}>&lt; שנה קודמת</button>
+                    <h2>הכנסות לפי חודשים ({currentYear})</h2>
+                    <button onClick={() => setCurrentYear(currentYear + 1)}>שנה הבאה &gt;</button>
+                </div>
+                <canvas id="incomeChart" />
+                <p className="average-income">
+                    ההכנסה הממוצעת לחודש בשנת {currentYear}: <strong>{averageIncome} ₪</strong>
+                </p>
+            </div>
             <div className="transactions-display">
                 <div>
                     <h2>
@@ -217,19 +232,6 @@ const TransactionsAsProvider = () => {
                         <TransactionsList transactions={pendingTransactions} />
                     )}
                 </div>
-            </div>
-
-            {/* גרף ההכנסות */}
-            <div className="income-chart-container">
-                <div className="chart-header">
-                    <button onClick={() => setCurrentYear(currentYear - 1)}>&lt; שנה קודמת</button>
-                    <h2>הכנסות לפי חודשים ({currentYear})</h2>
-                    <button onClick={() => setCurrentYear(currentYear + 1)}>שנה הבאה &gt;</button>
-                </div>
-                <canvas id="incomeChart" />
-                <p className="average-income">
-                    ההכנסה הממוצעת לחודש בשנת {currentYear}: <strong>{averageIncome} ₪</strong>
-                </p>
             </div>
         </div>
     )
