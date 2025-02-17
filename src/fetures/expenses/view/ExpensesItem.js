@@ -8,6 +8,10 @@ const alertsLevelMapping = {
 };
 
 const ExpensesItem = ({ transaction }) => {
+    function formatDate(isoString) {
+        let date = new Date(isoString);
+        return date.toLocaleDateString("he-IL"); // פורמט ישראלי: DD/MM/YYYY
+    }
 
     return (
         <tr>
@@ -17,16 +21,19 @@ const ExpensesItem = ({ transaction }) => {
                 }
             </td>
             <td>{transaction.agent.first_name} {transaction.agent.last_name}</td>
+            <td>{formatDate(transaction.createdAt)}</td>
+            {transaction.paymentDate ? <td>{formatDate(transaction.paymentDate)}</td>
+                : <td>{formatDate(transaction.billingDay)}</td>}
             <td>
                 {
                     `₪${transaction.price}`
                 }
             </td>
             <td>
-                { transaction.status === "paid" ? "שולם" : "לא שולם"}
+                {transaction.status === "paid" ? "שולם" : "לא שולם"}
             </td>
-          
-           
+
+
         </tr>
     );
 };

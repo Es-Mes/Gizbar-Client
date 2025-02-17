@@ -1,25 +1,3 @@
-// import React, { useState } from 'react';
-// import ExpensesItem from '../view/ExpensesItem';
-
-// const ExpensesList = ({ transactions }) => {
-
-//     if (transactions == []) {
-//         return <> אין עסקאות העונות על התנאים</>
-//     }
-
-//     return (
-//         <div>
-//             {transactions.map((transaction) => (
-//                 <ExpensesItem
-//                     key={transaction._id}
-//                     transaction={transaction}
-//                 />
-//             ))}
-//         </div>
-//     );
-// };
-
-// export default ExpensesList;
 import '../../transactions/list/TransactionList.css';
 import React, { useState } from "react";
 import ExpensesItem from '../view/ExpensesItem';
@@ -38,10 +16,11 @@ const ExpensesList = ({ transactions }) => {
     return (
         <table className="transaction-table">
             <thead>
-                <tr>
-                    
+                <tr>             
                     <th>סוג השירות</th>
                     <th>על ידי</th>
+                    <th>בתאריך</th>
+                    <th>תאריך תשלום</th>
                     <th>מחיר</th>
                     <th>סטטוס</th>   
                 </tr>

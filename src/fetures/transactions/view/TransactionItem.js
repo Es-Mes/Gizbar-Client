@@ -83,6 +83,10 @@ const TransactionItem = ({ transaction, onUpdate }) => {
         onUpdate(editedTransaction);
         setIsEditing(false);
     };
+    function formatDate(isoString) {
+        let date = new Date(isoString);
+        return date.toLocaleDateString("he-IL"); // פורמט ישראלי: DD/MM/YYYY
+    }
 
     return (
         <tr>
@@ -123,6 +127,10 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                 ) : editedTransaction.status === "paid" ? "שולם" : "לא שולם"}
             </td>
             <td>{editedTransaction.customer.full_name}</td>
+            <td>{formatDate(editedTransaction.createdAt)}</td>
+            {editedTransaction.paymentDate? <td>{formatDate(editedTransaction.paymentDate)}</td>
+            :<td>{formatDate(editedTransaction.billingDay)}</td>}
+
             <td>
                 {isEditing ? (
                     <select
