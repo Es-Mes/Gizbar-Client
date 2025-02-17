@@ -70,7 +70,7 @@
     min-height: 70px;
     max-height: 70px;
     background-color: var(--text);
-    background: linear-gradient(45deg, #3a256d, #8b7bda);
+    background: linear-gradient(45deg, var(--text), #8b7bda);
 }
 
 .navbar-menu-div {
