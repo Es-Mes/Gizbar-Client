@@ -5,9 +5,9 @@
   /* גובה שמותאם לגובה החלון פחות גובה התפריט העליון */
   max-width: 20vw;
   /* מאפיין נוסף מ-CSS השני */
-  background-color: none;
+  background: var(--bgWhite);
   /* צבע רקע כהה */
-  color: var(--bgSoft);
+  color: var(--text);
   /* צבע טקסט */
   position: fixed;
   /* המיקום הקבוע בצד ימין */
@@ -29,6 +29,8 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
+  /* border-left: var(--text) 5px solid ; */
+
 }
 
 .sidebar-main-menu .menu-item {
@@ -37,12 +39,18 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   position: relative;
+  border-left: var(--text) 8px solid ;
+border-radius: 4px;
   /* חובה ל-parent בשביל positioning */
 }
 
 .sidebar-main-menu .menu-item.active {
   /* background-color: #555; */
-  border: 1px solid #bd7dd1;
+  /* border: 1px solid #bd7dd1; */
+  border-left: none;
+  /* border-right: var(--text) 8px solid ; */
+  background-color: var(--hover);
+
   /* צבע רקע לפריט פעיל */
 }
 
@@ -80,10 +88,13 @@
   padding-right: 20px;
   /* תיקון מרחק ימין-שמאל ביחס ל-padding של ה-menu-item */
   list-style: none;
-  background-color: #444;
+  color: white;
+  background-color:rgba(19, 38, 85, 0.849);
   z-index: 10;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
   display: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   /* הסתרת ברירת מחדל */
 }
 
@@ -94,20 +105,20 @@
 
 .sidebar-main-menu .submenu li {
   padding: 8px 10px;
-  background-color: #394144;
+  /* background-color: #c189c9c1; */
   /* צבע רקע לפריטים פנימיים */
   transition: background-color 0.3s ease;
   /* מעבר צבע */
   width: 100%;
 }
 
-.sidebar-main-menu .submenu li:hover {
+.sidebar-main-menu .submenu li:hover,.sidebar-main-menu .submenu li.active {
   background-color: #666;
   /* צבע רקע בעת ריחוף */
 }
 
 .icon {
-  color: var(--bgSoft);
+  color: var(--text);
 
 }
 

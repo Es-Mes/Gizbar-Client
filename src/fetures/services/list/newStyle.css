@@ -37,7 +37,7 @@ h2 {
 
 .addButton,
 .showActive {
-    background: #007bff;
+    background: var(--bgSoft);
     color: white;
     padding: 12px 15px;
     border: none;
@@ -72,7 +72,7 @@ h2 {
 }
 
 .tHead {
-    background: #007bff;
+    background: var(--bgSoft);
     color: white;
     text-align: right;
 }
@@ -94,7 +94,7 @@ h2 {
 }
 
 .tHead tr:hover {
-    background-color: #007bff;
+    background-color: var(--bgSoft);
     cursor: text;
 }
 

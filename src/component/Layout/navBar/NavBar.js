@@ -67,7 +67,7 @@ const NavBar = () => {
 
         {roles !== "admin" && phone && (
           <div className="navbar-menu-box">
-            {phone && (
+            {/* {phone && (
               <div className="navbar-menu-div">
                 <MdPerson
                   size={40}
@@ -76,7 +76,7 @@ const NavBar = () => {
                 ></MdPerson>
                 <p>{first_name}</p>
               </div>
-            )}
+            )} */}
             <div className="navbar-icons">
               {/* <NavLink className="btn" to="/settings"> */}
               <NavLink className="nav-link" to="/dash/UnderConstruction">
