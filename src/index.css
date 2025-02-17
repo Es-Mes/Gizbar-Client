@@ -1,6 +1,8 @@
 :root {
-  --bg: #d9dbdf;
-  --bgSoft: rgb(133, 158, 212);
+  --bg: #ffffff86;
+  /* --bgSoft: rgb(133, 158, 212); */
+  --bgSoft: #8b7bda;
+  --bgDark: #765cf8;
   --bgPink: #668dc7d6;
   --text: rgb(19, 38, 85);
   --textSoft: #d6dbe7;

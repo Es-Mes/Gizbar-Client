@@ -27,6 +27,7 @@
 // };
 
 // export default TransactionsList;
+import './TransactionList.css';
 import React, { useState } from "react";
 import TransactionItem from '../view/TransactionItem';
 

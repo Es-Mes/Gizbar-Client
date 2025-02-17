@@ -39,7 +39,7 @@
     border-radius: 10px;
     border: solid 2px var(--bgPink);
     cursor: pointer; */
-    background: #007bff;
+    background: var(--bgSoft);
     color: white;
     padding: 10px 15px;
     border: none;
@@ -52,7 +52,7 @@
 
 .customers-list-add-btn:hover,
 .customers-list-top button:hover {
-    background: #0056b3;
+    background: var(--bgDark);
 }
 
 .customers-list-table {
@@ -70,7 +70,7 @@
 }
 
 .tHeads {
-    background: #007bff;
+    background: var(--bgSoft);
     color: white;
     /* color: black; */
     /* font-size: 30px; */
@@ -177,7 +177,7 @@
 } */
 
 .btn-customer-list:hover {
-    background-color: rgba(59, 126, 226, 0.648);
+    background-color: rgba(151, 59, 226, 0.648);
     cursor: pointer;
 }
 
@@ -186,6 +186,6 @@
 }
 
 .tHeads tr:hover {
-    background-color: #007bff;
+    background-color: var(--bgSoft);
     cursor: text;
 }

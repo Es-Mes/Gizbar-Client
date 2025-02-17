@@ -86,20 +86,21 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.transaction-table th, .transaction-table td {
+.transaction-table th,
+.transaction-table td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
 .transaction-table th {
-    background-color: #8b7bda;
+    background-color: var(--bgSoft);
     color: white;
     font-size: 16px;
 }
 
 .transaction-table tr:hover {
-    background-color: rgba(0, 123, 255, 0.1);
+    background-color: #f4f4f4;
     transition: background-color 0.2s ease-in-out;
 }
 
@@ -109,7 +110,7 @@
 }
 
 /* עריכת שדות */
-.transaction-table input, 
+.transaction-table input,
 .transaction-table select {
     padding: 8px;
     border-radius: 6px;
@@ -161,8 +162,8 @@
         font-size: 14px;
     }
 
-    .transaction-table th, .transaction-table td {
+    .transaction-table th,
+    .transaction-table td {
         padding: 8px;
     }
 }
-
