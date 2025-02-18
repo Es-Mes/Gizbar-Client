@@ -5,14 +5,6 @@ import ExpensesItem from '../view/ExpensesItem';
 const ExpensesList = ({ transactions }) => {
     const [transactionsList, setTransactionsList] = useState(transactions);
 
-    const handleUpdateTransaction = (updatedTransaction) => {
-        setTransactionsList(
-            transactionsList.map((t) =>
-                t._id === updatedTransaction._id ? updatedTransaction : t
-            )
-        );
-    };
-
     return (
         <table className="transaction-table">
             <thead>

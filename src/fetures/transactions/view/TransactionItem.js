@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { GrEdit, GrCheckmark, GrClose } from "react-icons/gr";
 import { BsCashCoin } from "react-icons/bs";
 import { usePayInCashMutation } from "../TransactionsApiSlice";
+import { setTransactionPaid } from "../../../app/transactionsSlice";
 import "./TransactionItem.css"
 
 const alertsLevelMapping = {
@@ -13,7 +15,8 @@ const alertsLevelMapping = {
 const TransactionItem = ({ transaction, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTransaction, setEditedTransaction] = useState({ ...transaction });
-
+    const dispatch = useDispatch();
+    // console.dir(editedTransaction,{depth:null});
     const handleChange = (e) => {
         setEditedTransaction({
             ...editedTransaction,
@@ -30,9 +33,16 @@ const TransactionItem = ({ transaction, onUpdate }) => {
         return date.toLocaleDateString("he-IL"); // פורמט ישראלי: DD/MM/YYYY
     }
     
-    const [payInCash, { isLoading, isSuccess, isError, error, data }] =
-    usePayInCashMutation();
+    const [payInCash, { isLoading, isSuccess, isError, error, data }] = usePayInCashMutation();
 
+    const payInCashFunction = ()=> {
+        const paidTransaction = payInCash({ _id: editedTransaction._id });
+        if(data){
+            console.log(data);
+        }
+        
+        // dispatch(setTransactionPaid(paidTransaction))
+    }
     return (
         <tr>
             <td>
@@ -79,7 +89,8 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                 )}
             </td>
             <td style={{ cursor: "pointer" }}>
-            <BsCashCoin size ={20} color = "green" onClick={() => payInCash(editedTransaction._id)}/>
+            <BsCashCoin size ={20} color = "green" onClick={payInCashFunction}
+/>
             </td>
         </tr>
     );

@@ -32,23 +32,23 @@ const Sidebar = () => {
     {
       title: "הוצאות",
       icon: FaMoneyBillTransfer,
-      link: "/dash/UnderConstruction",
+      link: "/dash/transactions/customer",
     },
-    {
-      title: "סליקת אשראי",
-      icon: FaCreditCard,
-      link: "/dash/UnderConstruction",
-    },
-    {
-      title: "הוראות קבע",
-      icon: FaArrowDownShortWide,
-      link: "/dash/UnderConstruction",
-    },
-    {
-      title: "היסטוריה",
-      icon: FaChartColumn,
-      link: "/dash/UnderConstruction",
-    },
+    // {
+    //   title: "סליקת אשראי",
+    //   icon: FaCreditCard,
+    //   link: "/dash/UnderConstruction",
+    // },
+    // {
+    //   title: "הוראות קבע",
+    //   icon: FaArrowDownShortWide,
+    //   link: "/dash/UnderConstruction",
+    // },
+    // {
+    //   title: "היסטוריה",
+    //   icon: FaChartColumn,
+    //   link: "/dash/UnderConstruction",
+    // },
     {
       title: "שירותים",
       icon: FaPlay,

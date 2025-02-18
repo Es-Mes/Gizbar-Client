@@ -12,6 +12,17 @@ const transactionsSlice = createSlice({
             const newTransection = action.payload;
             state.transactions.push(newTransection)
         },
+        setTransactionPaid(state,action){
+            const paidTransaction = action.payload;
+            const updatedTransactions = state.transactions.map((transaction) => {
+                if(transaction._id === paidTransaction._id){
+                    return {...transaction,status:"paid",
+                    paymentDate : new Date(),
+                    paymentType : "cash"}
+                }
+            })
+            state.transactions = updatedTransactions;
+        },
         setLoading(state, action) {
             state.isLoading = action.payload;
         },
@@ -21,5 +32,5 @@ const transactionsSlice = createSlice({
     },
 });
 
-export const { setTransactionsData, addNewTransaction, setLoading, setError } = transactionsSlice.actions;
+export const { setTransactionsData, addNewTransaction,setTransactionPaid, setLoading, setError } = transactionsSlice.actions;
 export default transactionsSlice.reducer;
