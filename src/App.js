@@ -32,6 +32,7 @@ import DelayedTransactions from "./fetures/transactions/list/delayedTransactions
 import FreezedServices from "./fetures/services/list/FreezedServices"
 import AllTransactions from "./fetures/transactions/list/AllTransactions"
 import useCustomerTransactionsData from "./hooks/useCustomerTransactionsData"
+import PersonalSettings from "./fetures/settings/PersonalSettings"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
@@ -53,6 +54,7 @@ const App = () => {
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
                         <Route index element={<HomeMain />} />
+                        <Route path="settings/personal" element={<PersonalSettings/>}/>
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<UsersListDemo />} />

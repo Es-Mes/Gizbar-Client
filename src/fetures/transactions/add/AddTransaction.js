@@ -28,15 +28,8 @@ const AddTransaction = ({ onSuccess }) => {
     const [selectedService, setSelectedService] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [transactionDetails, setTransactionDetails] = useState({
-        // description: "",
-        // price: 0,
-        // pricePerHour: "",
-        // serviceType: "global",
-        // hours: 0,
         billingDay: "",
         alerts: false,
-        // typeAlerts: "email and phone",
-        // alertsLevel: "once",
     });
 
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);

@@ -78,16 +78,15 @@ const NavBar = () => {
               </div>
             )} */}
             <div className="navbar-icons">
-              {/* <NavLink className="btn" to="/settings"> */}
-              <NavLink className="nav-link" to="/dash/UnderConstruction">
-                <FaWhmcs size={20} />
+              <NavLink className="navbar-nav-link" activClassName="active" to="settings/personal">
+                <FaWhmcs className="fa-icon" size={20} />
               </NavLink>
               {/* <NavLink className="btn" to="/letters"> */}
               <NavLink className="nav-link" to="/dash/UnderConstruction">
-                <FaEnvelopeOpenText size={20} />
+                <FaEnvelopeOpenText className="fa-icon" size={20} />
               </NavLink>
               <div className="btn" onClick={logOutClick}>
-                <FaArrowRightFromBracket size={20} />
+                <FaArrowRightFromBracket className="fa-icon" size={20} />
               </div>
             </div>
           </div>

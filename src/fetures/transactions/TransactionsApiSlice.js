@@ -37,6 +37,14 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Transactions"],
         }),
+        payInCash: build.mutation({
+            query: ({ _id }) => ({
+                url: `/api/agent/transaction/payCash`,
+                method: "PUT",
+                body: {_id},
+            }),
+            invalidatesTags: ["Transactions"],
+        }),
     }),
 });
 
@@ -46,4 +54,5 @@ export const {
     useAddTransactionMutation,
     useUpdateTransactionMutation,
     useDeleteTransactionMutation,
+    usePayInCashMutation
 } = transactionsApiSlice;

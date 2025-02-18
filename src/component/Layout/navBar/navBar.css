@@ -12,6 +12,15 @@
     gap: 20px;
     /* min-width: 100vw; */
 }
+.navbar-nav-link.active{
+    color: var(--bgSoft);
+}
+.navbar-nav-link .fa-icon {
+    transition: transform 0.3s ease-in-out;
+  }
+.navbar-nav-link.active .fa-icon {
+    transform: scale(1.5);
+  }
 
 .logo,
 .categoryIcon {

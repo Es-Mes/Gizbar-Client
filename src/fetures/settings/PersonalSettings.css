@@ -1,0 +1,56 @@
+.settings-container {
+    max-width: 90%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .settings-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .setting-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    gap: 20px; /* הוספת רווח בין ה-label לערך */
+  }
+  
+  .setting-label {
+    font-weight: 500;
+    color: #333;
+    flex: 1;
+  }
+  
+  .setting-value {
+    flex: 2;
+    text-align: right;
+    color: #555;
+  }
+  
+  .edit-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .edit-button:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  

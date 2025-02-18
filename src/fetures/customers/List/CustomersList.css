@@ -25,7 +25,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: white;
+    background-color: var(--bgGray);
     padding: 20px;
     padding-top: 0;
 }
@@ -57,7 +57,7 @@
 
 .customers-list-table {
     width: 100%;
-    background-color: white;
+    background-color: var(--bgWhite);
     max-width: 90vw;
     align-self: center;
     /* border-radius: 0 0 20px 20px; */

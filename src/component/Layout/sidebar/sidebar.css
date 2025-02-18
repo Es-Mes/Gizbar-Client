@@ -33,20 +33,22 @@
 
 }
 
-.sidebar-main-menu .menu-item {
+/* .sidebar-main-menu .menu-item { */
+.sidebar-main-menu .nav-link {
   margin-bottom: 15px;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   position: relative;
-  border-left: var(--text) 8px solid ;
-border-radius: 4px;
+  /* border-left: var(--text) 8px solid ; */
+  border-radius: 4px;
   /* חובה ל-parent בשביל positioning */
 }
 
-.sidebar-main-menu .menu-item.active {
+/* .sidebar-main-menu .menu-item.active { */
+.sidebar-main-menu .nav-link.active {
   /* background-color: #555; */
-  /* border: 1px solid #bd7dd1; */
+  border: 1px solid #bd7dd1;
   border-left: none;
   /* border-right: var(--text) 8px solid ; */
   background-color: var(--hover);
@@ -54,13 +56,14 @@ border-radius: 4px;
   /* צבע רקע לפריט פעיל */
 }
 
-.sidebar-main-menu .menu-item:hover {
+/* .sidebar-main-menu .menu-item:hover { */
+.sidebar-main-menu .nav-link:hover {
   background-color: #c189c94b;
   /* צבע רקע בעת ריחוף */
 }
 
-.sidebar-main-menu .nav-link,
-.sidebar-main-menu .menu-item .homeLink {
+.sidebar-main-menu .nav-link {
+  /* .sidebar-main-menu .menu-item .homeLink { */
   text-decoration: none;
   /* ללא קו תחתון */
   color: inherit;
@@ -89,7 +92,7 @@ border-radius: 4px;
   /* תיקון מרחק ימין-שמאל ביחס ל-padding של ה-menu-item */
   list-style: none;
   color: white;
-  background-color:rgba(19, 38, 85, 0.849);
+  background-color: rgba(19, 38, 85, 0.849);
   z-index: 10;
   /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
   display: none;
@@ -112,7 +115,8 @@ border-radius: 4px;
   width: 100%;
 }
 
-.sidebar-main-menu .submenu li:hover,.sidebar-main-menu .submenu li.active {
+.sidebar-main-menu .submenu li:hover,
+.sidebar-main-menu .submenu li.active {
   background-color: #666;
   /* צבע רקע בעת ריחוף */
 }

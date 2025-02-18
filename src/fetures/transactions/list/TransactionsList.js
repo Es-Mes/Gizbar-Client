@@ -53,7 +53,8 @@ const TransactionsList = ({ transactions }) => {
                     <th>תאריך</th>
                     <th>תאריך תשלום</th>
                     <th>התראות</th>
-                    <th>פעולות</th>
+                    <th>עריכת נודניק</th>
+                    <th>תשלום במזומן</th>
                 </tr>
             </thead>
             <tbody>

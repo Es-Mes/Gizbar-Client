@@ -29,8 +29,8 @@ const HomeMain = () => {
    Chart.register(ChartDataLabels);
 
    // console.log('agent ', agent);
-   //הכנסות בחודש הנוכחי 
 
+   //הכנסות בחודש הנוכחי 
    const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
    const [monthIncome, setMonthIncome] = useState(0);
    const [monthExpectedIncome, setMonthExpectedIncome] = useState(0);
@@ -166,11 +166,6 @@ const HomeMain = () => {
 
    //איסוף מידע עבור הגרפים
    //לעדכן סופית!!!!!
-   // const yearlyMonthIncome = [1200, 1800, 2400, 3000, 3500, 4000, 4200, 4800, 5000, 5200, 5800, monthIncome]
-   // const yearlyMonthCustomers = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, customersCount]
-   // const yearlyMonthServicies = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, servicesCount]
-   // const yearlyMonthDelayed = [1, 2, 3, 4, 6, 8, 3, 8, 9, 3, 5, delayedTransactionsCount]
-
    const yearlyMonthIncome = useMemo(() => {
       const months = new Array(12).fill(0);
       const currentMonthIndex = new Date().getMonth();
