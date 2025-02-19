@@ -1,136 +1,143 @@
 .login-page {
-    top: 0;
-    left: 0;
+    display: flex;
+    flex-direction: row;
     width: 100vw;
-    /* height: 100vh; */
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    height: 100vh;
     font-family: var(--fontFamily);
-    padding-top: 10vh;
-    padding-bottom: 10vh;
-    z-index: 1000;
+    color: var(--text);
 }
 
-.logoP {
-    width: 200px;
-    height: 100px;
-    background-image: url("http://localhost:1234/slika/SlikaLogo.JPG");
-    background-size: cover;
-    background-repeat: no-repeat;
+.loginImg {
+    min-width:70vw;
+    height: 100vh;
+    object-fit: cover;
 }
 
-/* .logoP-login{
-        max-height: 20vh;
-    } */
+.login-form {
+    width: 30vw;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+    padding: 20px;
+}
+
 .login-page-form {
-    background-color: whitesmoke;
-    padding: 50px;
-    padding-bottom: 25px;
-    padding-top: 10vh;
-    border-radius: 10px;
-    border-bottom-right-radius: 0%;
-    border-bottom-left-radius: 0%;
-    width: 450px;
-    height: 100%;
+    padding: 20px;
+    width: 80%;
+    max-width: 350px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 25px;
-    border: solid var(--blue) 3px;
-    z-index: 1001;
+    gap: 15px;
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.login-page-form h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: var(--text);
 }
 
 .login-page-form input {
     width: 100%;
     height: 30px;
-    padding: 30px;
-    border: solid 2px var(--green);
+    padding: 5px 10px;
+    border: solid 1px var(--bgSoft);
     border-radius: 5px;
     background-color: var(--bgWhite);
-    color: var(--text);
-    font-family: var(--fontFamily);
-
+    font-size: 14px;
 }
 
-.login-page-form button,
-.toRegist button {
-    width: 70%;
-    padding: 13px;
-    font-size: 20px;
-    font-family: var(--fontFamily);
-    background-color: var(--green);
+.login-page-form button {
+    width: 50%;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: var(--bgSoftLight);
     color: var(--text);
-    border: none;
     cursor: pointer;
-    border-radius: 5px;
-    text-align: center center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    transition: background 0.3s;
 }
 
-.exit {
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    max-height: 50px;
-    max-width: 50px;
-    align-self: self-end;
-    border-radius: 25px;
-    font-size: 40px;
-}
-
-.toRegist button {
-    background-color: var(--bgWhite);
-
+.login-page-form button:hover {
+    background-color: var(--text); 
+    color: var(--bgWhite);
 }
 
 .toRegist {
-    width: 450px;
-    height: 30%;
-    padding: 40px;
-    padding-top: 25px;
-    gap: 20px;
-    border-bottom: solid var(--blue) 10px;
-    border-radius: 10px;
-    border-top-right-radius: 0%;
-    border-top-left-radius: 0%;
-    color: #fff;
-    background-color: var(--blue);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 17px;
+    margin-bottom: 20px;
 }
 
-.h1ToRegist {
-    color: #fff;
+.toRegist a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: bold;
+    
 }
 
-.password-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.password-field input {
-    flex: 1;
-    padding-left: 40px;
-    /* מרווח לאייקון משמאל */
-    direction: ltr;
-    /* מוודא שכתיבת הסיסמה נראית כרגיל */
+.toRegist a:hover {
+    text-decoration: underline;
 }
 
 .eye-icon {
     position: absolute;
-    left: 20px;
-    top:35%;
-    /* ממקם את האייקון בתוך השדה מצד שמאל */
+    left: 10px;
+    bottom: 20px;
+    transform: translateY(-50%);
     cursor: pointer;
     font-size: 1.2em;
     color: #666;
 }
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    text-align: start;
+  }
+  
+  .field label {
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  
+  .field input {
+    width: 100%;
+    height: 30px;
+    padding: 5px 10px;
+    border: 1px solid var(--bgSoft);
+    border-radius: 3px;
+    background-color: var(--bgWhite);
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .login-page {
+        flex-direction: column;
+    }
+
+    .loginImg {
+        display: none;
+    }
+
+    .login-form {
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-page-form {
+        width: 90%;
+        max-width: 400px;
+    }
+}
+
+  

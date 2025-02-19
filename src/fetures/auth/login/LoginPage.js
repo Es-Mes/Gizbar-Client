@@ -47,61 +47,52 @@ export const LoginPage = () => {
 
   return (
     <div className='login-page'>
+      <div className="login-form">
+
+
       <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
-        <button onClick={handleGoHome} className="exit"><Link to='/' />x</button>
-        <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
-        <h1>כניסת משתמשים</h1>
-        {/* <input type='text' required name='phone' id='phone' placeholder="פלאפון" /> */}
-        {/* <input type='password' required name='password' id='password' placeholder='ססמא' /> */}
-        <div className="field">
-          <div className="required-wrapper">
-            <span className="required-asterisk">*</span>
-          </div>
-          <input
-            type="text"
-            name="phone"
-            id="phone"
-            placeholder="טלפון"
-            required
-          />
-        </div>
-        <div className="field">
-          <div className="required-wrapper">
-            <span className="required-asterisk">*</span>
-          </div>
-          <div className="password-wrapper">
-            <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            id="password"
-            placeholder="סיסמה"
-            required
-          />
-          <span
-              className="eye-icon"
-              onClick={() => setShowPassword((prev) => !prev)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-          
-        </div>
-        {isError &&
-          <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
-            {error && error.data?.message}
-          </Alert>}
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'בתהליך...' : 'כניסה'}
-        </button>
-      </form>
+  <h2>התחברות לחשבון</h2>
+  <div className="field">
+    <label htmlFor="phone">טלפון</label>
+    <input
+      type="text"
+      name="phone"
+      id="phone"
+      required
+    />
+  </div>
+  <div className="field">
+    <label htmlFor="password">סיסמה</label>
+    <div className="password-wrapper">
+      <input
+        type={showPassword ? "text" : "password"}
+        name="password"
+        id="password"
+        required
+      />
+      <span
+        className="eye-icon"
+        onClick={() => setShowPassword((prev) => !prev)}
+      >
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
+      </span>
+    </div>
+  </div>
+  {isError && (
+    <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
+      {error && error.data?.message}
+    </Alert>
+  )}
+  <button type="submit" disabled={isLoading}>
+    {isLoading ? 'בתהליך...' : 'כניסה'}
+  </button>
+</form>
+
       <div className="toRegist">
-        <h1 className="h1ToRegist">חדש באתר?</h1>
-        <button><NavLink to='/regist'>הרשם עכשיו!</NavLink></button>
+       <NavLink to='/regist'>חדש באתר? הרשם עכשיו!</NavLink>
       </div>
-
-      <div>
-
       </div>
+      <img className="loginImg" src="/slika/loginImg.JPG" alt="" />
     </div>
   )
 }

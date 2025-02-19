@@ -61,7 +61,7 @@ const authApiSlice=apiSlice.injectEndpoints({
         refresh:build.mutation({
             query:()=>({
                 url:"/api/auth/refresh",
-                method:"GET",
+                method:"POST",
                 credentials: 'include', // זה החלק החשוב!
             }),
             async onQueryStarted(arg,{dispatch,queryFulfilled }){
