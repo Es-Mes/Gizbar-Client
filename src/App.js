@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom"
+import { HashRouter as Router, Routes, Route, Outlet } from "react-router-dom"
 import SiteLayout from "./component/Layout/site/SiteLayout"
 import DashLayout from "./component/Layout/dash/DashLayout"
 import UsersList from "./fetures/users/List/UsersList"
