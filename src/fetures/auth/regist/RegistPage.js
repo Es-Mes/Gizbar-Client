@@ -82,12 +82,18 @@ export const RegistPage = () => {
   );
 
   return (
-    <div className='modal-overlay modal-static' ref={modalRef}>
+    <div className='modal-overlay modal-static regist-modal'
+      style={{ 
+      backgroundImage: `url(${process.env.PUBLIC_URL}/slika/loginImg.JPG)`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }} ref={modalRef}>
       <div className='regist-page modal-content'>
+        
         <form onChange={checkFull} onSubmit={handleSubmit} className='regist-page-form'>
-          <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button>
-          <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
-          <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} />
+        <h2>יצירת חשבון</h2>
+          {/* <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button> */}
+          {/* <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} /> */}
 
           <div className="field">
             <div className="required-wrapper">
@@ -207,7 +213,7 @@ export const RegistPage = () => {
             <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
               {error && error.data?.message}
             </Alert>}
-          <button type="submit" disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--green)' : "var(--blue)", color: !fullData && "white" }}>
+          <button type="submit" disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--text)' : "var(--bgSoftLight)", color: fullData && "white" }}>
             {isLoading ? 'בתהליך...' : 'רישום'}
           </button>
         </form>
