@@ -11,8 +11,6 @@ const useAuth = () => {
             roles: decoded.roles || "",
             phone: decoded.phone || "",
             first_name: decoded.first_name || "",
-            // last_name: decoded.last_name || "",
-            // email: decoded.email || "",
             isAdmin: decoded.roles === "admin",
             isUser: decoded.roles === "user",
         };
