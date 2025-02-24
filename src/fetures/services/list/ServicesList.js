@@ -22,10 +22,6 @@ const ServicesList = () => {
   const [selectedService, setSelectedService] = useState(null);
   const dispatch = useDispatch();
   const [filterServices, setFilterServices] = useState(services.filter((service) => service.active === true))
-
-  console.log("showFreeze :", showFreeze);
-  console.log(filterServices);
-
   useEffect(() => {
     setFilterServices(services.filter((service) => service.active !== showFreeze));
   }, [showFreeze, services]);

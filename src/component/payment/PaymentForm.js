@@ -59,7 +59,7 @@ const PaymentForm = ({ initialCustomerData }) => {
         if (window.postNedarim) {
             window.postNedarim({
                 ...customerData,
-                CallBack: "https://yourserver.com/payment-callback",
+                CallBack: process.env.REACT_APP_BASE_URL,
                 CallBackMailError: 'esterleah085@gmail.com',
             });
         } else {

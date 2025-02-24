@@ -66,7 +66,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar-main-menu">
           <NavLink className="nav-link" activeClassName="active" to="/dash" end>
-          {React.createElement(FaHouseChimney, { size: 25, className: "icon" })} "עמוד הבית"
+          {React.createElement(FaHouseChimney, { size: 25, className: "icon" })} עמוד הבית
         </NavLink>
          {menuItems.map((menu, index) => (
           <NavLink className="nav-link" activeClassName="active" to={menu.link}>
