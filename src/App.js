@@ -35,6 +35,8 @@ import useCustomerTransactionsData from "./hooks/useCustomerTransactionsData"
 import PersonalSettings from "./fetures/settings/PersonalSettings"
 import ExpensesList from "./fetures/expenses/list/ExpensesList"
 import ExpensesPage from "./fetures/expenses/ExpensesPage"
+import PaymentIframe from "./component/payment/PaymentForm"
+import PaymentPage from "./component/payment/PaymentPage"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 
@@ -56,7 +58,7 @@ const App = () => {
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
                         <Route index element={<HomeMain />} />
-                        <Route path="settings/personal" element={<PersonalSettings/>}/>
+                        <Route path="settings/personal" element={<PersonalSettings />} />
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<UsersListDemo />} />
@@ -74,6 +76,7 @@ const App = () => {
                             <Route path="all" element={<AllTransactions />} />
                             <Route path="add" element={<AddTransaction />} />
                             <Route path="delayed" element={<DelayedTransactions />} />
+                            <Route path="payment" element={<PaymentPage />} />
                         </Route>
                         <Route path="transactions/customer" element={<Outlet />}>
                             <Route index element={<ExpensesPage />} />

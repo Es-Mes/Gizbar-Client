@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { GrEdit, GrCheckmark, GrClose } from "react-icons/gr";
-import { BsCashCoin } from "react-icons/bs";
+import { BsCashCoin, BsCreditCard } from "react-icons/bs";
 import { usePayInCashMutation } from "../TransactionsApiSlice";
 import { setTransactionPaid } from "../../../app/transactionsSlice";
+import { useNavigate } from "react-router-dom"; 
 import "./TransactionItem.css"
 
 const alertsLevelMapping = {
@@ -16,6 +17,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTransaction, setEditedTransaction] = useState({ ...transaction });
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     // console.dir(editedTransaction,{depth:null});
     const handleChange = (e) => {
         setEditedTransaction({
@@ -43,6 +45,17 @@ const TransactionItem = ({ transaction, onUpdate }) => {
         
         // dispatch(setTransactionPaid(paidTransaction))
     }
+
+
+    const handleCreditPayment = () => {
+        navigate("/dash/transactions/income/payment", {
+            state: {
+                amount: editedTransaction.price,
+                customer: editedTransaction.customer,
+            },
+        });
+    };
+
     return (
         <tr>
             <td>
@@ -89,8 +102,8 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                 )}
             </td>
             <td style={{ cursor: "pointer" }}>
-            <BsCashCoin size ={20} color = "green" onClick={payInCashFunction}
-/>
+            <BsCashCoin size ={20} color = "green" onClick={payInCashFunction}/>
+            <BsCreditCard size={20} color="blue" onClick={handleCreditPayment} style={{ marginRight: "10px" }} />
             </td>
         </tr>
     );
