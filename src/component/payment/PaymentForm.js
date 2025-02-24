@@ -12,25 +12,16 @@ const PaymentForm = ({ initialCustomerData }) => {
         Currency: 1, // ברירת מחדל - שקלים
         PaymentType: "Ragil",
         Tashlumim: 1,
-        Mosad: process.env.MOSAD, // מזהה המוסד
-        ApiValid: process.env.API_VALID, // קוד אימות
+        Mosad: process.env.REACT_APP_MOSAD, // מזהה המוסד
+        ApiValid: process.env.REACT_APP_API_VALID, // קוד אימות
         Comment: "",
     });
 
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [iframeHeight, setIframeHeight] = useState("500px");
 
-    // טעינת הסקריפט של נדרים פלוס
-    useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://www.matara.pro/nedarimplus/iframe/sample2.js"; // לפי התיעוד שלהם
-        script.async = true;
-        document.body.appendChild(script);
-
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
+    const PostNedarim = (Data) => {
+         var iframeWin = iframeRef.current?.contentWindow; iframeWin.postMessage(Data, "*"); };
 
     // מאזין להודעות מהאייפרם
     useEffect(() => {
@@ -56,17 +47,13 @@ const PaymentForm = ({ initialCustomerData }) => {
     };
 
     const handlePayment = () => {
-        if (window.postNedarim) {
-            window.postNedarim({
+        console.log(customerData);
+            PostNedarim({
                 ...customerData,
                 CallBack: process.env.REACT_APP_BASE_URL,
                 CallBackMailError: 'esterleah085@gmail.com',
             });
-        } else {
-            console.error("postNedarim function is not available yet.");
-        }
     };
-
     return (
         <div className="payment-container">
             <form>
@@ -91,7 +78,7 @@ const PaymentForm = ({ initialCustomerData }) => {
                 </select>
 
                 <h2>פרטי תשלום</h2>
-                <iframe
+                <iframe id="NedarimFrame"
                     ref={iframeRef}
                     src="https://www.matara.pro/nedarimplus/iframe/"
                     style={{ width: "100%", border: "none", minHeight: iframeHeight }}

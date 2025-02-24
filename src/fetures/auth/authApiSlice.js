@@ -62,7 +62,7 @@ const authApiSlice=apiSlice.injectEndpoints({
             query:()=>({
                 url:"/api/auth/refresh",
                 method:"POST",
-                credentials: 'include', // זה החלק החשוב!
+                // credentials: 'include', // זה החלק החשוב!
             }),
             async onQueryStarted(arg,{dispatch,queryFulfilled }){
                 try{
