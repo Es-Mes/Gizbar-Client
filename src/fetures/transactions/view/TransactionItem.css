@@ -110,7 +110,7 @@
 }
 
 /* עריכת שדות */
-.transaction-table input,
+/* .transaction-table input,
 .transaction-table select {
     padding: 8px;
     border-radius: 6px;
@@ -118,7 +118,7 @@
     font-size: 14px;
     text-align: center;
     width: 90%;
-}
+} */
 
 .transaction-table select {
     cursor: pointer;

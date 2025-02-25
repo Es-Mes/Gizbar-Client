@@ -57,6 +57,7 @@ const App = () => {
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
+                        <Route path="CreditPay" element={<PaymentPage/>} />
                         <Route index element={<HomeMain />} />
                         <Route path="settings/personal" element={<PersonalSettings />} />
                         <Route path="customers" element={<Outlet />}>
@@ -76,7 +77,6 @@ const App = () => {
                             <Route path="all" element={<AllTransactions />} />
                             <Route path="add" element={<AddTransaction />} />
                             <Route path="delayed" element={<DelayedTransactions />} />
-                            <Route path="payment" element={<PaymentPage />} />
                         </Route>
                         <Route path="transactions/customer" element={<Outlet />}>
                             <Route index element={<ExpensesPage />} />

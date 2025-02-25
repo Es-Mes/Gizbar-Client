@@ -18,7 +18,7 @@ const PaymentForm = ({ initialCustomerData }) => {
     });
 
     const [paymentStatus, setPaymentStatus] = useState(null);
-    const [iframeHeight, setIframeHeight] = useState("500px");
+    const [iframeHeight, setIframeHeight] = useState("400px");
     const [errors, setErrors] = useState({});
 
     const validateForm = () => {
@@ -26,7 +26,7 @@ const PaymentForm = ({ initialCustomerData }) => {
         if (!customerData.FirstName.trim()) newErrors.FirstName = "שם פרטי חובה";
         // if (!customerData.LastName.trim()) newErrors.LastName = "שם משפחה חובה";
         // if (!customerData.Zeout.trim() || !/^\d{9}$/.test(customerData.Zeout)) newErrors.Zeout = "תעודת זהות לא תקינה";
-        if (!customerData.Mail.trim() || !/\S+@\S+\.\S+/.test(customerData.Mail)) newErrors.Mail = "אימייל לא תקין";
+        // if (!customerData.Mail.trim() || !/\S+@\S+\.\S+/.test(customerData.Mail)) newErrors.Mail = "אימייל לא תקין";
         if (!customerData.Amount || customerData.Amount <= 0) newErrors.Amount = "יש להזין סכום חיובי";
         if (!customerData.Tashlumim || customerData.Tashlumim < 1) newErrors.Tashlumim = "יש להזין מספר תשלומים תקף";
         setErrors(newErrors);
@@ -69,7 +69,11 @@ const PaymentForm = ({ initialCustomerData }) => {
     };
 
     const handlePayment = () => {
+
         if (!validateForm()) return;
+        console.log("ApiValid:", customerData.ApiValid);
+        console.log("API_VALID:", process.env.REACT_APP_API_VALID);
+        console.log("Customer Data:", customerData);
 
         PostNedarim({
             Name: "FinishTransaction2",
@@ -128,12 +132,15 @@ const PaymentForm = ({ initialCustomerData }) => {
                     text-align: center;
                 }
 
-                .form-label {
+                .form-label,.form-select {
                     display: flex;
                     flex-direction: column;
                     margin-bottom: 10px;
                     text-align: right;
                     font-weight: bold;
+                }
+                .form-select{
+                    font-weight: normal;
                 }
 
                 .TextBox {

@@ -4,7 +4,7 @@ import { GrEdit, GrCheckmark, GrClose } from "react-icons/gr";
 import { BsCashCoin, BsCreditCard } from "react-icons/bs";
 import { usePayInCashMutation } from "../TransactionsApiSlice";
 import { setTransactionPaid } from "../../../app/transactionsSlice";
-import { useNavigate } from "react-router-dom"; 
+import PaymentModal from "../../../modals/PaymentModal";
 import "./TransactionItem.css"
 
 const alertsLevelMapping = {
@@ -16,8 +16,8 @@ const alertsLevelMapping = {
 const TransactionItem = ({ transaction, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTransaction, setEditedTransaction] = useState({ ...transaction });
+    const [isPaymentModalOpen, setPaymentModalOpen] = useState(false); // ניהול המודל
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     // console.dir(editedTransaction,{depth:null});
     const handleChange = (e) => {
         setEditedTransaction({
@@ -48,15 +48,11 @@ const TransactionItem = ({ transaction, onUpdate }) => {
 
 
     const handleCreditPayment = () => {
-        navigate("/dash/transactions/income/payment", {
-            state: {
-                amount: editedTransaction.price,
-                customer: editedTransaction.customer,
-            },
-        });
+        setPaymentModalOpen(true); // פותח את המודל
     };
 
     return (
+        <>
         <tr>
             <td>
                 {
@@ -106,6 +102,13 @@ const TransactionItem = ({ transaction, onUpdate }) => {
             <BsCreditCard size={20} color="blue" onClick={handleCreditPayment} style={{ marginRight: "10px" }} />
             </td>
         </tr>
+         {/* המודל - מופיע אם `isPaymentModalOpen` = true */}
+         <PaymentModal 
+         isOpen={isPaymentModalOpen} 
+         onClose={() => setPaymentModalOpen(false)} 
+         transaction={editedTransaction} 
+     />
+     </>
     );
 };
 

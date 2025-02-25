@@ -1,0 +1,29 @@
+.modal-pay-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    overflow: hidden; /* מונע גלילה של הרקע */
+}
+
+.modal-pay-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-height: 90vh; /* מונע גובה גדול מדי */
+    overflow-y: auto; /* גלילה פנימית */
+    scrollbar-width: none; /* מסתיר גלילה בפיירפוקס */
+    -ms-overflow-style: none; /* מסתיר גלילה באקספלורר/Edge */
+}
+
+/* מסתיר את פס הגלילה בכרום */
+.modal-pay-content::-webkit-scrollbar {
+    display: none;
+}

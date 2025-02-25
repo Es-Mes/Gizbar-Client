@@ -38,7 +38,7 @@
 
 .customers-list-add-btn:hover,
 .customers-list-top button:hover {
-    background: #0056b3;
+    background: var(--text);
 }
 
 .customers-list-table {

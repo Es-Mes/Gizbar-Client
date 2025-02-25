@@ -50,7 +50,7 @@ h2 {
 }
 
 .addButton:hover {
-    background: #0056b3;
+    background: var(--text);
 }
 
 .showActive {

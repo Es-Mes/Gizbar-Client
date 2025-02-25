@@ -34,11 +34,11 @@ const Sidebar = () => {
       icon: FaMoneyBillTransfer,
       link: "/dash/transactions/customer",
     },
-    // {
-    //   title: "סליקת אשראי",
-    //   icon: FaCreditCard,
-    //   link: "/dash/UnderConstruction",
-    // },
+    {
+      title: "סליקת אשראי",
+      icon: FaCreditCard,
+      link: "/dash/CreditPay",
+    },
     // {
     //   title: "הוראות קבע",
     //   icon: FaArrowDownShortWide,
