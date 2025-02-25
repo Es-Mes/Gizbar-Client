@@ -79,7 +79,7 @@ const NavBar = () => {
             )} */}
             <div className="navbar-icons">
               <NavLink className="navbar-nav-link" activClassName="active" to="settings/personal">
-                <FaWhmcs className="fa-icon" size={20} />
+                <MdPerson className="fa-icon" size={20} />
               </NavLink>
               {/* <NavLink className="btn" to="/letters"> */}
               <NavLink className="nav-link" to="/dash/UnderConstruction">
