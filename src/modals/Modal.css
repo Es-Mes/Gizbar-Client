@@ -57,4 +57,18 @@
     font-size: 18px;
     cursor: pointer;
 }
-
+.modal-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap:10px;
+}
+.cancel-btn{
+    color: red;
+    background-color: white;
+}
+.question{
+    font-size: larger;
+}
+.details{
+    text-align: right;
+}

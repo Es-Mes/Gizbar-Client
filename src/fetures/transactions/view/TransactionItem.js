@@ -16,7 +16,9 @@ const alertsLevelMapping = {
 const TransactionItem = ({ transaction, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTransaction, setEditedTransaction] = useState({ ...transaction });
-    const [isPaymentModalOpen, setPaymentModalOpen] = useState(false); // ניהול המודל
+    const [isPaymentModalOpen, setPaymentModalOpen] = useState(false); // מודל תשלום באשראי
+    const [isCashModalOpen, setIsCashModalOpen] = useState(false); // מודל אישור תשלום במזומן
+
     const [showActions, setShowActions] = useState(false);
     const dispatch = useDispatch();
     // console.dir(editedTransaction,{depth:null});
@@ -38,14 +40,19 @@ const TransactionItem = ({ transaction, onUpdate }) => {
 
     const [payInCash, { isLoading, isSuccess, isError, error, data }] = usePayInCashMutation();
 
-    const payInCashFunction = () => {
-        const paidTransaction = payInCash({ _id: editedTransaction._id });
-        if (data) {
-            console.log(data);
-        }
+    const confirmPayInCash = () => {
+        payInCash({ _id: editedTransaction._id })
+            .then((response) => {
+                console.log(response);
+                dispatch(setTransactionPaid(response.data)); // עדכון סטטוס התשלום
+                setIsCashModalOpen(false);
+                       // dispatch(setTransactionPaid(paidTransaction))
+            })
+            .catch((err) => console.error("שגיאה בתשלום במזומן", err));
+    };
 
-        // dispatch(setTransactionPaid(paidTransaction))
-    }
+ 
+    
 
     return (
         <>
@@ -76,34 +83,49 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                         {showActions? <GrFormUp size={20} /> :<GrMoreVertical size={20} />}
                         
                     </span>
-                    {showActions && (
+                    {showActions  && (
                         <div className="actions-dropdown floating-menu">
-                            <div onClick={() => {payInCashFunction();setShowActions(!showActions)}} className="action-item">
+                            <div onClick={() => {setIsCashModalOpen(true);setShowActions(!showActions)}} className="action-item">
                                 <BsCashCoin size={20} /> תשלום במזומן
                             </div>
                             <div onClick={() => {setPaymentModalOpen(true);setShowActions(!showActions)}} className="action-item">
                                 <BsCreditCard size={20} /> תשלום באשראי
                             </div>
-                            <div className="action-item">
-                                {isEditing ? (
-                                    <div onClick={() =>{handleSave();setShowActions(!showActions)}} >
-                                        <GrCheckmark size={20} />  שמירת שינויים
-                                        {/* <GrClose size={20} color="red" onClick={() => setIsEditing(false)} /> */}
+                            
+                                {(isEditing && editedTransaction.alertsLevel)  ? (
+                                    <div  className="action-item">
+                                        <GrCheckmark color="green" size={20} onClick={() =>{handleSave();setShowActions(!showActions)}} />  שמירה
+                                        <GrClose color="red" size={20}  onClick={() => {setIsEditing(false);setShowActions(!showActions)}} /> ביטול
                                     </div>
-                                ) : (<div  onClick={() => setIsEditing(true)}><GrEdit size={20} /> עריכת נודניק</div>
+                                ) : (editedTransaction.alertsLevel && <div  className="action-item" onClick={() => setIsEditing(true)}><GrEdit size={20} /> עריכת נודניק</div>
 
                                 )}
-                            </div>
+                            
                         </div>
                     )}
                 </td>
             </tr>
-            {/* המודל - מופיע אם `isPaymentModalOpen` = true */}
-            <PaymentModal
-                isOpen={isPaymentModalOpen}
-                onClose={() => setPaymentModalOpen(false)}
-                transaction={editedTransaction}
-            />
+              {/* מודל תשלום במזומן */}
+              {isCashModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>אישור תשלום במזומן</h3>
+                        <br/>
+                        <p className="question">האם אתה מאשר קבלת תשלום במזומן על העסקה?</p>
+                        <br/>
+                        <h3>פרטי העסקה:</h3>
+                        <br/>
+                        <p className="details"><strong>סכום:</strong> ₪{editedTransaction.price}</p>
+                        <p className="details"><strong>לקוח:</strong> {editedTransaction.customer.full_name}</p>
+                        <div className="modal-actions">
+                        <button className="cancel-btn" onClick={() => setIsCashModalOpen(false)}>ביטול</button>
+                        <button className="confirm-btn" onClick={confirmPayInCash}>אישור</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* מודל תשלום באשראי */}
+            <PaymentModal isOpen={isPaymentModalOpen} onClose={() => setPaymentModalOpen(false)} transaction={editedTransaction} />
         </>
     );
 };
