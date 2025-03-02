@@ -39,6 +39,7 @@ import PaymentIframe from "./component/payment/PaymentForm"
 import PaymentPage from "./component/payment/PaymentPage"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
+import { useEffect } from "react";
 
 
 const App = () => {
@@ -47,6 +48,15 @@ const App = () => {
     useTransactionsData(phone);
     useCustomerTransactionsData(phone)
     useCustomersData(phone)
+
+    useEffect(() => {
+        if (!document.getElementById("dropdown-root")) {
+            const dropdownRoot = document.createElement("div");
+            dropdownRoot.id = "dropdown-root";
+            document.body.appendChild(dropdownRoot);
+        }
+    }, []);
+
     return <Router>
         <ScrollToTop />
         <Routes>

@@ -12,6 +12,8 @@
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ddd;
+    position: relative;
+    overflow: visible;  /* לוודא שהתוכן שבתוך td לא ייחתך */
 }
 
 .transaction-table th {
@@ -36,7 +38,7 @@
     background: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    z-index: 10;
+    z-index: 1000;
     padding: 8px;
     min-width: 150px;
 }
@@ -52,18 +54,6 @@
 .floating-menu .action-item:hover {
     background-color: #f0f0f0;
 }
-
-
-/* עריכת שדות */
-/* .transaction-table input,
-.transaction-table select {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    text-align: center;
-    width: 90%;
-} */
 
 .transaction-table select {
     cursor: pointer;
@@ -100,6 +90,38 @@
 .transaction-actions .edit-btn:hover {
     transform: scale(1.1);
 }
+.actions-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.actions-dropdown.above {
+    bottom: 100%;
+    /* margin-bottom: 5px; */
+}
+
+.actions-dropdown.below {
+    top: 100%;
+    /* margin-top: 5px; */
+}
+
+.action-item {
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.action-item:hover {
+    background-color: #f0f0f0;
+}
+
 
 /* טבלה רספונסיבית */
 @media (max-width: 768px) {
