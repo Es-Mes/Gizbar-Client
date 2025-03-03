@@ -3,9 +3,17 @@
     border-collapse: collapse;
     margin-top: 20px;
     border-radius: 12px;
-    overflow: hidden;
+    /* overflow: hidden; */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+.transaction-table thead th:first-child {
+    border-top-right-radius: 12px;
+}
+
+.transaction-table thead th:last-child {
+    border-top-left-radius: 12px;
+}
+
 
 .transaction-table th,
 .transaction-table td {
@@ -92,24 +100,20 @@
 }
 .actions-dropdown {
     position: absolute;
+    top: 100%; /* כברירת מחדל נפתח כלפי מטה */
+    left: 10;
     background: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #ddd;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    min-width: 150px;
     z-index: 1000;
+    min-width: 150px;
 }
 
-.actions-dropdown.above {
-    bottom: 100%;
-    /* margin-bottom: 5px; */
+.actions-dropdown.open-up {
+    top: auto;
+    bottom: 100%; /* כשאין מקום למטה, פותח כלפי מעלה */
 }
 
-.actions-dropdown.below {
-    top: 100%;
-    /* margin-top: 5px; */
-}
 
 .action-item {
     padding: 8px;

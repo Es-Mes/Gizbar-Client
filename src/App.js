@@ -49,14 +49,6 @@ const App = () => {
     useCustomerTransactionsData(phone)
     useCustomersData(phone)
 
-    useEffect(() => {
-        if (!document.getElementById("dropdown-root")) {
-            const dropdownRoot = document.createElement("div");
-            dropdownRoot.id = "dropdown-root";
-            document.body.appendChild(dropdownRoot);
-        }
-    }, []);
-
     return <Router>
         <ScrollToTop />
         <Routes>
