@@ -13,22 +13,35 @@ const PaymentForm = ({ initialCustomerData }) => {
         PaymentType: "Ragil",
         Tashlumim: 1,
         Mosad: process.env.REACT_APP_MOSAD,
-        ApiValid: process.env.REACT_APP_API_VALID,
+        ApiValid: process.env.REACT_APP_API_IFRAME,
         Comment: "",
     });
 
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [iframeHeight, setIframeHeight] = useState("400px");
     const [errors, setErrors] = useState({});
+    const [errorsMessage, setErrorsMessage] = useState("");
+
 
     const validateForm = () => {
         const newErrors = {};
-        if (!customerData.FirstName.trim()) newErrors.FirstName = "שם פרטי חובה";
+        setErrorsMessage("")
+        if (!customerData.FirstName.trim()) {
+            newErrors.FirstName = "שם פרטי חובה";
+            setErrorsMessage("נא לוודא שכל שדות החובה מלאים")
+        }
         // if (!customerData.LastName.trim()) newErrors.LastName = "שם משפחה חובה";
         // if (!customerData.Zeout.trim() || !/^\d{9}$/.test(customerData.Zeout)) newErrors.Zeout = "תעודת זהות לא תקינה";
         // if (!customerData.Mail.trim() || !/\S+@\S+\.\S+/.test(customerData.Mail)) newErrors.Mail = "אימייל לא תקין";
-        if (!customerData.Amount || customerData.Amount <= 0) newErrors.Amount = "יש להזין סכום חיובי";
-        if (!customerData.Tashlumim || customerData.Tashlumim < 1) newErrors.Tashlumim = "יש להזין מספר תשלומים תקף";
+        if (!customerData.Amount || customerData.Amount <= 0) {
+            newErrors.Amount = "יש להזין סכום חיובי";
+            setErrorsMessage("נא לוודא שכל שדות החובה מלאים")
+        }
+        if (!customerData.Tashlumim || customerData.Tashlumim < 1) {
+            newErrors.Tashlumim = "יש להזין מספר תשלומים תקף";
+            setErrorsMessage("נא לוודא שכל שדות החובה מלאים")
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -70,9 +83,12 @@ const PaymentForm = ({ initialCustomerData }) => {
 
     const handlePayment = () => {
 
-        if (!validateForm()) return;
+        if (!validateForm()) {
+
+            return;
+        }
         console.log("ApiValid:", customerData.ApiValid);
-        console.log("API_VALID:", process.env.REACT_APP_API_VALID);
+        console.log("API_VALID:", process.env.REACT_APP_API_IFRAME);
         console.log("Customer Data:", customerData);
 
         PostNedarim({
@@ -117,10 +133,10 @@ const PaymentForm = ({ initialCustomerData }) => {
                     src="https://www.matara.pro/nedarimplus/iframe/"
                     style={{ width: "100%", border: "none", minHeight: iframeHeight }}
                 />
+                {paymentStatus && <p className="payment-status">{paymentStatus}</p>}
+                <p className="errorsMessage">{errorsMessage}</p>
                 <button type="button" className="pay-button" onClick={handlePayment}>לתשלום</button>
             </form>
-            {paymentStatus && <p className="payment-status">{paymentStatus}</p>}
-
             <style>{`
                 .payment-container {
                     max-width: 500px;
@@ -160,6 +176,10 @@ const PaymentForm = ({ initialCustomerData }) => {
                 .error {
                     color: red;
                     font-size: 12px;
+                }
+                .errorsMessage{
+                    color: red;
+                    font-size: 20px;
                 }
 
                 .pay-button {
