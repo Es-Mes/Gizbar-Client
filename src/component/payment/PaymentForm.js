@@ -97,11 +97,11 @@ const PaymentForm = ({ initialCustomerData }) => {
         console.log("API_VALID:", process.env.REACT_APP_API_IFRAME);
         console.log("Customer Data:", customerData);
 
-        const event = PostNedarim({
+        PostNedarim({
             Name: "FinishTransaction2",
             Value: {
                 ...customerData,
-                CallBack: process.env.REACT_APP_BASE_URL,
+                CallBack: process.env.REACT_APP_CLIENT_URL,
                 CallBackMailError: "esterleah085@gmail.com",
             },
         });
