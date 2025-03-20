@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "GIZBAR",
+  "name": "GIZBAR - ניהול גבייה והכנסות",
   "icons": [
     {
       "src": "image.ico",
@@ -13,7 +13,7 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "SlikaLogo.ico",
       "type": "image/png",
       "sizes": "192x192"
     },
@@ -23,7 +23,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
