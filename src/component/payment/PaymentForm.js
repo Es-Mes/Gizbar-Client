@@ -51,6 +51,7 @@ const PaymentForm = ({ initialCustomerData }) => {
         if (iframeWin) iframeWin.postMessage(Data, "*");
     };
 
+
     useEffect(() => {
         const handleMessage = (event) => {
             if (event.origin !== "https://www.matara.pro") return;
@@ -61,6 +62,11 @@ const PaymentForm = ({ initialCustomerData }) => {
             }
             if (data.status) {
                 setPaymentStatus(data.status === "success" ? "✅ התשלום הצליח!" : "❌ התשלום נכשל, אנא נסה שוב.");
+            }
+            // קליטת הודעות שגיאה מהאייפריים
+            if (data.message) {
+                setErrorsMessage(data.message);
+                console.log("Message from iframe:", data.message);
             }
         };
 
@@ -91,7 +97,7 @@ const PaymentForm = ({ initialCustomerData }) => {
         console.log("API_VALID:", process.env.REACT_APP_API_IFRAME);
         console.log("Customer Data:", customerData);
 
-        PostNedarim({
+        const event = PostNedarim({
             Name: "FinishTransaction2",
             Value: {
                 ...customerData,
