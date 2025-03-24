@@ -79,8 +79,8 @@ const PaymentForm = ({ initialCustomerData }) => {
             if (event.origin !== "https://www.matara.pro") {
                 console.log("❗ הודעה שנפסלה בגלל origin לא תואם");
                 return;
-              }          
-
+            }
+            const data = event.data;
             if (data.height) {
                 setIframeHeight(`${data.height}px`);
                 console.log("גובה התעדכן:", data.height);
