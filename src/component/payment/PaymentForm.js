@@ -80,8 +80,13 @@ const PaymentForm = ({ initialCustomerData }) => {
     
             // עדכון גובה
             if (data.Name === "Height") {
-                setIframeHeight(`${data.Value}px`);
-                console.log("גובה התעדכן:", data.Value);
+                if(data.Value < 320) {
+                    setIframeHeight(`320px`);
+                }
+                else{
+                    setIframeHeight(`${data.Value}px`);
+                    console.log("גובה התעדכן:", data.Value);
+                }
             }
     
             // תגובה לעסקה
@@ -92,8 +97,9 @@ const PaymentForm = ({ initialCustomerData }) => {
                 console.log("סטטוס מהעסקה:", status);
                 console.log("הודעה מהעסקה:", message);
     
-                if (status === "Success") {
+                if (status === "OK") {
                     setPaymentStatus("✅ התשלום הצליח!");
+                    
                 } else if (status === "Error") {
                     setPaymentStatus("❌ התשלום נכשל, אנא נסה שוב.");
                     setErrorsMessage(message); // הצגת הודעת השגיאה שמגיעה מהשרת
