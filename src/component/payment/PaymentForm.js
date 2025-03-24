@@ -71,39 +71,40 @@ const PaymentForm = ({ initialCustomerData }) => {
 
     useEffect(() => {
         const handleMessage = (event) => {
-            // 🔎 מעקב אחרי כל הודעה שנכנסת
-            console.log("Event received!");
             console.log("Event origin:", event.origin);
             console.log("Full event data:", event.data);
-
-            if (event.origin !== "https://www.matara.pro") {
-                console.log("❗ הודעה שנפסלה בגלל origin לא תואם");
-                return;
-            }
+    
+            if (event.origin !== "https://www.matara.pro") return;
+    
             const data = event.data;
-            if (data.height) {
-                setIframeHeight(`${data.height}px`);
-                console.log("גובה התעדכן:", data.height);
+    
+            // עדכון גובה
+            if (data.Name === "Height") {
+                setIframeHeight(`${data.Value}px`);
+                console.log("גובה התעדכן:", data.Value);
             }
-
-            if (data.status) {
-                setPaymentStatus(
-                    data.status === "success"
-                        ? "✅ התשלום הצליח!"
-                        : "❌ התשלום נכשל, אנא נסה שוב."
-                );
-                window.scrollTo({ top: 0, behavior: "smooth" }); // גלילה למעלה בהצלחה/כישלון
-            }
-
-            if (data.message) {
-                setErrorsMessage(data.message);
-                console.log("Message from iframe:", data.message);
+    
+            // תגובה לעסקה
+            if (data.Name === "TransactionResponse") {
+                const status = data.Value.Status;
+                const message = data.Value.Message;
+    
+                console.log("סטטוס מהעסקה:", status);
+                console.log("הודעה מהעסקה:", message);
+    
+                if (status === "Success") {
+                    setPaymentStatus("✅ התשלום הצליח!");
+                } else if (status === "Error") {
+                    setPaymentStatus("❌ התשלום נכשל, אנא נסה שוב.");
+                    setErrorsMessage(message); // הצגת הודעת השגיאה שמגיעה מהשרת
+                }
             }
         };
-
+    
         window.addEventListener("message", handleMessage);
         return () => window.removeEventListener("message", handleMessage);
     }, []);
+    
 
     useEffect(() => {
         if (iframeRef.current) {
