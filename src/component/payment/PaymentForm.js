@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react";
 
 const PaymentForm = ({ initialCustomerData }) => {
     const iframeRef = useRef(null);
+    const initialData = initialCustomerData || {};
     const [customerData, setCustomerData] = useState({
-        FirstName: initialCustomerData?.FirstName || "",
-        LastName: "",
-        Zeout: "",
-        Phone: initialCustomerData?.Phone || "",
-        Mail: initialCustomerData?.Mail || "",
-        Amount: initialCustomerData?.Amount || "",
+        FirstName: initialData.FirstName || "",
+        LastName: initialData.LastName || "",
+        Zeout: initialData.Zeout || "",
+        Phone: initialData.Phone || "",
+        Mail: initialData.Mail || "",
+        Amount: initialData.Amount || "",
         Currency: 1, // שקלים
         PaymentType: "Ragil",
         Tashlumim: 1,
@@ -22,28 +23,45 @@ const PaymentForm = ({ initialCustomerData }) => {
     const [errors, setErrors] = useState({});
     const [errorsMessage, setErrorsMessage] = useState("");
 
-
     const validateForm = () => {
         const newErrors = {};
-        setErrorsMessage("")
+        let hasErrors = false;
+
         if (!customerData.FirstName.trim()) {
             newErrors.FirstName = "שם פרטי חובה";
-            setErrorsMessage("נא לוודא שכל שדות החובה מלאים")
-        }
-        // if (!customerData.LastName.trim()) newErrors.LastName = "שם משפחה חובה";
-        // if (!customerData.Zeout.trim() || !/^\d{9}$/.test(customerData.Zeout)) newErrors.Zeout = "תעודת זהות לא תקינה";
-        // if (!customerData.Mail.trim() || !/\S+@\S+\.\S+/.test(customerData.Mail)) newErrors.Mail = "אימייל לא תקין";
-        if (!customerData.Amount || customerData.Amount <= 0) {
-            newErrors.Amount = "יש להזין סכום חיובי";
-            setErrorsMessage("נא לוודא שכל שדות החובה מלאים")
-        }
-        if (!customerData.Tashlumim || customerData.Tashlumim < 1) {
-            newErrors.Tashlumim = "יש להזין מספר תשלומים תקף";
-            setErrorsMessage("נא לוודא שכל שדות החובה מלאים")
+            hasErrors = true;
         }
 
+        // // הוספתי בדיקת טלפון
+        // if (!customerData.Phone.trim() || !/^\d{9,10}$/.test(customerData.Phone)) {
+        //     newErrors.Phone = "מספר טלפון לא תקין";
+        //     hasErrors = true;
+        // }
+
+        // // הוספתי בדיקת מייל
+        // if (!customerData.Mail.trim() || !/\S+@\S+\.\S+/.test(customerData.Mail)) {
+        //     newErrors.Mail = "אימייל לא תקין";
+        //     hasErrors = true;
+        // }
+
+        // בדיקת סכום
+        if (!customerData.Amount || customerData.Amount <= 0) {
+            newErrors.Amount = "יש להזין סכום חיובי";
+            hasErrors = true;
+        }
+
+        // בדיקת תשלומים
+        if (!customerData.Tashlumim || customerData.Tashlumim < 1) {
+            newErrors.Tashlumim = "יש להזין מספר תשלומים תקף";
+            hasErrors = true;
+        }
+
+        // הודעת שגיאה כוללת
+        const errorMessages = Object.values(newErrors).join(" | ");
+        setErrorsMessage(hasErrors ? errorMessages || "נא לוודא שכל השדות תקינים ומלאים" : "");
+
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        return !hasErrors;
     };
 
     const PostNedarim = (Data) => {
@@ -51,19 +69,32 @@ const PaymentForm = ({ initialCustomerData }) => {
         if (iframeWin) iframeWin.postMessage(Data, "*");
     };
 
-
     useEffect(() => {
         const handleMessage = (event) => {
-            if (event.origin !== "https://www.matara.pro") return;
+            // 🔎 מעקב אחרי כל הודעה שנכנסת
+            console.log("Event received!");
+            console.log("Event origin:", event.origin);
+            console.log("Full event data:", event.data);
 
-            const data = event.data;
+            if (event.origin !== "https://www.matara.pro") {
+                console.log("❗ הודעה שנפסלה בגלל origin לא תואם");
+                return;
+              }          
+
             if (data.height) {
                 setIframeHeight(`${data.height}px`);
+                console.log("גובה התעדכן:", data.height);
             }
+
             if (data.status) {
-                setPaymentStatus(data.status === "success" ? "✅ התשלום הצליח!" : "❌ התשלום נכשל, אנא נסה שוב.");
+                setPaymentStatus(
+                    data.status === "success"
+                        ? "✅ התשלום הצליח!"
+                        : "❌ התשלום נכשל, אנא נסה שוב."
+                );
+                window.scrollTo({ top: 0, behavior: "smooth" }); // גלילה למעלה בהצלחה/כישלון
             }
-            // קליטת הודעות שגיאה מהאייפריים
+
             if (data.message) {
                 setErrorsMessage(data.message);
                 console.log("Message from iframe:", data.message);
@@ -88,11 +119,11 @@ const PaymentForm = ({ initialCustomerData }) => {
     };
 
     const handlePayment = () => {
-
         if (!validateForm()) {
-
+            console.log("Validation failed. Customer data:", customerData);
             return;
         }
+
         console.log("ApiValid:", customerData.ApiValid);
         console.log("API_VALID:", process.env.REACT_APP_API_IFRAME);
         console.log("Customer Data:", customerData);
@@ -101,7 +132,7 @@ const PaymentForm = ({ initialCustomerData }) => {
             Name: "FinishTransaction2",
             Value: {
                 ...customerData,
-                CallBack: process.env.REACT_APP_CLIENT_URL,
+                // CallBack: process.env.REACT_APP_CLIENT_URL,
                 CallBackMailError: "esterleah085@gmail.com",
             },
         });
@@ -117,17 +148,33 @@ const PaymentForm = ({ initialCustomerData }) => {
                     { label: "טלפון", name: "Phone" },
                     { label: "אימייל", name: "Mail", type: "email" },
                     { label: "סכום לתשלום", name: "Amount", type: "number" },
-                    { label: "מספר תשלומים", name: "Tashlumim", type: "number" }
+                    { label: "מספר תשלומים", name: "Tashlumim", type: "number" },
                 ].map(({ label, name, type = "text" }) => (
                     <label key={name} className="form-label">
                         {label}:
-                        <input className="TextBox" type={type} name={name} value={customerData[name]} onChange={handleChange} required />
-                        {errors[name] && <span className="error">{errors[name]}</span>}
+                        <input
+                            className="TextBox"
+                            type={type}
+                            name={name}
+                            value={customerData[name]}
+                            onChange={handleChange}
+                            min={name === "Tashlumim" || name === "Amount" ? "1" : undefined} // מינימום לערכים מספריים
+                            required
+                        />
+                        {errors[name] && (
+                            <span className="error">{errors[name]}</span>
+                        )}
                     </label>
                 ))}
 
-                <label className="form-label">אופן התשלום:</label><br />
-                <select className="form-select" name="PaymentType" value={customerData.PaymentType} onChange={handleChange}>
+                <label className="form-label">אופן התשלום:</label>
+                <br />
+                <select
+                    className="form-select"
+                    name="PaymentType"
+                    value={customerData.PaymentType}
+                    onChange={handleChange}
+                >
                     <option value="Ragil">רגיל</option>
                     <option value="HK">הוראת קבע</option>
                 </select>
@@ -137,12 +184,25 @@ const PaymentForm = ({ initialCustomerData }) => {
                     id="NedarimFrame"
                     ref={iframeRef}
                     src="https://www.matara.pro/nedarimplus/iframe/"
-                    style={{ width: "100%", border: "none", minHeight: iframeHeight }}
+                    style={{
+                        width: "100%",
+                        border: "none",
+                        minHeight: iframeHeight,
+                    }}
                 />
-                {paymentStatus && <p className="payment-status">{paymentStatus}</p>}
+                {paymentStatus && (
+                    <p className="payment-status">{paymentStatus}</p>
+                )}
                 <p className="errorsMessage">{errorsMessage}</p>
-                <button type="button" className="pay-button" onClick={handlePayment}>לתשלום</button>
+                <button
+                    type="button"
+                    className="pay-button"
+                    onClick={handlePayment}
+                >
+                    לתשלום
+                </button>
             </form>
+
             <style>{`
                 .payment-container {
                     max-width: 500px;
@@ -161,7 +221,7 @@ const PaymentForm = ({ initialCustomerData }) => {
                     text-align: right;
                     font-weight: bold;
                 }
-                .form-select{
+                .form-select {
                     font-weight: normal;
                 }
 
@@ -183,7 +243,7 @@ const PaymentForm = ({ initialCustomerData }) => {
                     color: red;
                     font-size: 12px;
                 }
-                .errorsMessage{
+                .errorsMessage {
                     color: red;
                     font-size: 20px;
                 }

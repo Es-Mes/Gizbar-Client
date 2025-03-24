@@ -92,7 +92,7 @@ export const LoginPage = () => {
        <NavLink to='/regist'>חדש באתר? הרשם עכשיו!</NavLink>
       </div>
       </div>
-      <img className="loginImg" src="/slika/loginImg.JPG" alt="" />
+      <img className="loginImg" src="/loginImg.jpg" alt="" />
     </div>
   )
 }

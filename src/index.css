@@ -76,7 +76,6 @@ a {
   align-items: center;
   justify-content: center;
   padding: 20vh;
-  /* background-image: url("./../public/companiesLogo/logo.png"); */
   object-fit: cover;
 }
 
