@@ -19,6 +19,8 @@
     "crypto-browserify": "^3.12.0",
     "dotenv": "^16.4.7",
     "emailjs-com": "^3.2.0",
+    "jspdf": "^3.0.1",
+    "jspdf-font": "^1.0.7",
     "jwt-decode": "^4.0.0",
     "nodemailer": "^6.9.13",
     "react": "^18.2.0",
