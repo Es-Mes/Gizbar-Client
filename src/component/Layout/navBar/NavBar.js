@@ -35,7 +35,7 @@ const NavBar = () => {
           {/* <div className="logoNavBar"></div> */}
           {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}
           <h2 className="title">GIZBAR</h2>
-          <h2>שלום {first_name || "אורח"}</h2>
+          <h2>שלום וברכה ל{first_name || "אורח"}</h2>
         </div>
 
         {roles !== "admin" && !phone && (
@@ -79,14 +79,14 @@ const NavBar = () => {
             )} */}
             <div className="navbar-icons">
               <NavLink className="navbar-nav-link" activClassName="active" to="settings/personal">
-                <MdPerson className="fa-icon" size={20} />
+                <MdPerson className="fa-icon" size={20} /><p>ניהול חשבון</p>
               </NavLink>
               {/* <NavLink className="btn" to="/letters"> */}
               <NavLink className="nav-link" to="/dash/UnderConstruction">
-                <FaEnvelopeOpenText className="fa-icon" size={20} />
+                <FaEnvelopeOpenText className="fa-icon" size={20} /><p>ההודעות שלי</p>
               </NavLink>
               <div className="btn" onClick={logOutClick}>
-                <FaArrowRightFromBracket className="fa-icon" size={20} />
+                <FaArrowRightFromBracket className="fa-icon" size={20} /><p>יציאה</p>
               </div>
             </div>
           </div>

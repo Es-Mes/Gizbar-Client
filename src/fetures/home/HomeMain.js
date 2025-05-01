@@ -276,7 +276,7 @@ const HomeMain = () => {
          chartInstance.current = new Chart(ctx, {
             type: "pie",
             data: {
-               labels: ["עד היום", "צפוי החודש", "עסקאות שלא שולמו"],
+               labels: ["הסכום שנכנס", "הסכום שעומד להכנס החודש", "הסכום בפיגור"],
                datasets: [
                   {
                      label: "סך הכול הכנסות החודש",
@@ -316,10 +316,10 @@ const HomeMain = () => {
    if (errorLoadingTransactions) return <p>Error: {error}</p>;
    return (
       <>
-         <h2>לוח בקרה חודש {currentMonth}</h2>
+         <h2>מה קורה החודש?{currentMonth}</h2>
          <div className="dashboard">
             <div className="dashboard-card-large">
-               <h4>סיכום הכנסות חודש {currentMonth}</h4>
+               <h4>חודש {currentMonth}</h4>
                <div className="chart-container">
                   {/* <Line data={incomeData} options={options} /> */}
                   <canvas ref={chartRef}></canvas>
@@ -333,7 +333,7 @@ const HomeMain = () => {
             <div className="dashboardBox">
                <div className="dashboard-card">
                   <Link to="transactions/income">
-                     <h4>הכנסות</h4>
+                     <h4>כמה עשינו</h4>
                      <h2>{monthIncome} ₪</h2>
                      <div className="chart-container">
                         <Line data={data} options={options} />
@@ -342,7 +342,7 @@ const HomeMain = () => {
                </div>
                <div className="dashboard-card">
                   <Link to={"services"}>
-                     <h4>שירותים</h4>
+                     <h4>מה הצענו</h4>
                      <h2>{servicesCount}</h2>
                      <div className="chart-container">
                         <Line data={serviciesData} options={options} />
@@ -351,7 +351,7 @@ const HomeMain = () => {
                </div>
                <div className="dashboard-card">
                   <Link to={"customers"}>
-                     <h4>לקוחות</h4>
+                     <h4>מי איתנו</h4>
                      <h2>{customersCount}</h2>
                      <div className="chart-container">
                         <Line data={customersData} options={options} />
@@ -360,7 +360,7 @@ const HomeMain = () => {
                </div>
                <div className="dashboard-card">
                   {/* <Link to={''}> */}
-                  <h4>עסקאות שלא נגבו</h4>
+                  <h4>תשלומים שעדיין מחכים</h4>
                   <h2>{customersCount}</h2>
                   <div className="chart-container">
                      <Line data={dellayedData} options={options} />
@@ -372,11 +372,11 @@ const HomeMain = () => {
 
          <div className="QuickActions">
             <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
-               עסקה חדשה
+            פותחים עסקה חדשה
                {/* <Link to="transactions/income/add">עסקה חדשה +</Link> */}
             </button>
             <button>
-               <Link to="transactions/income/all">לכל העסקאות</Link>
+               <Link to="transactions/income/all">רוצה לראות הכל?</Link>
             </button>
          </div>
 
@@ -387,18 +387,18 @@ const HomeMain = () => {
                   className={`toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
                   onClick={() => setSelectedOption('customer')}
                >
-                  לקוח
+                  הוצאות
                </button>
                <h1>עסקאות חודש {currentMonth}</h1>
                <button
                   className={`toggle-button ${selectedOption === 'agent' ? 'active' : ''}`}
                   onClick={() => setSelectedOption('agent')}
                >
-                  סוכן
+                  הכנסות
                </button>
             </div>
             <div>
-               <h2>עסקאות אחרונות</h2>
+               <h2>מה קרה לאחרונה</h2>
                {
                   selectedOption === 'agent' ?
                      <TransactionsList transactions={recentTransactions} />
@@ -407,7 +407,7 @@ const HomeMain = () => {
                }
             </div>
             <div>
-               <h2>עסקאות קרובות</h2>
+               <h2>מה מתקרב</h2>
                {
                   selectedOption === 'agent' ?
                      <TransactionsList transactions={pendingTransactions} />

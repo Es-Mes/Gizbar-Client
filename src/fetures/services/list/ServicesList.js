@@ -87,9 +87,9 @@ const ServicesList = () => {
   return (
     <div className="service-list-container">
       <h2>רשימת שירותים {showFreeze ? 'מוקפאים' : 'פעילים'}</h2>
-      <p className="service-icons-info">
+      {/* <p className="service-icons-info">
         ⏳ שירות לפי שעה | 📦 שירות גלובלי
-      </p>
+      </p> */}
       <div className='btn-container'>
 
         <button className="addButton" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
