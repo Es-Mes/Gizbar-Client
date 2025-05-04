@@ -50,10 +50,10 @@ const TransactionsList = ({ transactions }) => {
                     <th>מחיר</th>
                     <th>סטטוס</th>
                     <th>לקוח</th>
-                    <th>תאריך</th>
+                    <th>תאריך העסקה</th>
                     <th>תאריך תשלום</th>
                     <th>התראות</th>
-                    <th>פעולות</th>
+                    <th>פעולות מהירות</th>
                 </tr>
             </thead>
             <tbody>
