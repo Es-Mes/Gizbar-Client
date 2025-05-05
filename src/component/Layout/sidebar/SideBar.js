@@ -69,7 +69,10 @@ const Sidebar = ({ closeMenu }) => {
           {React.createElement(FaHouseChimney, { size: 25, className: "icon" })} עמוד הבית
         </NavLink>
          {menuItems.map((menu, index) => (
-          <NavLink className="nav-link" activeClassName="active" to={menu.link}>
+          <NavLink className="nav-link" activeClassName="active" to={menu.link}
+          onClick={() => {
+            if (closeMenu) closeMenu(); // סוגר תפריט במסך קטן
+          }}>
           {React.createElement(menu.icon, { size: 25, className: "icon" })} {menu.title}
         </NavLink>
         ))} 
