@@ -1,43 +1,34 @@
-import { Outlet } from "react-router-dom"
-import NavBar from "../navBar/NavBar"
-import Footer from "../footer/Footer"
-import "./dashLayout.css"
-import SideBar from "../sidebar/SideBar"
-import{ MdSearch}from "react-icons/md"
-import HomeMain from "../../../fetures/home/HomeMain"
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import NavBar from "../navBar/NavBar";
+import Footer from "../footer/Footer";
+import "./dashLayout.css";
+import SideBar from "../sidebar/SideBar";
 
-const DashLayout=()=>{
+const DashLayout = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // return(
-    //     <div className="container">
-    //         <div className="menu">
-    //             {/* <SideBar/> */}
-    //         </div>
-    //         <div className="content">
-    //         {/* <div className="navbar-search">
-    //                 <MdSearch/>
-    //                 <input type="text" placeholder="Search..." className="navbar-input"/>
-    //             </div>
-    //             <HomeMain/> */}
-    //             <Outlet/>
-    //             {/* <Footer/> */}
-    //         </div>
-    //     </div>
-    // )
-    return (
-        <div className="page">
-             <header>
-                <NavBar />
-            </header>
-            <main>
-                <div className="content">
-                    <Outlet />
-                </div>
-                <aside className="menu">
-                    <SideBar/>
-                </aside>
-            </main>
+  const toggleMenu = () => setIsMenuOpen(prev => !prev);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  return (
+    <div className="page">
+      <header>
+        <NavBar toggleMenu={toggleMenu} />
+      </header>
+      <main>
+        <div className="content">
+          <Outlet />
         </div>
-    );
-}
-export default DashLayout
+
+        {/* Overlay + Sidebar */}
+        {isMenuOpen && <div className="menu-overlay" onClick={closeMenu}></div>}
+        <aside className={`menu ${isMenuOpen ? "open" : ""}`}>
+          <SideBar closeMenu={closeMenu} />
+        </aside>
+      </main>
+    </div>
+  );
+};
+
+export default DashLayout;

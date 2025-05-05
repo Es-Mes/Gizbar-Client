@@ -35,3 +35,15 @@ main > .menu {
     padding: 20px; /* מרווח פנימי */
     box-sizing: border-box;
 }
+
+@media(max-width:768px){
+    main > .content {
+        width: 100% !important; /* תופס 80% מרוחב המסך */
+        padding: 20px; /* מרווח פנימי */
+        box-sizing: border-box;
+    }
+    main > .menu{
+        width: 0% !important;
+        padding: 0;
+    }
+}

@@ -4,6 +4,8 @@ import {
   MdPerson,
   MdLogout,
 } from "react-icons/md";
+import { FaBars } from "react-icons/fa";
+
 import { FaWhmcs, FaEnvelopeOpenText, FaArrowRightFromBracket } from "react-icons/fa6";
 import Search from "../../search/Search";
 import useAuth from "../../../hooks/useAuth";
@@ -11,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../../fetures/auth/authApiSlice";
 import "./navBar.css";
 
-const NavBar = () => {
+const NavBar = ({ toggleMenu }) => {
   const navigate = useNavigate();
   const { _id, phone, first_name, email, roles } = useAuth();
   const [logout, { isSuccess }] = useSendLogoutMutation();
@@ -31,6 +33,9 @@ const NavBar = () => {
   return (
     <div className="navbar">
       <div className="navbar-title">
+      <button className="menu-button" onClick={toggleMenu}>
+        <FaBars size={24} />
+      </button>
         <div className="navbar-logo-box">
           {/* <div className="logoNavBar"></div> */}
           {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}

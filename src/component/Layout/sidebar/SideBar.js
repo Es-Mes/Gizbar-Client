@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa6";
 import "./sidebar.css";
 
-const Sidebar = () => {
+const Sidebar = ({ closeMenu }) => {
   const [openIndex, setOpenIndex] = useState(null); // משתנה לניהול תפריטים פתוחים
   const [activeIndex, setActiveIndex] = useState(0); // משתנה לניהול פריט פעיל
 

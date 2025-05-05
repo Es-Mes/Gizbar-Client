@@ -139,3 +139,63 @@ li {
   margin-top: 60px;
   /* הזזת השורה הבאה בתפריט */
 }
+.menu-button{
+  display: none;
+}
+
+@media(max-width:768px){
+  /* תפריט צד בסיסי */
+.sidebar-main-menu {
+  height: calc(100vh - 70px);
+  background: var(--bgWhite);
+  color: var(--text);
+  position: fixed;
+  right: -260px; /* כברירת מחדל מוסתר במסכים קטנים */
+  top: 70px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-top: 20px;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  max-width: 30vw;
+
+}
+
+/* כאשר נפתח */
+.menu.open .sidebar-main-menu {
+  right: 0;
+}
+
+/* אייקון סגירה */
+/* .sidebar-main-menu .close-btn {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  margin: 10px 15px;
+  cursor: pointer;
+} */
+
+/* כפתור המבורגר */
+.menu-button {
+  display: block;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: var(--text);
+}
+
+/* רקע כהה שמופיע מאחורי התפריט */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 900;
+}
+}
