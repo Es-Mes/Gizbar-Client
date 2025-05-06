@@ -32,9 +32,9 @@ const HomeMain = () => {
 
    //משתנים לייבוא הצבעים לגרפים
    const cssVars = getComputedStyle(document.documentElement);
-   const bgClear = cssVars.getPropertyValue('--bgClear').trim();
+   const bgClear = cssVars.getPropertyValue('--bgSoftLight2').trim();
    const bgSoftLight = cssVars.getPropertyValue('--bgSoftLight').trim();
-   const text = cssVars.getPropertyValue('--text').trim();
+   const text = cssVars.getPropertyValue('--bgSoftLight3').trim();
 
 
    // console.log('agent ', agent);
@@ -121,7 +121,7 @@ const HomeMain = () => {
       };
       const delayedTransactions = filterDelayedTransactions(thisMonthTransactions)
       setDelayedTransactionsCount(delayedTransactions.length)
-      
+
       const paid = thisMonthTransactionsAsProvider.reduce((acc, transaction) => acc + transaction.price, 0);
       const expected = thisMonthExpectedTransactionsAsProvider.reduce((acc, transaction) => acc + transaction.price, 0);
       const delayed = delayedTransactions.filter(t => t.status === "notPaid").reduce((acc, t) => acc + t.price, 0);
@@ -189,7 +189,7 @@ const HomeMain = () => {
          chartInstance.current = new Chart(ctx, {
             type: "pie",
             data: {
-               // labels: ["הסכום שנכנס", "הסכום שעומד להכנס החודש", "הסכום בפיגור"],
+               labels: ["הכנסות קיימות", "הכנסות שעומדות להכנס", "הכנסות בפיגור"],
                datasets: [
                   {
                      // label: "סך הכול הכנסות החודש",
@@ -203,7 +203,7 @@ const HomeMain = () => {
                maintainAspectRatio: true, // לשמור על עיגול
                plugins: {
                   legend: {
-                     display: true,
+                     display: false,
                      position: "left",
                   },
                   tooltip: {
@@ -230,11 +230,11 @@ const HomeMain = () => {
          OutcomeChartInstance.current = new Chart(ctx, {
             type: "pie",
             data: {
-               // labels: ["הסכום שנכנס", "הסכום שעומד להכנס החודש", "הסכום בפיגור"],
+               labels: ["חיובים שיצאו", "חיובים שעומדים לצאת ", "חיובים בפיגור"],
+
                datasets: [
                   {
-                     label: "סך הכול הוצאות החודש",
-                     data: [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome],
+                   data: [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome],
                      backgroundColor: [bgClear, text, bgSoftLight]
                   },
                ],
@@ -244,11 +244,11 @@ const HomeMain = () => {
                maintainAspectRatio: true, // לשמור על עיגול
                plugins: {
                   legend: {
-                     display: true,
+                     display: false,
                      position: "left",
                   },
                   tooltip: {
-                     enabled: true
+                     enabled: true,
                   },
                   datalabels: {
                      display: false // מסיר לגמרי את המספרים מהגרף
@@ -438,40 +438,54 @@ const HomeMain = () => {
    if (errorLoadingTransactions) return <p>Error: {error}</p>;
    return (
       <>
-         <h2>{today} - מה קורה החודש?</h2>
+         {/* <h2>{today} - מה קורה החודש?</h2> */}
          <div className="dashboard">
 
             {/* שורה 1 - כרטיסים גדולים */}
             <div className="dashboard-row">
                <div className="dashboard-card-large">
-                  <h4>הכנסות חודש {currentMonth}</h4>
-                  <div className="income-summary">
-                     <p style={{ color: "var(--text)" }}>הסכום שעומד להכנס החודש: {totalExpectedIncome} ₪</p>
-                     <p style={{ color: "var(--bgClear)" }}>סכום שנכנס: {totalIncome} ₪</p>
-                     <p style={{ color: "var(--bgSoftLight)" }}>הכנסות בפיגור: {delayedTransactionsIncome} ₪</p>
-                  </div>
+                  <h4>סך הכול הכנסות לחודש {currentMonth}</h4>
+                  <h2>{monthIncome} ₪</h2>
                   <div className="chart-container">
                      <canvas ref={chartRef}></canvas>
                   </div>
                </div>
 
                <div className="dashboard-card-large">
-                  <h4>הוצאות חודש {currentMonth}</h4>
-                  <div className="card-content">
-                     <div className="income-summary">
-                        <p style={{ color: "var(--text)" }}>הסכום שעומד לצאת החודש: {totalExpectedOutcome} ₪</p>
-                        <p style={{ color: "var(--bgClear)" }}>סכום שכבר יצא: {totalOutcome} ₪</p>
-                        <p style={{ color: "var(--bgSoftLight)" }}>הוצאות בפיגור: {delayedTransactionsOutcome} ₪</p>
-                     </div>
+                  <h4>סך הכול הוצאות לחודש {currentMonth}</h4>
+                  <h2>{monthOutcome} ₪</h2>
                      <div className="chart-container">
                         <canvas ref={expenseChartRef}></canvas>
                      </div>
-                  </div>
                </div>
             </div>
 
+            <div className="dashboard-row income-outcome-summary">
+               {/* <div className="income-summary"> */}
+               <div className="dashboard-card color3">
+                  <p style={{
+                     color: "var(--text)", fontWeight: "bold"
+                  }}>סכום שעומד להכנס:<br /> <div style={{ padding: "5px" }}>{totalExpectedIncome} ₪</div></p></div>
+               <div className="dashboard-card color1">
+                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>סכום שכבר נכנס:<br /> <div style={{ padding: "5px" }}>{totalIncome} ₪</div></p>
+               </div>
+               <div className="dashboard-card color2">
+                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></p>
+               </div>
+               {/* </div> */}
+               {/* <div className="outcome-summary"> */}
+               <div className="dashboard-card color3" style={{ backgroundColor:"var(--bgSoftLight3)"}}>
+                  <p style={{ fontWeight: "bold",color:"white" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p></div>
+               <div className="dashboard-card color1" style={{backgroundColor:"var(--bgSoftLight)"}}>
+                  <p style={{ color: "white", fontWeight: "bold" }}>חיובים שיצאו מחשבונך:<br /> <div style={{ padding: "5px" }}>{totalOutcome} ₪</div></p>
+               </div>
+               <div className="dashboard-card color2" style={{backgroundColor:"var(--bgSoftLight2)"}}>
+                  <p style={{ color: "white", fontWeight: "bold" }}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></p>
+               </div>
+               {/* </div> */}
+            </div>
             {/* שורה 2 - סיכומי הכנסות והוצאות */}
-            <div className="dashboard-row">
+            {/* <div className="dashboard-row">
                <div className="dashboard-card">
                   <Link to="transactions/income">
                      <h4>סך הכול הכנסות</h4>
@@ -491,10 +505,10 @@ const HomeMain = () => {
                      </div>
                   </Link>
                </div>
-            </div>
+            </div> */}
 
             {/* שורה 3 - כרטיסים נוספים */}
-            <div className="dashboard-row">
+            {/* <div className="dashboard-row">
                <div className="dashboard-card three-cards">
                   <Link to={"services"}>
                      <h4>מה הצענו</h4>
@@ -522,7 +536,7 @@ const HomeMain = () => {
                      <Line data={dellayedData} options={options} />
                   </div>
                </div>
-            </div>
+            </div> */}
          </div>
 
 
@@ -536,7 +550,7 @@ const HomeMain = () => {
             </button>
          </div>
 
-         <div className="transactions-display">
+         {/* <div className="transactions-display">
 
             <div className="transaction-header head">
                <button
@@ -571,7 +585,7 @@ const HomeMain = () => {
                      <ExpensesList transactions={pendingTransactions} />
                }
             </div>
-         </div>
+         </div> */}
 
          <Modal isOpen={isTransactionModalOpen} onClose={() => setTransactionModalOpen(false)}>
             <AddTransaction

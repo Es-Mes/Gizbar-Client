@@ -2,14 +2,16 @@
   --bg: #ffffff86;
   /* --bgSoft: rgb(133, 158, 212); */
   --bgSoft: #8b7bda;
-  --bgSoftLight: #8b7bdabf;
+  --bgSoftLight: #8b7bdac8;
+  --bgSoftLight2: #755dedba;
+  --bgSoftLight3: #7f6ddc;
   --bgWhite:#f4f4ee;
   --bgGray:rgba#f8f9fa;
   --bgClear:#765cf8;
   --bgPink: #668dc7d6;
   --hover: #c189c94b;
   --text: #3a256d;
-  /* --text: rgb(19, 38, 85); */
+  /* --text: #6e5ec0b0; */
 
   --textSoft: #d6dbe7;
   --bgWhite: whitesmoke;

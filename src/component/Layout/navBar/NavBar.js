@@ -30,6 +30,12 @@ const NavBar = ({ toggleMenu }) => {
     }
   }, [isSuccess, navigate]);
 
+  const today = new Date().toLocaleDateString('he-IL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+ });
+
   return (
     <div className="navbar">
       <div className="navbar-title">
@@ -40,7 +46,9 @@ const NavBar = ({ toggleMenu }) => {
           {/* <div className="logoNavBar"></div> */}
           {/* <Search className="navBarSearch" placeholder={"חיפוש כללי"} /> */}
           <h2 className="title">GIZBAR</h2>
-          <h2>שלום וברכה ל{first_name || "אורח"}</h2>
+          <h2>שלום וברכה ל{first_name || "אורח"} | {today}</h2>
+          {/* <h2>{today} - מה קורה החודש?</h2> */}
+
         </div>
 
         {roles !== "admin" && !phone && (
