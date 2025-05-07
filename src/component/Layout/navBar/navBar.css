@@ -96,7 +96,6 @@
 .title,.navbar-title h2 {
     color: var(--bgWhite);
     font-family: var(--fontFamily);
-    /* padding-left: 10vw; */
 }
 
 .IMotag {
@@ -133,6 +132,34 @@
         cursor: pointer;
         color:var(--bgWhite);
     }
+    .icon-tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+      }
+      
+      .tooltip-text {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+        position: absolute;
+        top: 100%; /* מיקום מעל האייקון */
+        right: 50%;
+        transform: translateX(50%);
+        background-color: #fff;
+        color: #333;
+        padding: 4px 8px;
+        /* border-radius: 6px; */
+        white-space: nowrap;
+        font-size: 12px;
+        z-index: 10;
+      }
+      
+      .icon-tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+      
 
     .userMenu {
         cursor: pointer;
@@ -157,6 +184,11 @@
         display: flex;
         flex-wrap: wrap;
         min-height: 30vh;
+    }
+    .title,.navbar-title h2 {
+        color: var(--bgWhite);
+        font-family: var(--fontFamily);
+        font-size: large;
     }
 
 }

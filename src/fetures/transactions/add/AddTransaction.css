@@ -105,7 +105,7 @@ textarea:focus {
     margin-top: 20px;
 }
 
-button {
+.add-button {
     background: var(--bgSoft);
     color: white;
     padding: 12px;
@@ -116,7 +116,7 @@ button {
     transition: 0.3s;
 }
 
-button:hover {
+.add-button:hover {
     background: var(--text);
 }
 

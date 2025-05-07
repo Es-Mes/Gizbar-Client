@@ -87,7 +87,7 @@ const EditCustomer = ({ customer, onSuccess }) => {
                     onChange={handleChange}
                 />
 
-                <button type="submit" disabled={isLoading}>
+                <button className='editCustom' type="submit" disabled={isLoading}>
                     {isLoading ? "מעדכן..." : "עדכן"}
                 </button>
 

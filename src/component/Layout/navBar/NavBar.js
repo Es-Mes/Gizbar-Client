@@ -26,7 +26,7 @@ const NavBar = ({ toggleMenu }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
+      navigate("/login");
     }
   }, [isSuccess, navigate]);
 
@@ -91,15 +91,15 @@ const NavBar = ({ toggleMenu }) => {
               </div>
             )} */}
             <div className="navbar-icons">
-              <NavLink className="navbar-nav-link" activClassName="active" to="settings/personal">
-                <MdPerson className="fa-icon" size={20} /><p>ניהול חשבון</p>
+              <NavLink className="navbar-nav-link  icon-tooltip" activClassName="active" to="settings/personal">
+                <MdPerson className="fa-icon" size={20} /><p className="tooltip-text">ניהול חשבון</p>
               </NavLink>
               {/* <NavLink className="btn" to="/letters"> */}
-              <NavLink className="nav-link" to="/dash/UnderConstruction">
-                <FaEnvelopeOpenText className="fa-icon" size={20} /><p>ההודעות שלי</p>
+              <NavLink className="nav-link  icon-tooltip" to="/dash/UnderConstruction">
+                <FaEnvelopeOpenText className="fa-icon" size={20} /><p className="tooltip-text">ההודעות שלי</p>
               </NavLink>
-              <div className="btn" onClick={logOutClick}>
-                <FaArrowRightFromBracket className="fa-icon" size={20} /><p>יציאה</p>
+              <div className="btn  icon-tooltip" onClick={logOutClick}>
+                <FaArrowRightFromBracket className="fa-icon" size={20} /><p className="tooltip-text">יציאה</p>
               </div>
             </div>
           </div>

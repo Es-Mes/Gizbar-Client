@@ -234,7 +234,7 @@ const HomeMain = () => {
 
                datasets: [
                   {
-                   data: [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome],
+                     data: [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome],
                      backgroundColor: [bgClear, text, bgSoftLight]
                   },
                ],
@@ -443,21 +443,35 @@ const HomeMain = () => {
 
             {/* שורה 1 - כרטיסים גדולים */}
             <div className="dashboard-row">
-               <div className="dashboard-card-large">
-                  <h4>סך הכול הכנסות לחודש {currentMonth}</h4>
-                  <h2>{monthIncome} ₪</h2>
+               {monthIncome > 0 && <div className="dashboard-card-large">
+                  <div>
+                     <h4>סך הכול הכנסות לחודש {currentMonth}</h4>
+                     <h2>{monthIncome} ₪</h2>
+                  </div>
                   <div className="chart-container">
                      <canvas ref={chartRef}></canvas>
                   </div>
-               </div>
+               </div>}
 
-               <div className="dashboard-card-large">
-                  <h4>סך הכול הוצאות לחודש {currentMonth}</h4>
-                  <h2>{monthOutcome} ₪</h2>
-                     <div className="chart-container">
-                        <canvas ref={expenseChartRef}></canvas>
-                     </div>
-               </div>
+               {monthIncome <= 0 &&
+                  <div className="dashboard-card-large">
+                     <h4>עוד לא היו הכנסות לבינתיים :)</h4>
+                  </div>}
+
+               {monthOutcome > 0 && <div className="dashboard-card-large">
+                  <div>
+                     <h4>סך הכול הוצאות לחודש {currentMonth}</h4>
+                     <h2>{monthOutcome} ₪</h2>
+                  </div>
+                  <div className="chart-container">
+                     <canvas ref={expenseChartRef}></canvas>
+                  </div>
+               </div>}
+
+               {monthOutcome <= 0 &&
+                  <div className="dashboard-card-large">
+                     <h4>עדיין אין עסקאות יוצאות</h4>
+                  </div>}
             </div>
 
             <div className="dashboard-row income-outcome-summary">
@@ -465,23 +479,42 @@ const HomeMain = () => {
                <div className="dashboard-card color3">
                   <p style={{
                      color: "var(--text)", fontWeight: "bold"
-                  }}>סכום שעומד להכנס:<br /> <div style={{ padding: "5px" }}>{totalExpectedIncome} ₪</div></p></div>
+                  }}>סכום שעומד להכנס:<br /> <div style={{ padding: "5px" }}>{totalExpectedIncome} ₪</div></p>
+                  <button>
+                     <Link to="transactions/income/all">לפירוט לחץ</Link>
+                  </button></div>
                <div className="dashboard-card color1">
                   <p style={{ color: "var(--text)", fontWeight: "bold" }}>סכום שכבר נכנס:<br /> <div style={{ padding: "5px" }}>{totalIncome} ₪</div></p>
-               </div>
+                  <button>
+                     <Link to="transactions/income/all">לפירוט לחץ</Link>
+                  </button>
+                  </div>
                <div className="dashboard-card color2">
                   <p style={{ color: "var(--text)", fontWeight: "bold" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></p>
-               </div>
+                  <button>
+                     <Link to="transactions/income/all">לפירוט לחץ</Link>
+                  </button>
+                  </div>
                {/* </div> */}
                {/* <div className="outcome-summary"> */}
-               <div className="dashboard-card color3" style={{ backgroundColor:"var(--bgSoftLight3)"}}>
-                  <p style={{ fontWeight: "bold",color:"white" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p></div>
-               <div className="dashboard-card color1" style={{backgroundColor:"var(--bgSoftLight)"}}>
-                  <p style={{ color: "white", fontWeight: "bold" }}>חיובים שיצאו מחשבונך:<br /> <div style={{ padding: "5px" }}>{totalOutcome} ₪</div></p>
-               </div>
-               <div className="dashboard-card color2" style={{backgroundColor:"var(--bgSoftLight2)"}}>
-                  <p style={{ color: "white", fontWeight: "bold" }}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></p>
-               </div>
+               <div className="dashboard-card color3" >
+                  <p style={{ fontWeight: "bold", color: "var(--text)" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p>
+                  <button>
+                     <Link to="transactions/customer">לפירוט לחץ</Link>
+                  </button>
+                  </div>
+               <div className="dashboard-card color1">
+                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>חיובים שיצאו מחשבונך:<br /> <div style={{ padding: "5px" }}>{totalOutcome} ₪</div></p>
+                  <button>
+                     <Link to="transactions/customer">לפירוט לחץ</Link>
+                  </button>
+                  </div>
+               <div className="dashboard-card color2">
+                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></p>
+                  <button>
+                     <Link to="transactions/customer">לפירוט לחץ</Link>
+                  </button>
+                  </div>
                {/* </div> */}
             </div>
             {/* שורה 2 - סיכומי הכנסות והוצאות */}
@@ -539,14 +572,22 @@ const HomeMain = () => {
             </div> */}
          </div>
 
-
+         <h1 className="actionsHedder">פעולות מהירות</h1>
          <div className="QuickActions">
             <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
-               פותחים עסקה חדשה
-               {/* <Link to="transactions/income/add">עסקה חדשה +</Link> */}
+               הוסף עסקה חדשה לגביה
             </button>
             <button>
-               <Link to="transactions/income/all">רוצה לראות הכל?</Link>
+               <Link to="transactions/income/all">תשלום חובות</Link>
+            </button>
+            <button>
+               <Link to="transactions/income/all">שליחת תזכורות והודעות</Link>
+            </button>
+            <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
+               סליקת אשראי לגביה מיידית               {/* <Link to="transactions/income/add">עסקה חדשה +</Link> */}
+            </button>
+            <button>
+               <Link to="transactions/income/all">הוראת קבע</Link>
             </button>
          </div>
 

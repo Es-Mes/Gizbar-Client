@@ -1,64 +1,6 @@
+/* ----- בסיס ----- */
 body {
     text-align: center;
-}
-
-.income-display {
-    position: fixed;
-    top: 115px;
-    left: 20px;
-    background-color: #f8f8f8;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    text-align: right;
-    /* עיצוב טקסט מימין לשמאל */
-}
-
-.income-display h2,
-.transactions-display h2 {
-    margin-bottom: 20px;
-}
-
-.income-details {
-    margin-top: 10px;
-    color: #333;
-}
-
-.income-details p {
-    margin: 5px 0;
-}
-
-.transactions-display {
-    max-width: 100%;
-    margin: 20px;
-
-}
-
-.QuickActions {
-    display: flex;
-    justify-content: end;
-}
-
-.QuickActions button {
-    background-color: var(--bgSoft);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    margin-left: 15px;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-}
-
-.QuickActions button a {
-    color: white;
-    text-decoration: none;
-}
-
-.QuickActions button:hover {
-    background-color: var(--text);
 }
 
 .head {
@@ -71,7 +13,8 @@ body {
     color: (var(--text));
 }
 
-.toggle-button {
+/* ----- כפתורי מעבר / Toggle ----- */
+/* .toggle-button {
     border: 2px solidvar(--bgSoft);
     background-color: transparent;
     color: var(--bgSoft);
@@ -90,53 +33,128 @@ body {
 
 .toggle-button:not(.active):hover {
     background-color: white;
+} */
+
+/* ----- תצוגת הכנסות ----- */
+/* .income-display {
+    position: fixed;
+    top: 115px;
+    left: 20px;
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    text-align: right;
 }
 
+.income-display h2,
+.transactions-display h2 {
+    margin-bottom: 20px;
+}
+
+.income-details {
+    margin-top: 10px;
+    color: #333;
+}
+
+.income-details p {
+    margin: 5px 0;
+}
+
+.income-summary {
+    text-align: right;
+    font-weight: bold;
+} */
+
+/* ----- תצוגת עסקאות ----- */
+/* .transactions-display {
+    max-width: 100%;
+    margin: 20px;
+} */
+
+/* ----- כפתורי פעולות מהירות ----- */
+.actionsHedder {
+    margin: 20px;
+}
+
+.QuickActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    gap: 15px;
+    font-family: var(--fontFamily);
+}
+
+.QuickActions button {
+    height: 15vh;
+    width: 18%;
+    color: var(--text);
+    background-color: var(--bgSoft);
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    font-family: var(--fontFamily);
+}
+
+.QuickActions button:hover {
+    box-shadow: 0 4px 10px var(--bgSoftLight);
+    transform: translateY(-3px);
+}
+
+.QuickActions button a {
+    text-decoration: none;
+}
+
+/* ----- לוח בקרה ----- */
 .dashboard {
-    /* max-height: 500px; */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
 }
 
-.dashboard-card {
-    width: 48%;
-    /* height: 46%; */
-    overflow: hidden;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.color1 {
-    box-shadow: 0 4px 10px var(--bgSoftLight);
-}
-
-.color2 {
-    box-shadow: 0 4px 10px var(--bgSoftLight2);
-}
-
-.color3 {
-    box-shadow: 0 6px 15px var(--bgSoftLight3);
-
-}
-
-
-
-
-.dashboard-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+.dashboard-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
 }
 
 .dashboard-row.three-cards .dashboard-card {
     width: 31%;
 }
 
+/* ----- כרטיסי לוח בקרה רגילים ----- */
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 48%;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+   padding: 15px;
+    gap:20px;
+    text-align: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+    /* transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); */
+}
 
 .dashboard-card h4 {
     font-size: 14px;
@@ -150,8 +168,39 @@ body {
     color: var(--bgSoft);
 }
 
+.dashboard-card .chart-container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 40px);
+    max-height: 120px;
+}
+.dashboard-card button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bgSoft);
+    color: white;
+    height: 30px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* transition: 0.3s; */
+    text-decoration: none;
+    transform: translateY(-3px);
+    box-shadow: 0 2px 2px #999;
+    transition: all 0.1s ease-in-out;
+    text-align: center;
+}
+.dashboard-card button:hover{
+    box-shadow: 0 1px #666;
+    transform: translateY(-2px);}
+
+
+/* ----- כרטיסי לוח בקרה גדולים ----- */
 .dashboard-card-large {
     flex: 1 1;
+    width: 48%;
     overflow: hidden;
     background: #ffffff;
     border-radius: 12px;
@@ -159,18 +208,10 @@ body {
     padding: 20px;
     text-align: center;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    width: 48%;
-    /* max-height: 70%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.income-summary {
-    text-align: right;
-    font-weight: bold;
-
 }
 
 .dashboard-card-large:hover {
@@ -180,47 +221,29 @@ body {
 
 .dashboard-card-large h4 {
     font-size: 18px;
-    /* color: #333; */
-}
-
-.dashboard-card .chart-container {
-    position: relative;
-    width: 100%;
-    height: calc(100% - 40px);
-    max-height: 120px;
-    /* overflow: auto; */
 }
 
 .dashboard-card-large .chart-container {
     position: relative;
     width: 90%;
-    max-width: 350px;
-    /* מונע מהגרף להיות גדול מדי */
+    max-width: 100px;
     aspect-ratio: 1 / 1;
-    /* מבטיח שהגרף יהיה עגול */
     margin: 20px;
-    /* שומר על מיקום מרכזי */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* ----- עיצוב גרף ----- */
 .chart-container canvas {
     width: 100% !important;
     height: 100% !important;
     display: block;
 }
 
-.dashboard-row {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 15px;
-    width: 100%;
-}
-
+/* ----- מדיה ----- */
 @media (min-width: 1024px) {
-    .dashboard {
+    /* .dashboard {
         min-height: 83vh;
         margin-bottom: 20px;
     }
@@ -228,20 +251,34 @@ body {
     .dashboard-card {
         max-height: 13vh;
     }
-
+*/
     .dashboard-card-large {
+        flex-direction: row-reverse;
+        justify-content: space-between;
         width: 100%;
-        height: 68vh;
-    }
+        height: 30vh;
+    } 
+}
 
-    .dashboard-card-large .chart-container {
-        margin: 0;
+@media (max-width: 1024px) {
+    /* .income-outcome-summary {
+        flex-direction: row;
+        flex-wrap: wrap;
+    } */
+    .dashboard-card{
+        width: 48%;
     }
-    @media (max-width: 1024px) {
-        /* .income-outcome-summary{
-            flex-direction: row;
-            flex-wrap: wrap;
-        } */
-
+    .income-outcome-summary {
+        flex-wrap: wrap;
+        flex-direction: column;
+        max-height: 80vh;
     }
+    .QuickActions {
+        justify-content: space-evenly;
     }
+    .QuickActions button{
+    height: 15vh;
+    width: 30%;
+    }
+    
+}

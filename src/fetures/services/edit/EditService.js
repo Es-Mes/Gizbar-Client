@@ -95,7 +95,7 @@ const EditService = ({ service, onSuccess }) => {
                     value={editedservice.price}
                     onChange={handleChange}
                 />
-                <button type="submit" disabled={isLoading}>
+                <button className='editButton' type="submit" disabled={isLoading}>
                     {isLoading ? 'מעדכן...' : 'עדכן שירות'}
                 </button>
             </form>
