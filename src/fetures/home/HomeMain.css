@@ -271,7 +271,7 @@ body {
     .income-outcome-summary {
         flex-wrap: wrap;
         flex-direction: column;
-        max-height: 80vh;
+        max-height: 75vh;
     }
     .QuickActions {
         justify-content: space-evenly;
