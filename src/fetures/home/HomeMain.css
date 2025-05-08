@@ -62,10 +62,7 @@ body {
     margin: 5px 0;
 }
 
-.income-summary {
-    text-align: right;
-    font-weight: bold;
-} */
+ */
 
 /* ----- תצוגת עסקאות ----- */
 /* .transactions-display {
@@ -73,6 +70,11 @@ body {
     margin: 20px;
 } */
 
+.income-outcome-summary {
+display: flex;
+width: 100%;
+gap: 15px;
+}
 /* ----- כפתורי פעולות מהירות ----- */
 .actionsHedder {
     margin: 20px;
@@ -261,12 +263,14 @@ body {
 }
 
 @media (max-width: 1024px) {
-    /* .income-outcome-summary {
-        flex-direction: row;
-        flex-wrap: wrap;
-    } */
+    .income-outcome-summary {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+        }
     .dashboard-card{
-        width: 48%;
+        width: 100%;
     }
     .income-outcome-summary {
         flex-wrap: wrap;

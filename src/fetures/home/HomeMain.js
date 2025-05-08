@@ -474,8 +474,8 @@ const HomeMain = () => {
                   </div>}
             </div>
 
-            <div className="dashboard-row income-outcome-summary">
-               {/* <div className="income-summary"> */}
+            <div className="dashboard-row ">
+               <div className="income-outcome-summary">
                <div className="dashboard-card color3">
                   <p style={{
                      color: "var(--text)", fontWeight: "bold"
@@ -495,8 +495,8 @@ const HomeMain = () => {
                      <Link to="transactions/income/all">לפירוט לחץ</Link>
                   </button>
                   </div>
-               {/* </div> */}
-               {/* <div className="outcome-summary"> */}
+               </div>
+               <div className="income-outcome-summary">
                <div className="dashboard-card color3" >
                   <p style={{ fontWeight: "bold", color: "var(--text)" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p>
                   <button>
@@ -515,7 +515,7 @@ const HomeMain = () => {
                      <Link to="transactions/customer">לפירוט לחץ</Link>
                   </button>
                   </div>
-               {/* </div> */}
+               </div>
             </div>
             {/* שורה 2 - סיכומי הכנסות והוצאות */}
             {/* <div className="dashboard-row">
