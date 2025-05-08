@@ -36,7 +36,7 @@ main > .menu {
     box-sizing: border-box;
 }
 
-@media(max-width:768px){
+@media (max-width:768px){
     main > .content {
         width: 100% !important; /* תופס 80% מרוחב המסך */
         padding: 20px; /* מרווח פנימי */
@@ -47,3 +47,8 @@ main > .menu {
         padding: 0;
     }
 }
+@media screen and (min-width: 1200px) {
+    main > .content {
+      width: calc(100vw - 250px) !important;
+    }
+  }
