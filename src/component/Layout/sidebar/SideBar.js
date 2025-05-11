@@ -32,7 +32,7 @@ const Sidebar = ({ closeMenu }) => {
     {
       title: "הוצאות",
       icon: FaMoneyBillTransfer,
-      link: "/dash/transactions/customer",
+      link: "/dash/transactions/expense",
     },
     {
       title: "סליקת אשראי",

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Chart, registerables } from 'chart.js'; // ייבוא Chart.js
 import useAuth from '../../../hooks/useAuth';
@@ -12,16 +13,26 @@ const TransactionsAsProvider = () => {
     const transactions = useSelector((state) => state.transactions.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
-    const transactionsAsProvider = [...transactions].filter(transaction =>
-        transaction.agent === _id
-    );
-
+    const transactionsAsProvider = useMemo(() => {
+        return [...transactions].filter(t => t.agent === _id);
+      }, [transactions, _id]);
+      
     const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
     const [isLastTransactionsSlice, setIsLastTransactionsSlice] = useState(true)
     const [isPendingTransactionsSlice, setIsPendingTransactionsSlice] = useState(true)
+    const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsProvider)
+    const [isReady, setIsReady] = useState(false);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // ניהול השנה הנוכחית ב-state
     const chartRef = useRef(null); // רפרנס לגרף
+    const navigate = useNavigate();
 
+
+    const [searchParams] = useSearchParams();
+    const filterBy = searchParams.get("filter");
+
+    const [header, setHeader] = useState("כל העסקאות")
+
+    /*/////איסוף נתונים עבור הגרף*/////
     //הכנסה לפי חודש
     const getMonthlyIncome = (transactionsAsProvider, year) => {
         const startOfYear = new Date(year, 0, 1); // התחלת השנה
@@ -47,7 +58,7 @@ const TransactionsAsProvider = () => {
     };
 
     const monthlyIncome = getMonthlyIncome(transactionsAsProvider, currentYear);
-    console.log(monthlyIncome);
+    // console.log(monthlyIncome);
     const averageIncome = calculateAverageIncome(monthlyIncome);
 
 
@@ -142,7 +153,7 @@ const TransactionsAsProvider = () => {
 
     const lastTransactions = filterLastTransactions(transactionsAsProvider) || [];
     const lastTransactionsSlice = lastTransactions.slice(0, 5) || [];
-    console.log(`lastTransactions${lastTransactions}`);
+    // console.log(`lastTransactions${lastTransactions}`);
 
 
     //תשלומים קרובים
@@ -161,12 +172,42 @@ const TransactionsAsProvider = () => {
     const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
     const pendingTransactionsSlice = pendingTransactions.slice(0, 5);
 
+    
+
+    /*/////סינון לפי סוג עסקה FilterBy*/////
+   
+    useEffect(() => {
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    
+        let filtered = transactionsAsProvider;
+    
+        if (filterBy === "recentMonth") {
+            setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
+            filtered = [...transactionsAsProvider].filter(transaction => {
+                const billingDate = new Date(transaction.billingDay);
+                return billingDate >= startOfMonth && billingDate < startOfNextMonth;
+            }).map(t => ({ ...t, agent: undefined }));
+        } else if (filterBy === "delayed") {
+            setHeader("עסקאות בפיגור");
+            filtered = transactionsAsProvider.filter(t => t.status === "notPaid").map(t => ({ ...t, agent: undefined }));
+        } else {
+            setHeader("כל העסקאות");
+        }
+    
+        setTransactionsToDisplay(filtered);
+        setIsReady(true); // רק אחרי העדכון!
+    }, [filterBy,transactionsAsProvider]);
+    
+    
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
+    if (!isReady) return <p>טוען עסקאות...</p>
     return (
         <div className='transactions_first_page'>
             {/* גרף ההכנסות */}
-            <div className="income-chart-container">
+            {/* <div className="income-chart-container">
                 <div className="chart-header">
                     <button onClick={() => setCurrentYear(currentYear - 1)}>&lt; שנה קודמת</button>
                     <h2>הכנסות לפי חודשים ({currentYear})</h2>
@@ -176,9 +217,9 @@ const TransactionsAsProvider = () => {
                 <p className="average-income">
                     ההכנסה הממוצעת לחודש בשנת {currentYear}: <strong>{averageIncome} ₪</strong>
                 </p>
-            </div>
+            </div> */}
             <div className="transactions-display">
-                <div>
+                {/* <div>
                     <h2>
                         עסקאות אחרונות שבוצעו
                         <span
@@ -194,29 +235,17 @@ const TransactionsAsProvider = () => {
                         ) : (
                             <TransactionsList transactions={recentTransactions} />
                         )}
-                </div>
-                <div>
+                </div> */}
+                
                     <h2>
-                        הכנסות אחרונות
-                        <span
-                            className="toggle-view"
-                            onClick={() => setIsLastTransactionsSlice(!isLastTransactionsSlice)}
-                        >
-                            {isLastTransactionsSlice ? "יותר" : "פחות"}
-                        </span>
+                        {header}
                     </h2>
                     {
-                        (lastTransactionsSlice == [] && lastTransactions == []) ?
-                            (<h2>לא נמצאו עסקאות תואמות</h2>)
-                            :
-                            (isLastTransactionsSlice ? (
-                                <TransactionsList transactions={lastTransactionsSlice} />
-                            ) : (
-                                <TransactionsList transactions={lastTransactions} />
-                            ))
+                    <TransactionsList transactions={transactionsToDisplay} />
+                        
                     }
-                </div>
-                <div>
+                
+                {/* <div>
                     <h2>
                         תשלומים קרובים
                         <span
@@ -231,7 +260,7 @@ const TransactionsAsProvider = () => {
                     ) : (
                         <TransactionsList transactions={pendingTransactions} />
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     )

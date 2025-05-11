@@ -40,6 +40,8 @@ import PaymentPage from "./component/payment/PaymentPage"
 // import FeedbackForm from "./fetures/pages/FeedbackForm"
 // import ContactForm from "./fetures/pages/ContactForm"
 import { useEffect } from "react";
+import TransactionsMenu from "./fetures/transactions/view/TransactionsMenu"
+import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCustomer"
 
 
 const App = () => {
@@ -59,7 +61,7 @@ const App = () => {
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
-                        <Route path="CreditPay" element={<PaymentPage/>} />
+                        <Route path="CreditPay" element={<PaymentPage />} />
                         <Route index element={<HomeMain />} />
                         <Route path="settings/personal" element={<PersonalSettings />} />
                         <Route path="customers" element={<Outlet />}>
@@ -74,11 +76,11 @@ const App = () => {
                             <Route path="add" element={<AddService />} />
                             <Route path=":userId" element={<SingleService />} />
                         </Route>
-                        <Route path="transactions/income" element={<Outlet />}>
-                            <Route index element={<TransactionsAsProvider />} />
-                            <Route path="all" element={<AllTransactions />} />
-                            <Route path="add" element={<AddTransaction />} />
-                            <Route path="delayed" element={<DelayedTransactions />} />
+                        <Route path="transactions/:type" element={<Outlet />}>
+                            <Route  index element={<TransactionsMenu />} />
+                            <Route path="providerList" element={<TransactionsAsProvider />} />
+                            <Route path="customerList" element={<TransactionsAsCustomer />} />
+                            
                         </Route>
                         <Route path="transactions/customer" element={<Outlet />}>
                             <Route index element={<ExpensesPage />} />

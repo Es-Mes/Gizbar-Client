@@ -1,0 +1,26 @@
+.TransactionsMenu{
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 110px);
+    justify-content: space-evenly;
+}
+.TransactionsMenu h2{
+    padding: 20px;
+}
+.income-summary{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    /* margin-top: 20px; */
+}
+.menu-card{
+    width: 30%;
+    height: 100px;
+    font-size: large;
+}
+.menu-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}

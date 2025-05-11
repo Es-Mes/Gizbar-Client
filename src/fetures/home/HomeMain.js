@@ -6,6 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import "./HomeMain.css"
 import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate } from "react-router-dom";
 import { useAddUserMutation } from "../users/UsersApiSlice";
 import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
@@ -25,6 +26,8 @@ const HomeMain = () => {
    const error = useSelector((state) => state.agent?.error);
    const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
    const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
+
+   const navigate = useNavigate();
    const chartRef = useRef(null);
    const expenseChartRef = useRef(null);
 
@@ -430,7 +433,22 @@ const HomeMain = () => {
       year: 'numeric',
    });
 
-
+   ///פונקציות לניווט לעסקאות
+   const handleClickAllIncome = () => {
+      navigate("transactions/income"); // כאן את שמה את הנתיב הרצוי
+    };
+    const handleClickDelayedIncome = () => {
+      navigate("transactions/income/providerList?filter=delayed"); // כאן את שמה את הנתיב הרצוי
+  };
+   
+    ///פונקציות לניווט להוצאות
+   const handleClickAllOutcome = () => {
+      navigate("transactions/expense"); // כאן את שמה את הנתיב הרצוי
+    };
+    const handleClickDelayedExpenses = () => {
+      navigate("transactions/expense/customerList?filter=delayed"); // כאן את שמה את הנתיב הרצוי
+  };
+  
 
    if (isLoading) return <p>Loading...</p>;
    if (error) return <p>Error: {error}</p>;
@@ -443,10 +461,13 @@ const HomeMain = () => {
 
             {/* שורה 1 - כרטיסים גדולים */}
             <div className="dashboard-row">
-               {monthIncome > 0 && <div className="dashboard-card-large">
+               {monthIncome > 0 && 
+               <div className="dashboard-card-large" onClick={handleClickAllIncome} style={{ cursor: "pointer" }}>
                   <div>
                      <h4>סך הכול הכנסות לחודש {currentMonth}</h4>
                      <h2>{monthIncome} ₪</h2>
+                     <h4>מתוכן שולמו</h4>
+                     <h2>{totalIncome} ₪</h2>
                   </div>
                   <div className="chart-container">
                      <canvas ref={chartRef}></canvas>
@@ -458,10 +479,12 @@ const HomeMain = () => {
                      <h4>עוד לא היו הכנסות לבינתיים :)</h4>
                   </div>}
 
-               {monthOutcome > 0 && <div className="dashboard-card-large">
+               {monthOutcome > 0 && <div className="dashboard-card-large"  onClick={handleClickAllOutcome} style={{ cursor: "pointer" }}>
                   <div>
                      <h4>סך הכול הוצאות לחודש {currentMonth}</h4>
                      <h2>{monthOutcome} ₪</h2>
+                     <h4>מתוכן שילמת</h4>
+                     <h2>{totalOutcome} ₪</h2>
                   </div>
                   <div className="chart-container">
                      <canvas ref={expenseChartRef}></canvas>
@@ -476,28 +499,28 @@ const HomeMain = () => {
 
             <div className="dashboard-row ">
                <div className="income-outcome-summary">
-               <div className="dashboard-card color3">
+               {/* <div className="dashboard-card color3">
                   <p style={{
                      color: "var(--text)", fontWeight: "bold"
                   }}>סכום שעומד להכנס:<br /> <div style={{ padding: "5px" }}>{totalExpectedIncome} ₪</div></p>
                   <button>
-                     <Link to="transactions/income/all">לפירוט לחץ</Link>
+                     <Link to="transactions/income/list?filter=pending">לפירוט לחץ</Link>
                   </button></div>
                <div className="dashboard-card color1">
                   <p style={{ color: "var(--text)", fontWeight: "bold" }}>סכום שכבר נכנס:<br /> <div style={{ padding: "5px" }}>{totalIncome} ₪</div></p>
                   <button>
-                     <Link to="transactions/income/all">לפירוט לחץ</Link>
+                     <Link to="transactions/income/list?filter=recent">לפירוט לחץ</Link>
                   </button>
-                  </div>
-               <div className="dashboard-card color2">
-                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></p>
-                  <button>
-                     <Link to="transactions/income/all">לפירוט לחץ</Link>
-                  </button>
+                  </div> */}
+               <div className="dashboard-card color2"  onClick={handleClickDelayedIncome} style={{ cursor: "pointer" }}>
+                  <p style={{ color: "var(--text)", fontWeight: "bold",fontSize:"18px" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></p>
+                  {/* <button>
+                     <Link to="transactions/income/list?filter=delay">לפירוט לחץ</Link>
+                  </button> */}
                   </div>
                </div>
                <div className="income-outcome-summary">
-               <div className="dashboard-card color3" >
+               {/* <div className="dashboard-card color3" >
                   <p style={{ fontWeight: "bold", color: "var(--text)" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p>
                   <button>
                      <Link to="transactions/customer">לפירוט לחץ</Link>
@@ -508,12 +531,12 @@ const HomeMain = () => {
                   <button>
                      <Link to="transactions/customer">לפירוט לחץ</Link>
                   </button>
-                  </div>
-               <div className="dashboard-card color2">
-                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></p>
-                  <button>
+                  </div> */}
+               <div className="dashboard-card color2"  onClick={handleClickDelayedExpenses} style={{ cursor: "pointer" }}>
+                  <p style={{ color: "var(--text)", fontWeight: "bold" ,fontSize:"18px"}}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></p>
+                  {/* <button>
                      <Link to="transactions/customer">לפירוט לחץ</Link>
-                  </button>
+                  </button> */}
                   </div>
                </div>
             </div>

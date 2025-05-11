@@ -154,8 +154,8 @@ gap: 15px;
 }
 
 .dashboard-card:hover {
-    /* transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .dashboard-card h4 {
@@ -249,11 +249,10 @@ gap: 15px;
         min-height: 83vh;
         margin-bottom: 20px;
     }
-
-    .dashboard-card {
-        max-height: 13vh;
-    }
 */
+    .dashboard-card {
+width: 100%;    }
+
     .dashboard-card-large {
         flex-direction: row-reverse;
         justify-content: space-between;
