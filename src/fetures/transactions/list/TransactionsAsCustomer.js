@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Chart, registerables } from 'chart.js'; // ייבוא Chart.js
 import useAuth from '../../../hooks/useAuth';
 import TransactionsList from './TransactionsList';
+import { GrFormNextLink } from "react-icons/gr";
 import './TransactionsAsProvider.css'
 
 const TransactionsAsCustomer = () => {
@@ -49,9 +50,12 @@ const error = useSelector((state) => state.customerTransactions?.error);
   return (
     <div className='transactions_first_page'>
         <div className='transactions-display'></div>
-        <h2>
-                        {header}
-                    </h2>
+        <div className="header-with-button">
+                    <button className="backButton" onClick={() => navigate(-1)}>
+                        <GrFormNextLink />
+                    </button>
+                    <h2>{header}</h2>
+                </div>
                     {
                     <TransactionsList transactions={transactionsToDisplay} />
                         

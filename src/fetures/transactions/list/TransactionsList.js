@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import TransactionItem from '../view/TransactionItem';
 
 const TransactionsList = ({ transactions }) => {
-console.log(`transactions: ${transactions}`);
+// console.log(`transactions: ${transactions}`);
     const [transactionsList, setTransactionsList] = useState(transactions);
 
     const handleUpdateTransaction = (updatedTransaction) => {

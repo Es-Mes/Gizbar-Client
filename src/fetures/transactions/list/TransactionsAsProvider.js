@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Chart, registerables } from 'chart.js'; // ייבוא Chart.js
 import useAuth from '../../../hooks/useAuth';
 import TransactionsList from './TransactionsList';
+import { GrFormNextLink } from "react-icons/gr";
 import './TransactionsAsProvider.css'
 
 Chart.register(...registerables); // הרשמת כל האפשרויות של Chart.js
@@ -15,8 +16,8 @@ const TransactionsAsProvider = () => {
     const error = useSelector((state) => state.transactions?.error);
     const transactionsAsProvider = useMemo(() => {
         return [...transactions].filter(t => t.agent === _id);
-      }, [transactions, _id]);
-      
+    }, [transactions, _id]);
+
     const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
     const [isLastTransactionsSlice, setIsLastTransactionsSlice] = useState(true)
     const [isPendingTransactionsSlice, setIsPendingTransactionsSlice] = useState(true)
@@ -172,17 +173,18 @@ const TransactionsAsProvider = () => {
     const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
     const pendingTransactionsSlice = pendingTransactions.slice(0, 5);
 
-    
+
 
     /*/////סינון לפי סוג עסקה FilterBy*/////
-   
+
     useEffect(() => {
+        if (!transactionsAsProvider || transactionsAsProvider.length === 0) return;
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    
+
         let filtered = transactionsAsProvider;
-    
+
         if (filterBy === "recentMonth") {
             setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
             filtered = [...transactionsAsProvider].filter(transaction => {
@@ -195,12 +197,12 @@ const TransactionsAsProvider = () => {
         } else {
             setHeader("כל העסקאות");
         }
-    
+
         setTransactionsToDisplay(filtered);
         setIsReady(true); // רק אחרי העדכון!
-    }, [filterBy,transactionsAsProvider]);
-    
-    
+    }, [filterBy, transactionsAsProvider]);
+
+
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!isReady) return <p>טוען עסקאות...</p>
@@ -236,15 +238,18 @@ const TransactionsAsProvider = () => {
                             <TransactionsList transactions={recentTransactions} />
                         )}
                 </div> */}
-                
-                    <h2>
-                        {header}
-                    </h2>
-                    {
+                <div className="header-with-button">
+                    <button className="backButton" onClick={() => navigate(-1)}>
+                        <GrFormNextLink />
+                    </button>
+                    <h2>{header}</h2>
+                </div>
+
+                {
                     <TransactionsList transactions={transactionsToDisplay} />
-                        
-                    }
-                
+
+                }
+
                 {/* <div>
                     <h2>
                         תשלומים קרובים
