@@ -9,6 +9,7 @@ import './TransactionsAsProvider.css'
 
 const TransactionsAsCustomer = () => {
 const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
+console.log(transactionsAsCustomer);
 const isLoading = useSelector((state) => state.customerTransactions?.isLoading);
 const error = useSelector((state) => state.customerTransactions?.error);
     const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsCustomer)

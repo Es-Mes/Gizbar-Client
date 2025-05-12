@@ -17,7 +17,6 @@ const TransactionsAsProvider = () => {
     const transactionsAsProvider = useMemo(() => {
         return [...transactions].filter(t => t.agent === _id);
     }, [transactions, _id]);
-
     const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
     const [isLastTransactionsSlice, setIsLastTransactionsSlice] = useState(true)
     const [isPendingTransactionsSlice, setIsPendingTransactionsSlice] = useState(true)

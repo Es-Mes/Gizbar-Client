@@ -1,3 +1,10 @@
+.filters {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
 .transaction-table {
     max-width: 1200px;
     margin: auto;
@@ -5,4 +12,53 @@
     /* background: #f8f9fa; */
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.refreshFilterButton {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--bgSoft);
+    transition: transform 0.2s ease;
+    text-align: center;
+    margin-bottom: -30px;
+}
+
+.refreshFilterButton:hover {
+    transform: scale(1.2);
+
+}
+.tooltip-text{
+    top: 0%; /* מיקום מעל האייקון */
+    border: solid 0.005px var(--text);
+    border-radius: 5px;
+}
+
+.date-range{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.date-box{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+@media screen and (max-width: 908px) {
+    .filters {
+        max-width: 100%;
+        display: flex;
+        gap: 5px;
+        justify-content: space-between;
+    }
+    input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: 0.3s;
+        width: 50%;
+    }
 }
