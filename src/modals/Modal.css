@@ -70,11 +70,11 @@
     text-decoration: none;
 }
 .cancel-btn{
-    /* color: red; */
+    border: red;
     background-color: white;
 }
 .confirm-btn{
-    /* color: green; */
+    border: green;
     background-color: white;
 }
 .cancel-btn:hover{
