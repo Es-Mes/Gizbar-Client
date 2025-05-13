@@ -40,7 +40,7 @@ const PersistsLogin = () => {
         console.log("error");
         content = <p className="errorMsg">
             {`${error?.data?.message}-`}
-            <Link to="/login">please login again</Link>
+            <Link to="../login">please login again</Link>
         </p>
     } else if (isSuccess && trueSuccess) {
         // console.log("success");

@@ -436,19 +436,19 @@ const HomeMain = () => {
    ///פונקציות לניווט לעסקאות
    const handleClickAllIncome = () => {
       navigate("transactions/income"); // כאן את שמה את הנתיב הרצוי
-    };
-    const handleClickDelayedIncome = () => {
+   };
+   const handleClickDelayedIncome = () => {
       navigate("transactions/income/providerList?filter=delayed"); // כאן את שמה את הנתיב הרצוי
-  };
-   
-    ///פונקציות לניווט להוצאות
+   };
+
+   ///פונקציות לניווט להוצאות
    const handleClickAllOutcome = () => {
       navigate("transactions/expense"); // כאן את שמה את הנתיב הרצוי
-    };
-    const handleClickDelayedExpenses = () => {
+   };
+   const handleClickDelayedExpenses = () => {
       navigate("transactions/expense/customerList?filter=delayed"); // כאן את שמה את הנתיב הרצוי
-  };
-  
+   };
+
 
    if (isLoading) return <p>Loading...</p>;
    if (error) return <p>Error: {error}</p>;
@@ -461,25 +461,25 @@ const HomeMain = () => {
 
             {/* שורה 1 - כרטיסים גדולים */}
             <div className="dashboard-row">
-               {monthIncome > 0 && 
-               <div className="dashboard-card-large" onClick={handleClickAllIncome} style={{ cursor: "pointer" }}>
-                  <div>
-                     <h4>סך הכול הכנסות לחודש {currentMonth}</h4>
-                     <h2>{monthIncome} ₪</h2>
-                     <h4>מתוכן שולמו</h4>
-                     <h2>{totalIncome} ₪</h2>
-                  </div>
-                  <div className="chart-container">
-                     <canvas ref={chartRef}></canvas>
-                  </div>
-               </div>}
+               {monthIncome > 0 &&
+                  <div className="dashboard-card-large" onClick={handleClickAllIncome} style={{ cursor: "pointer" }}>
+                     <div>
+                        <h4>סך הכול הכנסות לחודש {currentMonth}</h4>
+                        <h2>{monthIncome} ₪</h2>
+                        <h4>מתוכן שולמו</h4>
+                        <h2>{totalIncome} ₪</h2>
+                     </div>
+                     <div className="chart-container">
+                        <canvas ref={chartRef}></canvas>
+                     </div>
+                  </div>}
 
                {monthIncome <= 0 &&
                   <div className="dashboard-card-large">
                      <h4>עוד לא היו הכנסות לבינתיים :)</h4>
                   </div>}
 
-               {monthOutcome > 0 && <div className="dashboard-card-large"  onClick={handleClickAllOutcome} style={{ cursor: "pointer" }}>
+               {monthOutcome > 0 && <div className="dashboard-card-large" onClick={handleClickAllOutcome} style={{ cursor: "pointer" }}>
                   <div>
                      <h4>סך הכול הוצאות לחודש {currentMonth}</h4>
                      <h2>{monthOutcome} ₪</h2>
@@ -499,7 +499,7 @@ const HomeMain = () => {
 
             <div className="dashboard-row ">
                <div className="income-outcome-summary">
-               {/* <div className="dashboard-card color3">
+                  {/* <div className="dashboard-card color3">
                   <p style={{
                      color: "var(--text)", fontWeight: "bold"
                   }}>סכום שעומד להכנס:<br /> <div style={{ padding: "5px" }}>{totalExpectedIncome} ₪</div></p>
@@ -512,15 +512,15 @@ const HomeMain = () => {
                      <Link to="transactions/income/list?filter=recent">לפירוט לחץ</Link>
                   </button>
                   </div> */}
-               <div className="dashboard-card color2"  onClick={handleClickDelayedIncome} style={{ cursor: "pointer" }}>
-                  <p style={{ color: "var(--text)", fontWeight: "bold",fontSize:"18px" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></p>
-                  {/* <button>
+                  <div className="dashboard-card color2" onClick={handleClickDelayedIncome} style={{ cursor: "pointer" }}>
+                     <div style={{ color: "var(--text)", fontWeight: "bold", fontSize: "18px" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></div>
+                     {/* <button>
                      <Link to="transactions/income/list?filter=delay">לפירוט לחץ</Link>
                   </button> */}
                   </div>
                </div>
                <div className="income-outcome-summary">
-               {/* <div className="dashboard-card color3" >
+                  {/* <div className="dashboard-card color3" >
                   <p style={{ fontWeight: "bold", color: "var(--text)" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p>
                   <button>
                      <Link to="transactions/customer">לפירוט לחץ</Link>
@@ -532,9 +532,9 @@ const HomeMain = () => {
                      <Link to="transactions/customer">לפירוט לחץ</Link>
                   </button>
                   </div> */}
-               <div className="dashboard-card color2"  onClick={handleClickDelayedExpenses} style={{ cursor: "pointer" }}>
-                  <p style={{ color: "var(--text)", fontWeight: "bold" ,fontSize:"18px"}}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></p>
-                  {/* <button>
+                  <div className="dashboard-card color2" onClick={handleClickDelayedExpenses} style={{ cursor: "pointer" }}>
+                     <div style={{ color: "var(--text)", fontWeight: "bold", fontSize: "18px" }}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></div>
+                     {/* <button>
                      <Link to="transactions/customer">לפירוט לחץ</Link>
                   </button> */}
                   </div>
@@ -600,18 +600,22 @@ const HomeMain = () => {
             <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
                הוסף עסקה חדשה לגביה
             </button>
-            <button>
-               <Link to="transactions/income/all">תשלום חובות</Link>
-            </button>
-            <button>
-               <Link to="transactions/income/all">שליחת תזכורות והודעות</Link>
-            </button>
-            <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
-               סליקת אשראי לגביה מיידית               {/* <Link to="transactions/income/add">עסקה חדשה +</Link> */}
-            </button>
-            <button>
-               <Link to="transactions/income/all">הוראת קבע</Link>
-            </button>
+            <Link to="../dash/UnderConstruction" className="nav-button">
+               חובות תשלום
+            </Link>
+
+            <Link to="../dash/UnderConstruction" className="nav-button">
+               שליחת תזכורות והודעות
+            </Link>
+
+            <Link to="../dash/CreditPay" className="nav-button">
+               סליקת אשראי לגביה מיידית
+            </Link>
+
+            <Link to="../dash/UnderConstruction" className="nav-button">
+               הוראת קבע
+            </Link>
+
          </div>
 
          {/* <div className="transactions-display">

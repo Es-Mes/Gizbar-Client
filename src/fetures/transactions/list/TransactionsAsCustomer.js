@@ -33,10 +33,10 @@ const error = useSelector((state) => state.customerTransactions?.error);
             filtered = [...transactionsAsCustomer].filter(transaction => {
                 const billingDate = new Date(transaction.billingDay);
                 return billingDate >= startOfMonth && billingDate < startOfNextMonth;
-            }).map(t => ({ ...t, agent: undefined }));
+            });
         } else if (filterBy === "delayed") {
             setHeader("הוצאות בפיגור");
-            filtered = transactionsAsCustomer.filter(t => t.status === "notPaid").map(t => ({ ...t, agent: undefined }));
+            filtered = transactionsAsCustomer.filter(t => t.status === "notPaid");
         } else {
             setHeader("כל ההוצאות");
         }

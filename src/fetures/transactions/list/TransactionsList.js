@@ -5,14 +5,20 @@ import { MdOutlineRefresh } from "react-icons/md";
 
 
 const TransactionsList = ({ transactions }) => {
+    
     // console.log(`transactions: ${transactions}`);
     const [transactionsList, setTransactionsList] = useState(transactions);
     const [customerNameFilter, setCustomerNameFilter] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
+    console.log(transactions);
+    if (!transactions) return null;
+    if (transactions.length === 0) {
+        return <p>אין עסקאות תואמות</p>;
+    }
     //בדיקה האם  זו רשימת הכנסות או הוצאות
-    const isIncome = transactions[0].agent.first_name? false : true;
-
+    const isIncome = transactions[0].agent.phone? false : true;
+    console.log(isIncome);
     const handleUpdateTransaction = (updatedTransaction) => {
         setTransactionsList(
             transactionsList.map((t) =>
@@ -22,7 +28,7 @@ const TransactionsList = ({ transactions }) => {
     };
 
     const filteredTransactions = transactionsList.filter((transaction) => {
-        const customerName = isIncome? transaction.customer?.full_name || '' :transaction.agent.first_name;
+        const customerName = !isIncome? transaction.agent?.first_name || '' : transaction.customer?.full_name || '' ;
         const billingDate = new Date(transaction.billingDay);
 
         const from = fromDate ? new Date(fromDate) : null;
@@ -55,9 +61,7 @@ const TransactionsList = ({ transactions }) => {
     });
 
 
-    if (transactions.length === 0) {
-        return <p>אין עסקאות תואמות</p>;
-    }
+    
     return (<>
         <div className="filters">
             <div className='customer-filter'>

@@ -189,10 +189,10 @@ const TransactionsAsProvider = () => {
             filtered = [...transactionsAsProvider].filter(transaction => {
                 const billingDate = new Date(transaction.billingDay);
                 return billingDate >= startOfMonth && billingDate < startOfNextMonth;
-            }).map(t => ({ ...t, agent: undefined }));
+            });
         } else if (filterBy === "delayed") {
             setHeader("עסקאות בפיגור");
-            filtered = transactionsAsProvider.filter(t => t.status === "notPaid").map(t => ({ ...t, agent: undefined }));
+            filtered = transactionsAsProvider.filter(t => t.status === "notPaid");
         } else {
             setHeader("כל העסקאות");
         }

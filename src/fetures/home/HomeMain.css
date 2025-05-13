@@ -71,10 +71,11 @@ body {
 } */
 
 .income-outcome-summary {
-display: flex;
-width: 100%;
-gap: 15px;
+    display: flex;
+    width: 100%;
+    gap: 15px;
 }
+
 /* ----- כפתורי פעולות מהירות ----- */
 .actionsHedder {
     margin: 20px;
@@ -89,7 +90,11 @@ gap: 15px;
     font-family: var(--fontFamily);
 }
 
-.QuickActions button {
+.QuickActions button,
+.nav-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 15vh;
     width: 18%;
     color: var(--text);
@@ -107,7 +112,8 @@ gap: 15px;
     font-family: var(--fontFamily);
 }
 
-.QuickActions button:hover {
+.QuickActions button:hover,
+.nav-button:hover {
     box-shadow: 0 4px 10px var(--bgSoftLight);
     transform: translateY(-3px);
 }
@@ -147,8 +153,8 @@ gap: 15px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-   padding: 15px;
-    gap:20px;
+    padding: 15px;
+    gap: 20px;
     text-align: center;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -176,7 +182,8 @@ gap: 15px;
     height: calc(100% - 40px);
     max-height: 120px;
 }
-.dashboard-card button{
+
+.dashboard-card button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,9 +201,11 @@ gap: 15px;
     transition: all 0.1s ease-in-out;
     text-align: center;
 }
-.dashboard-card button:hover{
+
+.dashboard-card button:hover {
     box-shadow: 0 1px #666;
-    transform: translateY(-2px);}
+    transform: translateY(-2px);
+}
 
 
 /* ----- כרטיסי לוח בקרה גדולים ----- */
@@ -245,20 +254,22 @@ gap: 15px;
 
 /* ----- מדיה ----- */
 @media (min-width: 1024px) {
+
     /* .dashboard {
         min-height: 83vh;
         margin-bottom: 20px;
     }
 */
     .dashboard-card {
-width: 100%;    }
+        width: 100%;
+    }
 
     .dashboard-card-large {
         flex-direction: row-reverse;
         justify-content: space-between;
         width: 100%;
         height: 30vh;
-    } 
+    }
 }
 
 @media (max-width: 1024px) {
@@ -267,21 +278,26 @@ width: 100%;    }
         flex-direction: column;
         width: 100%;
         gap: 15px;
-        }
-    .dashboard-card{
+    }
+
+    .dashboard-card {
         width: 100%;
     }
+
     .income-outcome-summary {
         flex-wrap: wrap;
         flex-direction: column;
         max-height: 75vh;
     }
+
     .QuickActions {
         justify-content: space-evenly;
     }
-    .QuickActions button{
-    height: 15vh;
-    width: 30%;
+
+    .QuickActions button,
+    .nav-button {
+        height: 15vh;
+        width: 30%;
     }
-    
+
 }

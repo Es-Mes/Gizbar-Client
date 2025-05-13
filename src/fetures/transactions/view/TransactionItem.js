@@ -27,7 +27,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל טלפון
 
-
+    const isIncome = transaction.agent.first_name ? false : true
 
     const dispatch = useDispatch();
     const actionsRef = useRef(null);
@@ -103,7 +103,8 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
                 <td>{editedTransaction.serviceName || "שירות ללא שם"}</td>
                 <td>{`₪${editedTransaction.price}`}</td>
                 <td>{editedTransaction.status === "paid" ? "שולם" : "לא שולם"}</td>
-                <td>{editedTransaction.customer.full_name}</td>
+                {isIncome && <td>{editedTransaction.customer.full_name || ''}</td>}
+                {!isIncome && <td>{editedTransaction.agent.first_name || ''}</td>}
                 <td>{new Date(editedTransaction.createdAt).toLocaleDateString("he-IL")}</td>
                 <td>
                     {editedTransaction.paymentDate ?
@@ -122,19 +123,22 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
                     ) : (<span>-</span>)}
                     {showActions && (
                         <div className={`actions-dropdown floating-menu ${openUpwards ? "open-up" : ""}`}>
-                            <div onClick={() => { setIsCashModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                            {isIncome &&(<div onClick={() => { setIsCashModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCashCoin size={20} /> תשלום במזומן
-                            </div>
-                            <div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                            </div>)}
+                            {isIncome &&(<div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום באשראי
-                            </div>
+                            </div>)}
 
-                            <div className="action-item" onClick={() => setShowAlertsModal(true)}>
+                            {isIncome &&(<div className="action-item" onClick={() => setShowAlertsModal(true)}>
                                 <GrEdit size={20} /> עריכת נודניק
-                            </div>
-                            <div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
+                            </div>)}
+                            {isIncome &&(<div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
                                 <LuBellRing size={20} /> שליחת התראה
-                            </div>
+                            </div>)}
+                            {!isIncome &&(<div onClick={() => {  setShowActions(!showActions) }} className="action-item">
+                                <BsCreditCard size={20} />(בפיתוח) תשלום חוב באשראי
+                            </div>)}
 
 
                         </div>
