@@ -14,9 +14,9 @@ const TransactionsAsProvider = () => {
     const transactions = useSelector((state) => state.transactions.transactions || []);
     const isLoading = useSelector((state) => state.transactions?.isLoading);
     const error = useSelector((state) => state.transactions?.error);
-    const transactionsAsProvider = useMemo(() => {
-        return [...transactions].filter(t => t.agent === _id);
-    }, [transactions, _id]);
+   const transactionsAsProvider = useMemo(() => {
+    return transactions?.filter(t => t?.agent === _id) || [];
+}, [transactions, _id]);
     const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
     const [isLastTransactionsSlice, setIsLastTransactionsSlice] = useState(true)
     const [isPendingTransactionsSlice, setIsPendingTransactionsSlice] = useState(true)

@@ -62,9 +62,30 @@
     justify-content: flex-end;
     gap:10px;
 }
+.modal-actions button{
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    /* transition: 0.3s; */
+    text-decoration: none;
+}
 .cancel-btn{
-    color: red;
+    /* color: red; */
     background-color: white;
+}
+.confirm-btn{
+    /* color: green; */
+    background-color: white;
+}
+.cancel-btn:hover{
+    background-color: red;
+    color: white;
+    border: none;
+}
+.confirm-btn:hover{
+    background-color: green;
+    color: white;
+    border: none;
 }
 .question{
     font-size: larger;

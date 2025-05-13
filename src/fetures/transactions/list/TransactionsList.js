@@ -1,23 +1,29 @@
 import './TransactionList.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TransactionItem from '../view/TransactionItem';
 import { MdOutlineRefresh } from "react-icons/md";
 
 
 const TransactionsList = ({ transactions }) => {
-    
+
     // console.log(`transactions: ${transactions}`);
     const [transactionsList, setTransactionsList] = useState(transactions);
     const [customerNameFilter, setCustomerNameFilter] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     console.log(transactions);
-    if (!transactions) return null;
+    useEffect(() => {
+        setTransactionsList(transactions);
+    }, [transactions]);
+
+    if (!transactions || !Array.isArray(transactions)) return null;
     if (transactions.length === 0) {
         return <p>אין עסקאות תואמות</p>;
     }
+
+
     //בדיקה האם  זו רשימת הכנסות או הוצאות
-    const isIncome = transactions[0].agent.phone? false : true;
+    const isIncome = transactions[0].agent.phone ? false : true;
     console.log(isIncome);
     const handleUpdateTransaction = (updatedTransaction) => {
         setTransactionsList(
@@ -28,7 +34,7 @@ const TransactionsList = ({ transactions }) => {
     };
 
     const filteredTransactions = transactionsList.filter((transaction) => {
-        const customerName = !isIncome? transaction.agent?.first_name || '' : transaction.customer?.full_name || '' ;
+        const customerName = !isIncome ? transaction.agent?.first_name || '' : transaction.customer?.full_name || '';
         const billingDate = new Date(transaction.billingDay);
 
         const from = fromDate ? new Date(fromDate) : null;
@@ -61,7 +67,7 @@ const TransactionsList = ({ transactions }) => {
     });
 
 
-    
+
     return (<>
         <div className="filters">
             <div className='customer-filter'>
@@ -75,7 +81,7 @@ const TransactionsList = ({ transactions }) => {
                     onChange={(e) => setCustomerNameFilter(e.target.value)}
                 />}
                 {!isIncome && <p style={{ fontSize: "1em", marginBottom: "4px", color: "#555" }}>
-                נותן השירות:
+                    נותן השירות:
                 </p>}
                 {!isIncome && <input
                     type="text"
@@ -85,21 +91,21 @@ const TransactionsList = ({ transactions }) => {
                 />}
             </div>
             <div className="date-range">
-                
+
                 <p style={{ fontSize: "1em", marginBottom: "4px", color: "#555" }}>
                     עסקאות מתאריך ועד תאריך:
                 </p>
                 <div className='date-box'>
-                <input style={{marginLeft:"20px"}}
-                    type="date"
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                />
-                <input
-                    type="date"
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                /></div>
+                    <input style={{ marginLeft: "20px" }}
+                        type="date"
+                        value={fromDate}
+                        onChange={(e) => setFromDate(e.target.value)}
+                    />
+                    <input
+                        type="date"
+                        value={toDate}
+                        onChange={(e) => setToDate(e.target.value)}
+                    /></div>
             </div>
             <button className='refreshFilterButton icon-tooltip' activClassName="active"
                 type="button"
@@ -110,7 +116,7 @@ const TransactionsList = ({ transactions }) => {
                 }}
                 style={{ fontSize: '25px' }}
             >
-            <MdOutlineRefresh/><p className='tooltip-text'>בטל סינון</p>
+                <MdOutlineRefresh /><p className='tooltip-text'>בטל סינון</p>
             </button>
         </div>
 

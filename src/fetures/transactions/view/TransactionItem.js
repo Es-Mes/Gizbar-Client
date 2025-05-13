@@ -32,6 +32,9 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
     const dispatch = useDispatch();
     const actionsRef = useRef(null);
 
+
+
+
     // console.dir(editedTransaction,{depth:null});
     const handleChange = (e) => {
         setEditedTransaction({
@@ -58,7 +61,7 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
                 console.log(response);
                 dispatch(setTransactionPaid(response.data)); // עדכון סטטוס התשלום
                 setIsCashModalOpen(false);
-                // dispatch(setTransactionPaid(paidTransaction))
+            onUpdate(response.data); 
             })
             .catch((err) => console.error("שגיאה בתשלום במזומן", err));
     };
@@ -137,7 +140,7 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
                                 <LuBellRing size={20} /> שליחת התראה
                             </div>)}
                             {!isIncome &&(<div onClick={() => {  setShowActions(!showActions) }} className="action-item">
-                                <BsCreditCard size={20} />(בפיתוח) תשלום חוב באשראי
+                                <BsCreditCard size={20} /> תשלום חוב באשראי(בפיתוח)
                             </div>)}
 
 
