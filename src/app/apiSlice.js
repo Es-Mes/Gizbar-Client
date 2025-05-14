@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { setToken } from "../fetures/auth/authSlice";
 const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({
         baseUrl:process.env.REACT_APP_BASE_URL,
         credentials: "include",
-        prepareHeaders: async (headers, { getState,endpoint  }) => {
+        prepareHeaders: async (headers, { getState,endpoint ,dispatch }) => {
             const token = getState().auth.token;
             if (token) {
                 headers.set("authorization", `Bearer ${token}`);
