@@ -6,12 +6,12 @@ import useAuth from '../../../hooks/useAuth';
 import TransactionsList from './TransactionsList';
 import { GrFormNextLink } from "react-icons/gr";
 import './TransactionsAsProvider.css'
+import { useGetAllTransactionsAsCustomerQuery } from '../TransactionsApiSlice';
+import { BsPhone } from 'react-icons/bs';
 
 const TransactionsAsCustomer = () => {
-const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
+const {data:transactionsAsCustomer,isLoading:isLoading,error:error} = useGetAllTransactionsAsCustomerQuery({BsPhone})
 console.log(transactionsAsCustomer);
-const isLoading = useSelector((state) => state.customerTransactions?.isLoading);
-const error = useSelector((state) => state.customerTransactions?.error);
     const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsCustomer)
     const [isReady, setIsReady] = useState(false);
     const [searchParams] = useSearchParams();

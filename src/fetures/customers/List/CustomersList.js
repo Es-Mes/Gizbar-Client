@@ -1,7 +1,7 @@
 import "./CustomersList.css"
 // import "./new.css"
 import Search from "../../../component/search/Search"
-import { useDeleteCustomerMutation } from "../customersApiSlice"
+import { useDeleteCustomerMutation, useGetAllCustomersQuery, useGetCustomerQuery } from "../customersApiSlice"
 import { Link, useSearchParams } from "react-router-dom"
 import { GrView, GrEdit, GrFormTrash } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux"
@@ -11,13 +11,16 @@ import { useState } from "react"
 import Modal from "../../../modals/Modal"
 import EditCustomer from "../edit/EditCustomer"
 import AddCustomer from "../add/AddCustomer"
+import { useGetAgentQuery } from "../../../app/apiSlice";
 
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
 
     const dispatch = useDispatch()
-    const customers = useSelector((state) => state.customers?.customers || []);
-    // console.log(customers);
+   const { data: agent, isLoading, error } = useGetAgentQuery({phone});
+   const customers = agent?.customers || [];
+    console.log(customers);
+    
 
     const [isEditModelOpen, setEditModelOpen] = useState(false)
     const [selectedCustomer, setSelectedCustomer] = useState(null)
@@ -56,10 +59,10 @@ const CustomersList = () => {
     const [searchParams] = useSearchParams()
     const q = searchParams.get("")
 
-    // if (isLoading) return <h1>loading...</h1>
-    // if (isError) return <h1>{JSON.stringify(error)}</h1>
-
     const filteredData = !q ? [...customers] : customers.filter(c => c.full_name.indexOf(q) > -1)
+
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className="customers-list">

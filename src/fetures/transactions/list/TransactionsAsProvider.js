@@ -6,14 +6,13 @@ import useAuth from '../../../hooks/useAuth';
 import TransactionsList from './TransactionsList';
 import { GrFormNextLink } from "react-icons/gr";
 import './TransactionsAsProvider.css'
+import { useGetAllTransactionsQuery } from '../TransactionsApiSlice';
 
 Chart.register(...registerables); // הרשמת כל האפשרויות של Chart.js
 
 const TransactionsAsProvider = () => {
     const { _id, phone } = useAuth()
-    const transactions = useSelector((state) => state.transactions.transactions || []);
-    const isLoading = useSelector((state) => state.transactions?.isLoading);
-    const error = useSelector((state) => state.transactions?.error);
+      const { data: transactions = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({phone});
    const transactionsAsProvider = useMemo(() => {
     return transactions?.filter(t => t?.agent === _id) || [];
 }, [transactions, _id]);

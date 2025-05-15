@@ -42,9 +42,22 @@ import PaymentPage from "./component/payment/PaymentPage"
 import { useEffect } from "react";
 import TransactionsMenu from "./fetures/transactions/view/TransactionsMenu"
 import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCustomer"
+import { useDispatch } from "react-redux"
+import { setToken } from "./fetures/auth/authSlice"
 
 
 const App = () => {
+      const dispatch = useDispatch()
+      useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken')
+    if (accessToken) {
+      dispatch(setToken({ accessToken }))
+    } else {
+      // גם אם אין טוקן, עדיין נרצה לעדכן ש־isInitialized יהיה true
+      dispatch({ type: 'auth/logout' })
+    }
+  }, [dispatch])
+
     const { phone } = useAuth();
     useAgentData(phone); // הפעלת ה-hook
     useTransactionsData(phone);

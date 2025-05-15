@@ -17,16 +17,25 @@ import { useMemo } from "react";
 import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
 import ExpensesList from "../expenses/list/ExpensesList";
+import { useGetAgentQuery } from "../../app/apiSlice";
+import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
-   const agent = useSelector((state) => state.agent.agent || {});
-   const transactions = useSelector((state) => state.transactions.transactions || []);
-   const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
-   const isLoading = useSelector((state) => state.agent?.isLoading);
-   const error = useSelector((state) => state.agent?.error);
-   const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
-   const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
+   // const agent = useSelector((state) => state.agent.agent || {});
+   // const transactions = useSelector((state) => state.transactions.transactions || []);
+   // const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
+   // const isLoading = useSelector((state) => state.agent?.isLoading);
+   // const error = useSelector((state) => state.agent?.error);
+   // const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
+   // const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
 
+   const { data: agent, isLoading, error } = useGetAgentQuery({phone});
+   console.log(agent);
+   
+  const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions } = useGetAllTransactionsQuery({phone});
+  const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({phone});
+   console.log(transactions,errorLoadingTransactions);
+   
    const navigate = useNavigate();
    const chartRef = useRef(null);
    const expenseChartRef = useRef(null);
