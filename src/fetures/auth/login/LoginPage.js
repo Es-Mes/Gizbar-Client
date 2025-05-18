@@ -8,6 +8,7 @@ import useAuth from "../../../hooks/useAuth"
 import { Link } from "react-router-dom"
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import LoadingScreen from "../../../component/LoadingScreen";
 
 export const LoginPage = () => {
   // const { _id, phone, roles } = useAuth()
@@ -44,14 +45,17 @@ export const LoginPage = () => {
   const handleGoHome = () => {
     navigate("/")
   }
+  if(isLoading){
 
+    return(<><LoadingScreen/></>) 
+  }
   return (
     <div className='login-page'>
       <div className="login-form">
 
 
       <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
-  <h2>התחברות לחשבון</h2>
+  <h2>מזדהים ומתחברים</h2>
   <div className="field">
     <label htmlFor="phone">טלפון</label>
     <input
@@ -89,7 +93,7 @@ export const LoginPage = () => {
 </form>
 
       <div className="toRegist">
-       <NavLink to='/regist'>חדש באתר? הרשם עכשיו!</NavLink>
+       <NavLink to='/regist'> עדיין לא השתמשת במערכת? לחץ כאן</NavLink>
       </div>
       </div>
       <img className="loginImg" src="/loginImg.jpg" alt="" />

@@ -69,6 +69,7 @@ const App = () => {
             <Route path="/dash" element={<DashLayout />}>
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
+                        {/* <Route path ="" */}
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
                         <Route path="CreditPay" element={<PaymentPage />} />
                         <Route index element={<HomeMain />} />
