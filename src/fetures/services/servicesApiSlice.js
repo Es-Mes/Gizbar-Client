@@ -2,19 +2,13 @@ import apiSlice from "../../app/apiSlice";
 
 const servicesApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({
-        // getAllServices: build.query({
-        //     query: ({ phone }) => ({
-        //         url: `/api/agent/${phone}/service`,
-        //     }),
-        //     providesTags: ["Services"],
-        // }),
         addService: build.mutation({
             query: ({ phone, service }) => ({
                 url: `/api/agent/${phone}/service`,
                 method: "POST",
                 body: service,
             }),
-            invalidatesTags: ["Services"],
+            invalidatesTags: ["Agent"],
         }),
         updateService: build.mutation({
             query: ({ phone, service }) => ({
@@ -22,7 +16,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: service,
             }),
-            invalidatesTags: ["Services"],
+            invalidatesTags: ["Agent"],
         }),
         freezService: build.mutation({
             query: ({ phone, _id }) => ({
@@ -33,7 +27,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
                 },
                 body: { _id },
             }),
-            invalidatesTags: ["Services"],
+            invalidatesTags: ["Agent"],
         }),
         unFreezService: build.mutation({
             query: ({ phone, _id }) => ({
@@ -44,7 +38,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
                 },
                 body: { _id },
             }),
-            invalidatesTags: ["Services"],
+            invalidatesTags: ["Agent"],
         }),
         
         deleteService: build.mutation({
@@ -56,7 +50,7 @@ const servicesApiSlice = apiSlice.injectEndpoints({
               },
               body: { _id },
             }),
-            invalidatesTags: ["Services"],
+            invalidatesTags: ["Agent"],
           }),
     }),
 });

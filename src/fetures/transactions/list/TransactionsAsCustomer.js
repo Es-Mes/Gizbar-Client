@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Chart, registerables } from 'chart.js'; // ייבוא Chart.js
 import useAuth from '../../../hooks/useAuth';
 import TransactionsList from './TransactionsList';
 import { GrFormNextLink } from "react-icons/gr";
 import './TransactionsAsProvider.css'
 import { useGetAllTransactionsAsCustomerQuery } from '../TransactionsApiSlice';
-import { BsPhone } from 'react-icons/bs';
 
 const TransactionsAsCustomer = () => {
-const {data:transactionsAsCustomer,isLoading:isLoading,error:error} = useGetAllTransactionsAsCustomerQuery({BsPhone})
-console.log(transactionsAsCustomer);
+    const {phone} = useAuth();    
+    const { data: transactionsAsCustomer = [], isLoading: isLoading, error: error } = useGetAllTransactionsAsCustomerQuery({ phone })
+    console.log(transactionsAsCustomer);
     const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsCustomer)
     const [isReady, setIsReady] = useState(false);
     const [searchParams] = useSearchParams();
@@ -25,9 +24,9 @@ console.log(transactionsAsCustomer);
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    
+
         let filtered = transactionsAsCustomer;
-    
+
         if (filterBy === "recentMonth") {
             setHeader(`הוצאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
             filtered = [...transactionsAsCustomer].filter(transaction => {
@@ -40,29 +39,26 @@ console.log(transactionsAsCustomer);
         } else {
             setHeader("כל ההוצאות");
         }
-    
+
         setTransactionsToDisplay(filtered);
         setIsReady(true); // רק אחרי העדכון!
-    }, [filterBy,transactionsAsCustomer]);
+    }, [filterBy, transactionsAsCustomer]);
 
     if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (error) return <p>שגיאה: {error.data?.message || "אירעה שגיאה"}</p>;
     if (!isReady) return <p>טוען עסקאות...</p>
-  return (
-    <div className='transactions_first_page'>
-        <div className='transactions-display'></div>
-        <div className="header-with-button">
-                    <button className="backButton" onClick={() => navigate(-1)}>
-                        <GrFormNextLink />
-                    </button>
-                    <h2>{header}</h2>
-                </div>
-                    {
-                    <TransactionsList transactions={transactionsToDisplay} />
-                        
-                    }
-    </div>
-  )
+    return (
+        <div className='transactions_first_page'>
+            <div className='transactions-display'></div>
+            <div className="header-with-button">
+                <button className="backButton" onClick={() => navigate(-1)}>
+                    <GrFormNextLink />
+                </button>
+                <h2>{header}</h2>
+            </div>
+            <TransactionsList transactions={transactionsToDisplay} />
+        </div>
+    )
 }
 
 export default TransactionsAsCustomer

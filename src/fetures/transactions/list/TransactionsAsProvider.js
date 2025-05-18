@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Chart, registerables } from 'chart.js'; // ייבוא Chart.js
 import useAuth from '../../../hooks/useAuth';
 import TransactionsList from './TransactionsList';
@@ -12,13 +11,7 @@ Chart.register(...registerables); // הרשמת כל האפשרויות של Cha
 
 const TransactionsAsProvider = () => {
     const { _id, phone } = useAuth()
-      const { data: transactions = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({phone});
-   const transactionsAsProvider = useMemo(() => {
-    return transactions?.filter(t => t?.agent === _id) || [];
-}, [transactions, _id]);
-    const [isRecentTransactionsSlice, setIsRecentTransactionsSlice] = useState(true)
-    const [isLastTransactionsSlice, setIsLastTransactionsSlice] = useState(true)
-    const [isPendingTransactionsSlice, setIsPendingTransactionsSlice] = useState(true)
+    const { data: transactionsAsProvider = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({ phone });
     const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsProvider)
     const [isReady, setIsReady] = useState(false);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // ניהול השנה הנוכחית ב-state
@@ -108,68 +101,6 @@ const TransactionsAsProvider = () => {
         };
     }, [monthlyIncome, currentYear]); // עדכון הגרף במקרה שהנתונים משתנים
 
-    //עסקאות אחרונות שבוצעו
-    const filterRecentTransactions = (transactionsAsProvider) => {
-        const today = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(today.getMonth() - 3); // לחשב את התאריך של 3 חודשים אחורה
-
-        return [...transactionsAsProvider]
-            .filter(transaction =>
-                transaction.status !== "canceled" && // רק עסקאות שלא בוטלו
-                new Date(transaction.updatedAt) >= threeMonthsAgo // רק עסקאות מעודכנות ב-3 חודשים האחרונים
-            )
-            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)) // מיון לפי תאריך העדכון (מהחדש לישן)
-            // .slice(0, 10) // להחזיר עד 10 עסקאות
-            .map(transaction => ({
-                ...transaction, // שומר את שאר המידע של העסקה
-                agent: undefined, // מחיקת שדה agent
-            }));
-    };
-
-    const recentTransactions = filterRecentTransactions(transactionsAsProvider);
-    const recentTransactionsSlice = recentTransactions.slice(0, 5);
-
-    //הכנסות אחרונות
-    const filterLastTransactions = (transactionsAsProvider) => {
-        const today = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(today.getMonth() - 3); // לחשב את התאריך של 3 חודשים אחורה
-
-        return [...transactionsAsProvider]
-            .filter(transaction =>
-                transaction.status === "paid" && // רק עסקאות שלא בוטלו
-                new Date(transaction.billingDay) >= threeMonthsAgo  // רק עסקאות מעודכנות ב-3 חודשים האחרונים
-
-            )
-            .sort((a, b) => new Date(b.billingDay) - new Date(a.billingDay)) // מיון לפי תאריך העדכון (מהחדש לישן)
-            // .slice(0, 10) // להחזיר עד 10 עסקאות
-            .map(transaction => ({
-                ...transaction, // שומר את שאר המידע של העסקה
-                agent: undefined, // מחיקת שדה agent
-            }));
-    };
-
-    const lastTransactions = filterLastTransactions(transactionsAsProvider) || [];
-    const lastTransactionsSlice = lastTransactions.slice(0, 5) || [];
-    // console.log(`lastTransactions${lastTransactions}`);
-
-
-    //תשלומים קרובים
-    const filterPendingTransactions = (transactionsAsProvider) => {
-        // קבלת תאריך נוכחי
-        const today = new Date();
-
-        return [...transactionsAsProvider]
-            .filter(transaction =>
-                transaction.status === "pendingCharge" && // רק עסקאות שלא נגבו
-                new Date(transaction.billingDay) > today // תאריך גבייה מאוחר מהיום
-            )
-            .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
-    };
-
-    const pendingTransactions = filterPendingTransactions(transactionsAsProvider);
-    const pendingTransactionsSlice = pendingTransactions.slice(0, 5);
 
 
 
@@ -206,64 +137,14 @@ const TransactionsAsProvider = () => {
     if (!isReady) return <p>טוען עסקאות...</p>
     return (
         <div className='transactions_first_page'>
-            {/* גרף ההכנסות */}
-            {/* <div className="income-chart-container">
-                <div className="chart-header">
-                    <button onClick={() => setCurrentYear(currentYear - 1)}>&lt; שנה קודמת</button>
-                    <h2>הכנסות לפי חודשים ({currentYear})</h2>
-                    <button onClick={() => setCurrentYear(currentYear + 1)}>שנה הבאה &gt;</button>
-                </div>
-                <canvas id="incomeChart" />
-                <p className="average-income">
-                    ההכנסה הממוצעת לחודש בשנת {currentYear}: <strong>{averageIncome} ₪</strong>
-                </p>
-            </div> */}
             <div className="transactions-display">
-                {/* <div>
-                    <h2>
-                        עסקאות אחרונות שבוצעו
-                        <span
-                            className="toggle-view"
-                            onClick={() => setIsRecentTransactionsSlice(!isRecentTransactionsSlice)}
-                        >
-                            {isRecentTransactionsSlice ? "יותר" : "פחות"}
-                        </span>
-                    </h2>
-                    {
-                        isRecentTransactionsSlice ? (
-                            <TransactionsList transactions={recentTransactionsSlice} />
-                        ) : (
-                            <TransactionsList transactions={recentTransactions} />
-                        )}
-                </div> */}
                 <div className="header-with-button">
                     <button className="backButton" onClick={() => navigate(-1)}>
                         <GrFormNextLink />
                     </button>
                     <h2>{header}</h2>
-                </div>
-
-                {
-                    <TransactionsList transactions={transactionsToDisplay} />
-
-                }
-
-                {/* <div>
-                    <h2>
-                        תשלומים קרובים
-                        <span
-                            className="toggle-view"
-                            onClick={() => setIsPendingTransactionsSlice(!isPendingTransactionsSlice)}
-                        >
-                            {isPendingTransactionsSlice ? "יותר" : "פחות"}
-                        </span>
-                    </h2>
-                    {isPendingTransactionsSlice ? (
-                        <TransactionsList transactions={pendingTransactionsSlice} />
-                    ) : (
-                        <TransactionsList transactions={pendingTransactions} />
-                    )}
-                </div> */}
+                </div>               
+                    <TransactionsList transactions={transactionsToDisplay} />               
             </div>
         </div>
     )

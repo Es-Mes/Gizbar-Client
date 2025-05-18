@@ -1,12 +1,11 @@
 import "./CustomersList.css"
 // import "./new.css"
 import Search from "../../../component/search/Search"
-import { useDeleteCustomerMutation, useGetAllCustomersQuery, useGetCustomerQuery } from "../customersApiSlice"
+import { useDeleteCustomerMutation } from "../customersApiSlice"
 import { Link, useSearchParams } from "react-router-dom"
 import { GrView, GrEdit, GrFormTrash } from "react-icons/gr";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import useAuth from "../../../hooks/useAuth"
-import { deleteCustomerData } from "../../../app/customersSlice"
 import { useState } from "react"
 import Modal from "../../../modals/Modal"
 import EditCustomer from "../edit/EditCustomer"
@@ -15,17 +14,12 @@ import { useGetAgentQuery } from "../../../app/apiSlice";
 
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
-
-    const dispatch = useDispatch()
-   const { data: agent, isLoading, error } = useGetAgentQuery({phone});
-   const customers = agent?.customers || [];
-    console.log(customers);
-    
+    const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
+    const customers = agent?.customers || [];
 
     const [isEditModelOpen, setEditModelOpen] = useState(false)
     const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [isAddModelOpen, setAddModelOpen] = useState(false)
-    // const { data: custmers, isError, error, isLoading } = useGetAllCustomersQuery()
     const [deleteCustomer, { isSuccess: isDeleteSuccess }] = useDeleteCustomerMutation()
 
     const openEditModel = (customer) => {
@@ -40,42 +34,50 @@ const CustomersList = () => {
         if (window.confirm("?בטוח שברצונך למחוק את הלקוח")) {
             console.log(customer);
 
-            const data = await deleteCustomer({ phone, _id: customer._id })
-            console.log('data : ', data);
+            const result = await deleteCustomer({ phone, _id: customer._id });
 
-            if (data.data) {
-                if (!data.error) {
-                    dispatch(deleteCustomerData(customer._id));
-                }
-            } else {
-                if (data.error.status === 403) {
-                    window.alert("אין אפשרות למחוק לקוח שיש לו עסקאות.")
-                }
+            if ('error' in result && result.error.status === 403) {
+                alert("אין אפשרות למחוק לקוח שיש לו עסקאות.");
+            } else if ('data' in result) {
+                alert("הלקוח נמחק בהצלחה");
             }
 
         }
     }
 
-    const [searchParams] = useSearchParams()
-    const q = searchParams.get("")
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const filteredData = !q ? [...customers] : customers.filter(c => c.full_name.indexOf(q) > -1)
+    const q = searchParams.get("q" )|| ""
+    const handleChange = (e) => {
+        const value = e.target.value;
+        if (value) {
+            setSearchParams({ q: value });
+        }
+        else {
+            setSearchParams({}); // מנקה את הפרמטר
+          }
+    };
+    const filteredData = q === ""
+        ? [...customers]
+        : customers.filter(c =>
+            c.full_name?.toLowerCase().includes(q.toLowerCase())
+        );
 
     if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
 
     return (
         <div className="customers-list">
             <h2 className="customers-title">לקוחות</h2>
             <div className="customers-list-top">
-                <Search placeholder={"חיפוש לפי שם לקוח"} />
-                {/* <Link to="/dash/customers/add" className="customers-list-add-btn">
-                    הוספת משתמש
-                </Link> */}
+                <input
+                    type="text"
+                    placeholder={'חפש לפי שם לקוח'}
+                    onChange={handleChange}
+                    value={searchParams.get("q") || ""}
+                />
                 <button onClick={addCustomerClick}>
-                    {/* <Link to="add"> */}
                     הוספת לקוח
-                    {/* </Link> */}
                 </button>
             </div>
             <table className="customers-list-table">

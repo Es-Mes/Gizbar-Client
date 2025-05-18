@@ -3,22 +3,16 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
-import { useGetAllServicesQuery } from "../../services/servicesApiSlice";
-import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
-import { addTransactionStore } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
-import { addNewTransaction, setError } from "../../../app/transactionsSlice";
 const AddTransaction = ({ onSuccess }) => {
     const { _id, phone } = useAuth();
     const services = useSelector((state) => state.agent?.agent?.services || []);
     const filterServices = services.filter((service) => service.active === true);
     const customers = useSelector((state) => state.customers?.customers || []);
-    const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
-    const dispatch = useDispatch();
 
     const navigate = useNavigate();
     const [addTransaction, { isLoading, isSuccess, isError, error, data }] =
@@ -168,10 +162,6 @@ const AddTransaction = ({ onSuccess }) => {
                     customer: customerDetails
                 };
                 console.log(transactionWhithCustomer);
-
-                dispatch(addNewTransaction(transactionWhithCustomer));
-            } else {
-                dispatch(setError(transaction.message));
             }
 
 
@@ -397,7 +387,6 @@ const AddTransaction = ({ onSuccess }) => {
                 <AddCustomer
                     onSuccess={(newCustomer) => {
 
-                        refetchCustomers();
                         setSelectedCustomer(newCustomer); // עדכון אוטומטי של הלקוח הנבחר
                         setCustomerModalOpen(false);
                         // קריאה יזומה לפונקציה שמטפלת בבחירת לקוח

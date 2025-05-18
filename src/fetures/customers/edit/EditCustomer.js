@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import useAuth from '../../../hooks/useAuth'
 import { useUpdateCustomerMutation } from '../customersApiSlice';
-import { useDispatch } from 'react-redux';
-import { updateCustomerData } from '../../../app/customersSlice';
 import './editCustomer.css'
 
 const EditCustomer = ({ customer, onSuccess }) => {
     const { phone } = useAuth();
     const [updateCustomer, { isLoading, isSuccess, isError, error, data }] = useUpdateCustomerMutation();
-    const dispatch = useDispatch();
     console.log(customer);
 
     const [customerData, setCustomerData] = useState({
@@ -36,11 +33,12 @@ const EditCustomer = ({ customer, onSuccess }) => {
             console.log(data);
             if (data) {
                 if (!data.error) {
-                    // עדכון הסטור עם הלקוח החדש
-                    dispatch(updateCustomerData(data.data));
+                    if(onSuccess){
+                        onSuccess();
+                    }
                 }
             }
-            onSuccess();
+           
         } catch (err) {
             console.error("Error adding customer:", err);
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch } from "react-redux";
-import { setAgentData, setError } from "../../../app/agentSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddService.css';
 
@@ -46,25 +45,13 @@ const AddService = ({ onSuccess }) => {
             if (data) {
                 if (!data.error) {
                     setShowSuccessMessage(true); // הצג הודעת הצלחה
-                    // const services = data.services;
-                    // const newService = services[services.length - 1];
-                    dispatch(setAgentData(data.data)); // עדכון הסטור בשירות החדש
-                } else {
-                    dispatch(setError(data.message));
+                    setTimeout(() => {
+                    setShowSuccessMessage(false); // הסתר את ההודעה
+                    onSuccess()
+                }, 2000); // עיכוב של 2 שניות (2000ms)
                 }
             }
 
-            if (onSuccess) {
-                const services = data.data.services;
-                const newService = services[services.length - 1];
-                onSuccess(newService); // קריאה ל־onSuccess אם הוגדר
-            } else {
-                setTimeout(() => {
-                    setShowSuccessMessage(false); // הסתר את ההודעה
-                    navigate("/dash"); // נווט לעמוד השירותים
-                }, 2000); // עיכוב של 2 שניות (2000ms)
-
-            }
         } catch (err) {
             console.error("Error adding service:", err);
         }

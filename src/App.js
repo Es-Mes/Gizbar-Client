@@ -24,14 +24,8 @@ import AddService from "./fetures/services/add/AddService"
 import ServicesList from "./fetures/services/list/ServicesList"
 import SingleService from "./fetures/services/view/SingleService"
 import useAuth from "./hooks/useAuth"
-import useAgentData from "./hooks/useAgentData"
-import useCustomersData from "./hooks/useCustomersData"
-import useTransactionsData from "./hooks/useTransactionsData"
 import UnderConstruction from "./component/UnderConstruction"
-import DelayedTransactions from "./fetures/transactions/list/delayedTransactions"
-import FreezedServices from "./fetures/services/list/FreezedServices"
 import AllTransactions from "./fetures/transactions/list/AllTransactions"
-import useCustomerTransactionsData from "./hooks/useCustomerTransactionsData"
 import PersonalSettings from "./fetures/settings/PersonalSettings"
 import ExpensesList from "./fetures/expenses/list/ExpensesList"
 import ExpensesPage from "./fetures/expenses/ExpensesPage"
@@ -44,25 +38,27 @@ import TransactionsMenu from "./fetures/transactions/view/TransactionsMenu"
 import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCustomer"
 import { useDispatch } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
-
+import { useGetAgentQuery } from "./app/apiSlice"
 
 const App = () => {
-      const dispatch = useDispatch()
-      useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken')
-    if (accessToken) {
-      dispatch(setToken({ accessToken }))
-    } else {
-      // גם אם אין טוקן, עדיין נרצה לעדכן ש־isInitialized יהיה true
-      dispatch({ type: 'auth/logout' })
-    }
-  }, [dispatch])
+    const dispatch = useDispatch()
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken')
+        if (accessToken) {
+            dispatch(setToken({ accessToken }))
+        } else {
+            // גם אם אין טוקן, עדיין נרצה לעדכן ש־isInitialized יהיה true
+            dispatch({ type: 'auth/logout' })
+        }
+    }, [dispatch])
 
     const { phone } = useAuth();
-    useAgentData(phone); // הפעלת ה-hook
-    useTransactionsData(phone);
-    useCustomerTransactionsData(phone)
-    useCustomersData(phone)
+    // console.log(phone);
+    
+    // const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
+
+    // if (isLoading) return <p>טוען את הנתונים האישיים שלך ...</p>;
+    // if (error) return <p>שגיאה בטעינת הנתונים  :(</p>;
 
     return <Router>
         <ScrollToTop />
@@ -85,15 +81,14 @@ const App = () => {
                         </Route>
                         <Route path="services" element={<Outlet />}>
                             <Route index element={<ServicesList />} />
-                            <Route path="freezed" element={<FreezedServices />} />
                             <Route path="add" element={<AddService />} />
                             <Route path=":userId" element={<SingleService />} />
                         </Route>
                         <Route path="transactions/:type" element={<Outlet />}>
-                            <Route  index element={<TransactionsMenu />} />
+                            <Route index element={<TransactionsMenu />} />
                             <Route path="providerList" element={<TransactionsAsProvider />} />
                             <Route path="customerList" element={<TransactionsAsCustomer />} />
-                            
+
                         </Route>
                         <Route path="transactions/customer" element={<Outlet />}>
                             <Route index element={<ExpensesPage />} />

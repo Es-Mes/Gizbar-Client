@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import useAuth from "../../../hooks/useAuth";
 import TransactionsList from "./TransactionsList";
-import "./delayedTransactions.css"
 import { useMemo } from "react";
+import { useGetAllTransactionsQuery } from "../TransactionsApiSlice";
 
 const AllTransactions = () => {
-    const { _id } = useAuth();
-    const transactions = useSelector((state) => state.transactions.transactions || []);
-    const isLoading = useSelector((state) => state.transactions?.isLoading);
-    const error = useSelector((state) => state.transactions?.error);
+    const { _id ,phone} = useAuth();
+    const { data: transactions = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({ phone });
+   
 
     const [requireField, setRequireFiled] = useState(3); // ברירת מחדל: שלושה חודשים אחורה
 

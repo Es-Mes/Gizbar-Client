@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Chart, registerables } from 'chart.js';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom/dist/umd/react-router-dom.development';
+import { useGetAllTransactionsQuery } from '../TransactionsApiSlice';
+import { BsPhone } from 'react-icons/bs';
+import useAuth from '../../../hooks/useAuth';
 
 Chart.register(...registerables);
 
@@ -12,8 +15,8 @@ const TransactionsMenu = () => {
     const navigate = useNavigate()
     const { type } = useParams(); // "income" או "expense"
     const isIncome = type === 'income';
-
-    const transactions = useSelector((state) => state.transactions.transactions || []);
+    const phone = useAuth();
+    const  {data :transactions = []} = useGetAllTransactionsQuery({phone});
     //גרף הכנסות
     // components/IncomeChart.jsx
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());

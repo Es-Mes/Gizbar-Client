@@ -12,7 +12,7 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
             query: ({ phone }) => ({
                 url: `/api/agent/${phone}/transactionsAsCustomer`
             }),
-            providesTags: ["Transactions"],
+            providesTags: ["TransactionsAsCustomers"],
         }),
         addTransaction: build.mutation({
             query: ({ phone, transaction }) => ({

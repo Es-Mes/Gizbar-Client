@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAddCustomerMutation } from "../customersApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { addNewCustomer } from "../../../app/customersSlice";
-import { useGetAllCustomersQuery } from "../../customers/customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
 const AddCustomer = ({ onSuccess }) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
     const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-    // const customers = useSelector((state) => state.agent?.data?.customers || []);
 
     const [customerData, setCustomerData] = useState({
         full_name: "",
@@ -28,7 +20,6 @@ const AddCustomer = ({ onSuccess }) => {
         const { name, value } = e.target;
         setCustomerData((prev) => ({ ...prev, [name]: value }));
     };
-    const { refetch: refetchCustomers } = useGetAllCustomersQuery({ phone });
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!phone) {
@@ -42,20 +33,16 @@ const AddCustomer = ({ onSuccess }) => {
             if (data) {
                 if (!data.error) {
                     setShowSuccessMessage(true); // הצג הודעת הצלחה         
-                    // עדכון הסטור עם הלקוח החדש
-                    dispatch(addNewCustomer(data.data));
                 }
-            }
 
-
-            if (onSuccess) {
-                onSuccess(); // קריאה ל־onSuccess אם הוגדר
-            } else {
                 setTimeout(() => {
                     setShowSuccessMessage(false); // הסתר את ההודעה
-                    navigate("/dash"); // נווט לעמוד השירותים
+                    if (onSuccess) {
+                        onSuccess(); // קריאה ל־onSuccess אם הוגדר
+                    }
                 }, 2000); // עיכוב של 2 שניות (2000ms)
             }
+
         } catch (err) {
             console.error("Error adding customer:", err);
         }

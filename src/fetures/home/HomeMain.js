@@ -10,30 +10,22 @@ import { useNavigate } from "react-router-dom";
 import { useAddUserMutation } from "../users/UsersApiSlice";
 import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
-import useTransactionsData from "../../hooks/useTransactionsData";
 import { useSelector } from "react-redux";
 import TransactionsList from "../transactions/list/TransactionsList";
 import { useMemo } from "react";
 import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
-import ExpensesList from "../expenses/list/ExpensesList";
 import { useGetAgentQuery } from "../../app/apiSlice";
 import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
-   // const agent = useSelector((state) => state.agent.agent || {});
-   // const transactions = useSelector((state) => state.transactions.transactions || []);
-   // const transactionsAsCustomer = useSelector((state) => state.customerTransactions.transactions || []);
-   // const isLoading = useSelector((state) => state.agent?.isLoading);
-   // const error = useSelector((state) => state.agent?.error);
-   // const isLoadingTransactions = useSelector((state) => state.transactions?.isLoading);
-   // const errorLoadingTransactions = useSelector((state) => state.transactions?.error);
-
    const { data: agent, isLoading, error } = useGetAgentQuery({phone});
    console.log(agent);
    
   const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions } = useGetAllTransactionsQuery({phone});
   const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({phone});
+  console.log(transactionsAsCustomer);
+  
    console.log(transactions,errorLoadingTransactions);
    
    const navigate = useNavigate();
@@ -47,9 +39,6 @@ const HomeMain = () => {
    const bgClear = cssVars.getPropertyValue('--bgSoftLight2').trim();
    const bgSoftLight = cssVars.getPropertyValue('--bgSoftLight').trim();
    const text = cssVars.getPropertyValue('--bgSoftLight3').trim();
-
-
-   // console.log('agent ', agent);
 
    //הכנסות בחודש הנוכחי 
    const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
@@ -462,7 +451,7 @@ const HomeMain = () => {
    if (isLoading) return <p>Loading...</p>;
    if (error) return <p>Error: {error}</p>;
    if (isLoadingTransactions) return <p>Loading transactions...</p>;
-   if (errorLoadingTransactions) return <p>Error: {error}</p>;
+   if (errorLoadingTransactions) return <p>Error: {errorLoadingTransactions}</p>;
    return (
       <>
          {/* <h2>{today} - מה קורה החודש?</h2> */}

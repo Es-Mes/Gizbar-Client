@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useUpdateServiceMutation } from '../servicesApiSlice';
 import { useDispatch } from 'react-redux';
 import useAuth from '../../../hooks/useAuth';
-import { updateServiceStore } from '../../../app/agentSlice';
 import './editService.css'
 
 const EditService = ({ service, onSuccess }) => {
 
     const { phone } = useAuth()
     const [updatedService, { isLoading }] = useUpdateServiceMutation();
-    const dispatch = useDispatch();
 
     const [editedservice, setEditedService] = useState({
         _id: service._id,
@@ -38,10 +36,7 @@ const EditService = ({ service, onSuccess }) => {
         try {
             const data = await updatedService({ phone, service: editedservice }).unwrap();
             console.log(data);
-            if (data) {
-                if (!data.error) {
-                    dispatch(updateServiceStore(data.data.services));
-                }
+            if (data) { 
                 onSuccess();
             }
         } catch (err) {

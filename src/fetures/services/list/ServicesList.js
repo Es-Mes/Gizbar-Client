@@ -1,26 +1,24 @@
-// import './ServicesList.css'; // קובץ CSS
 import './newStyle.css'
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import useAuth from '../../../hooks/useAuth'; // הנחה שאת משתמשת ב-hook הזה
 import { useFreezServiceMutation, useUnFreezServiceMutation, useDeleteServiceMutation } from '../servicesApiSlice';
-import { toggleServiceFreezeStore, deleteServiceStore } from '../../../app/agentSlice';
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import { GrEdit, GrFormTrash } from 'react-icons/gr';
 import { MdOutlineAcUnit, MdSevereCold } from 'react-icons/md';
 import EditService from '../edit/EditService';
+import { useGetAgentQuery } from '../../../app/apiSlice';
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
-  const services = useSelector((state) => state.agent?.agent?.services || []);
+  const {data: agent,isLoading,error} = useGetAgentQuery({phone})
+  const services = agent?.services ||[];
 
   const [deleteService] = useDeleteServiceMutation();
   const [showFreeze, setShowFreeze] = useState(false)
   const [isServiceModalOpen, setServiceModalOpen] = useState(false);
   const [isEditModelOpen, setEditModelOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const dispatch = useDispatch();
   const [filterServices, setFilterServices] = useState(services.filter((service) => service.active === true))
   useEffect(() => {
     setFilterServices(services.filter((service) => service.active !== showFreeze));
@@ -35,9 +33,7 @@ const ServicesList = () => {
       console.log('Sending to API:', { phone, _id: id });
       const data = await freezService({ phone, _id: id }).unwrap();
       console.dir(data, { depth: null, colors: true });
-      if (data) {
-        dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
-      }
+      
     } catch (error) {
       console.error('Error freezing service:', error?.data || error.message || error);
       alert('Failed to freeze service.');
@@ -48,9 +44,6 @@ const ServicesList = () => {
       console.log('Sending to API:', { phone, _id: id });
       const data = await unFreezService({ phone, _id: id }).unwrap();
       console.dir(data, { depth: null, colors: true });
-      if (data) {
-        dispatch(toggleServiceFreezeStore(id)); // עדכון הסטור
-      }
     } catch (error) {
       console.error('Error freezing service:', error?.data || error.message || error);
       alert('Failed to freeze service.');
@@ -62,7 +55,6 @@ const ServicesList = () => {
       try {
         const data = await deleteService({ phone, _id: id }).unwrap();
         console.log('Service deleted:', data);
-        dispatch(deleteServiceStore(id)); // עדכון הסטור
         alert('השירות נמחק בהצלחה.');
       } catch (error) {
         console.error('Error deleting service:', error?.data || error.message || error);
@@ -87,9 +79,6 @@ const ServicesList = () => {
   return (
     <div className="service-list-container">
       <h2>רשימת שירותים {showFreeze ? 'מוקפאים' : 'פעילים'}</h2>
-      {/* <p className="service-icons-info">
-        ⏳ שירות לפי שעה | 📦 שירות גלובלי
-      </p> */}
       <div className='btn-container'>
 
         <button className="addButton" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
@@ -150,8 +139,7 @@ const ServicesList = () => {
 
       <Modal isOpen={isServiceModalOpen} onClose={() => setServiceModalOpen(false)}>
         <AddService
-          onSuccess={(newService) => {
-            console.log(newService);
+          onSuccess={() => {
             // Handle successful service addition if necessary
             setServiceModalOpen(false);
           }}
@@ -161,7 +149,6 @@ const ServicesList = () => {
         <EditService
           service={selectedService}
           onSuccess={() => {
-            // Handle successful service addition if necessary
             setEditModelOpen(false);
           }}
         />

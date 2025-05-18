@@ -5,7 +5,6 @@ import { LuBellRing } from "react-icons/lu";
 
 import { BsCashCoin, BsCreditCard } from "react-icons/bs";
 import { usePayInCashMutation } from "../TransactionsApiSlice";
-import { setTransactionPaid } from "../../../app/transactionsSlice";
 import PaymentModal from "../../../modals/PaymentModal";
 import "./TransactionItem.css"
 
@@ -59,7 +58,6 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
         payInCash({ _id: editedTransaction._id })
             .then((response) => {
                 console.log(response);
-                dispatch(setTransactionPaid(response.data)); // עדכון סטטוס התשלום
                 setIsCashModalOpen(false);
             onUpdate(response.data); 
             })
