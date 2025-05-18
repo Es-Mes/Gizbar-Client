@@ -3,6 +3,7 @@ import { useRegistMutation } from "../authApiSlice"
 import { useEffect, useState, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Alert from '@mui/material/Alert';
+import LoadingScreen from "../../../component/LoadingScreen";
 
 export const RegistPage = () => {
 
@@ -80,24 +81,27 @@ export const RegistPage = () => {
       נרשמת בהצלחה למערכת, הינך מועבר לדף הכניסה.
     </div>
   );
+  if(isLoading){
+    return <LoadingScreen/>
+  }
 
   return (
     <div className='modal-overlay modal-static regist-modal'
       style={{ 
-      backgroundImage: `url(${process.env.PUBLIC_URL}/slika/loginImg.JPG)`,
+      backgroundImage: `url(${process.env.PUBLIC_URL}/loginImg.JPG)`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }} ref={modalRef}>
       <div className='regist-page modal-content'>
         
         <form onChange={checkFull} onSubmit={handleSubmit} className='regist-page-form'>
-        <h2>יצירת חשבון</h2>
+        <h2>משתמש חדש במערכת</h2>
           {/* <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button> */}
           {/* <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} /> */}
 
           <div className="field">
             <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
+              <span className="required-asterisk">*</span>
             </div>
             <input
               type="text"
@@ -105,13 +109,13 @@ export const RegistPage = () => {
               id="first_name"
               onChange={(e) => setFirst_name(e.target.value)}
               placeholder="שם פרטי"
-            // required
+            required
             />
           </div>
 
           <div className="field">
             <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
+              <span className="required-asterisk">*</span>
             </div>
             <input
               type="text"
@@ -119,7 +123,7 @@ export const RegistPage = () => {
               id="last_name"
               onChange={(e) => setLast_name(e.target.value)}
               placeholder="שם משפחה"
-            // required
+            required
             />
           </div>
 
@@ -151,9 +155,9 @@ export const RegistPage = () => {
             />
           </div>
 
-          <div className="field">
+          {/* <div className="field">
             <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
+              <span className="required-asterisk">*</span>
             </div>
             <input
               type="text"
@@ -161,13 +165,13 @@ export const RegistPage = () => {
               id="city"
               onChange={(e) => setCity(e.target.value)}
               placeholder="עיר"
-            // required
+            required
             />
           </div>
 
           <div className="field">
             <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
+              <span className="required-asterisk">*</span>
             </div>
             <input
               type="text"
@@ -175,9 +179,9 @@ export const RegistPage = () => {
               id="address"
               onChange={(e) => setAddress(e.target.value)}
               placeholder="כתובת"
-            // required
+            required
             />
-          </div>
+          </div> */}
 
           <div className="field">
             <div className="required-wrapper">
@@ -208,13 +212,13 @@ export const RegistPage = () => {
 
           {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
 
-          <Link className="linkToLogin" to={"/login"}>לקוח רשום? הכנס כאן!</Link>
+          <Link className="linkToLogin" to={"/login"}>רשום כבר במערכת? הכנס כאן!</Link>
           {isError &&
             <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
               {error && error.data?.message}
             </Alert>}
           <button type="submit" disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--text)' : "var(--bgSoftLight)", color: fullData && "white" }}>
-            {isLoading ? 'בתהליך...' : 'רישום'}
+            {isLoading ? 'בתהליך...' : 'והתחברת!'}
           </button>
         </form>
       </div>

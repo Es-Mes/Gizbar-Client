@@ -1,15 +1,15 @@
-.regist-page {
+/* .regist-page {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 100vh;
-}
-.regist-modal{
+    max-height: 100vh !important; 
+} */
+/* .regist-modal{
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-}
-.regist-modal::before {
+} */
+/* .regist-modal::before {
     margin: 0;
     padding: 0;
     content: "";
@@ -18,13 +18,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* מוסיף שכבת כהות קלה על התמונה */
-}
+    background: rgba(0, 0, 0, 0.5); 
+} */
 
-.regist-page-form {
+/* .regist-page-form {
     position: relative;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.8); /* רקע שקוף-לבן לטופס */
+    background: rgba(255, 255, 255, 0.8);
     padding: 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     width: 75%;
@@ -33,14 +33,14 @@
     flex-direction: column;
     align-items: center;
     gap: 3px;
-}
-.regist-page-form h2 {
+} */
+/* .regist-page-form h2 {
     margin-bottom: 10px;
     font-size: 24px;
     color: var(--text);
-}
+} */
 
-.regist-page-form input {
+/* .regist-page-form input {
     width: 100%;
     height: 35px;
     padding: 8px;
@@ -48,14 +48,14 @@
     border-radius: 5px;
     background-color: var(--bgWhite);
     font-size: 14px;
-}
-.field {
+} */
+/* .field {
     margin-bottom: 18px;
     position: relative;
     width: 100%;
-}
+} */
 
-.regist-page-form button {
+/* .regist-page-form button {
     width: 50%;
     padding: 10px;
     font-size: 16px;
@@ -63,28 +63,137 @@
     background-color: var(--bgSoftLight);
     color: var(--text);
     transition: background 0.3s;
-}
+} */
 
-.regist-page-form button:hover {
+/* .regist-page-form button:hover {
     background-color: var(--text);
     color: var(--bgWhite);
+} */
+
+
+
+/* @media (max-width: 768px) {
+    .regist-page-form {
+        width: 90%;
+        padding: 20px;
+    }
+} */
+
+.regist-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 30px 15px;
+    background: linear-gradient(to bottom right, #e3f2fd, #fffde7);
+    animation: fadeIn 1.2s ease-in-out;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.regist-page {
+    background-color: white;
+    padding: 25px 45px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    animation: popIn 0.5s ease-out;
+}
+
+.regist-page h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.regist-page-form {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cfd8dc;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+.field input:focus {
+    border-color: #1565c0;
+    outline: none;
+}
+
+button[type="submit"] {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+.required-wrapper{
+    margin: 0;
+    padding: 0;
 }
 
 .linkToLogin {
     color: var(--text);
     text-decoration: none;
     font-weight: bold;
-    font-size: 17px;
-    margin-top:0 ;
-    margin-bottom: 5px;
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    cursor: pointer;
 }
+
 .linkToLogin:hover {
     text-decoration: underline;
 }
+.error {
+    font-size: 0.9rem;
+    direction: rtl;
+    text-align: right;
+    margin-top: 5px;
+}
 
-@media (max-width: 768px) {
-    .regist-page-form {
-        width: 90%;
-        padding: 20px;
+.welcome-message {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    background: linear-gradient(to bottom right, #e3f2fd, #fffde7);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* אנימציות */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
