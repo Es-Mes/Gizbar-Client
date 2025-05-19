@@ -94,7 +94,7 @@ export const RegistPage = () => {
     }} ref={modalRef}>
       <div className='regist-page modal-content'>
         
-        <form onChange={checkFull} onSubmit={handleSubmit} className='regist-page-form'>
+        <form id="registForm" onChange={checkFull} onSubmit={handleSubmit} className='regist-page-form'>
         <h2>משתמש חדש במערכת</h2>
           {/* <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button> */}
           {/* <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} /> */}
