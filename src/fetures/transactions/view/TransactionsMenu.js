@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import "./TransactionsMenu.css"
 import { useEffect, useRef, useState } from 'react';
 import { Chart, registerables } from 'chart.js';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom/dist/umd/react-router-dom.development';
 import { useGetAllTransactionsQuery } from '../TransactionsApiSlice';
 import { BsPhone } from 'react-icons/bs';

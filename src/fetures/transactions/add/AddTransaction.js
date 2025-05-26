@@ -1,21 +1,23 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
+import { useGetAgentQuery } from "../../../app/apiSlice";
 const AddTransaction = ({ onSuccess }) => {
     const { _id, phone } = useAuth();
-    const services = useSelector((state) => state.agent?.agent?.services || []);
+    const {data: agent,isLoading} = useGetAgentQuery({phone})
+      const services = agent?.services ||[];
     const filterServices = services.filter((service) => service.active === true);
-    const customers = useSelector((state) => state.customers?.customers || []);
+    const customers = agent?.customers || [];
 
     const navigate = useNavigate();
-    const [addTransaction, { isLoading, isSuccess, isError, error, data }] =
+    const [addTransaction, {  isSuccess, isError, error, data }] =
         useAddTransactionMutation();
 
     const [currentStep, setCurrentStep] = useState(1);

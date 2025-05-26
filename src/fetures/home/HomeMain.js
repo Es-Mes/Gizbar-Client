@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { useAddUserMutation } from "../users/UsersApiSlice";
 import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
-import { useSelector } from "react-redux";
 import TransactionsList from "../transactions/list/TransactionsList";
 import { useMemo } from "react";
 import AddTransaction from "../transactions/add/AddTransaction";
