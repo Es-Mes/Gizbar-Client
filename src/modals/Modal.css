@@ -19,7 +19,7 @@
     max-width: 500px;
     width: 100%;
     position: relative;
-    max-height: 90vh; /* מונע גובה גדול מדי */
+    max-height: 92vh; /* מונע גובה גדול מדי */
     overflow-y: auto; /* גלילה פנימית */
     scrollbar-width: none; /* מסתיר גלילה בפיירפוקס */
     -ms-overflow-style: none; /* מסתיר גלילה באקספלורר/Edge */
@@ -33,13 +33,18 @@
     }
 
 .modal-close {
+    color: var(--text);
     position: absolute;
     top: 10px;
     right: 10px;
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 22px;
     cursor: pointer;
+}
+.modal-close:hover{
+        color: red;
+
 }
 
 .modal-overlay.modal-static {

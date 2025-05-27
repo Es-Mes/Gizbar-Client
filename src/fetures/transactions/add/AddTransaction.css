@@ -2,9 +2,9 @@
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 600px;
-    margin: 20px auto;
+    padding: 10px;
+    margin: 0;
+    max-width: 600px; 
     text-align: right;
     /* יישור לימין */
 }
@@ -41,7 +41,7 @@ h3 {
 .transaction-body {
     display: flex;
     flex-direction: column;
-    height: 45vh;
+    height: 55vh;
     display: flex;
     justify-content: space-evenly;
     /* justify-content: center;
@@ -115,8 +115,8 @@ textarea:focus {
   max-width: 50%;
 }
 .date{
-    flex-direction: column;
-    min-width: 270px;
+    flex-direction: row;
+    min-width: 260px;
     max-width: 70%;
 }
 

@@ -179,24 +179,25 @@ const AddTransaction = ({ onSuccess }) => {
 
 
     const nextStep = () => {
+        setMessage("");
         if (currentStep === 2 && !selectedService) {
-            alert("יש לבחור שירות לפני המעבר לשלב הבא.");
+            setMessage("יש לבחור שירות לפני המעבר לשלב הבא.");
             return;
         }
         if (currentStep === 2 && selectedService.type === "hourly" && transactionDetails.hours < 1) {
-            alert("יש לבחור מספר שעות לפני המעבר לשלב הבא.");
+            setMessage("יש לבחור מספר שעות לפני המעבר לשלב הבא.");
             return;
         }
         if (currentStep === 2) {
             // updatePrice()
             console.log(transactionDetails);
             if (!transactionDetails.price) {
-                alert("יש להכניס מחיר לפני המעבר לשלב הבא.");
+                setMessage("יש להכניס מחיר לפני המעבר לשלב הבא.");
                 return;
             }
         }
         if (currentStep === 1 && !selectedCustomer) {
-            alert("יש לבחור לקוח לפני המעבר לשלב הבא.");
+            setMessage("יש לבחור לקוח לפני המעבר לשלב הבא.");
             return;
         }
         setCurrentStep((prev) => prev + 1);
