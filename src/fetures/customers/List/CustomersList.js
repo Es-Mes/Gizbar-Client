@@ -1,5 +1,4 @@
 import "./CustomersList.css"
-// import "./new.css"
 import Search from "../../../component/search/Search"
 import { useDeleteCustomerMutation } from "../customersApiSlice"
 import { Link, useSearchParams } from "react-router-dom"
@@ -47,7 +46,7 @@ const CustomersList = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const q = searchParams.get("q" )|| ""
+    const q = searchParams.get("q") || ""
     const handleChange = (e) => {
         const value = e.target.value;
         if (value) {
@@ -55,7 +54,7 @@ const CustomersList = () => {
         }
         else {
             setSearchParams({}); // מנקה את הפרמטר
-          }
+        }
     };
     const filteredData = q === ""
         ? [...customers]
@@ -63,8 +62,8 @@ const CustomersList = () => {
             c.full_name?.toLowerCase().includes(q.toLowerCase())
         );
 
-    if (isLoading) return <p>Loading...</p>;
-if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
+    if (isLoading) return <p>טוען נתונים...</p>;
+    if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
 
     return (
         <div className="customers-list">

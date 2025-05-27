@@ -7,8 +7,6 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import "./HomeMain.css"
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from "react-router-dom";
-import { useAddUserMutation } from "../users/UsersApiSlice";
-import { useGetUserQuery } from "../users/UsersApiSlice";
 import useAuth from "../../hooks/useAuth";
 import TransactionsList from "../transactions/list/TransactionsList";
 import { useMemo } from "react";
@@ -447,10 +445,10 @@ const HomeMain = () => {
    };
 
 
-   if (isLoading) return <p>Loading...</p>;
+   if (isLoading) return <p>טוען...</p>;
    if (error) return <p>Error: {error}</p>;
-   if (isLoadingTransactions) return <p>Loading transactions...</p>;
-   if (errorLoadingTransactions) return <p>Error: {errorLoadingTransactions}</p>;
+   if (isLoadingTransactions) return <p>טוען עסקאות...</p>;
+   if (errorLoadingTransactions) return <p>שגיאה: {errorLoadingTransactions}</p>;
    return (
       <>
          {/* <h2>{today} - מה קורה החודש?</h2> */}
