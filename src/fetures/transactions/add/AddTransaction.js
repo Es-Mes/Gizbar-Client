@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { useAddTransactionMutation } from "../TransactionsApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import AddCustomer from "../../customers/add/AddCustomer";
@@ -9,18 +9,20 @@ import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
 import { useGetAgentQuery } from "../../../app/apiSlice";
+import StepIndicator from "./StepIndicator";
 const AddTransaction = ({ onSuccess }) => {
     const { _id, phone } = useAuth();
-    const {data: agent,isLoading} = useGetAgentQuery({phone})
-      const services = agent?.services ||[];
+    const { data: agent, isLoading } = useGetAgentQuery({ phone })
+    const services = agent?.services || [];
     const filterServices = services.filter((service) => service.active === true);
     const customers = agent?.customers || [];
 
     const navigate = useNavigate();
-    const [addTransaction, {  isSuccess, isError, error, data }] =
+    const [addTransaction, { isSuccess, isError, error, data }] =
         useAddTransactionMutation();
 
     const [currentStep, setCurrentStep] = useState(1);
+    const [step, setStep] = useState(0); // 0 - פרטי הלקוח, 1 - פרטי העסקה, 2 - פרטי הגביה
     const [selectedService, setSelectedService] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [transactionDetails, setTransactionDetails] = useState({
@@ -41,7 +43,8 @@ const AddTransaction = ({ onSuccess }) => {
         if (isSuccess) {
             setMessage("העסקה נוספה בהצלחה!");
             setMessageType("success");
-            setTimeout(() => navigate("/dash"), 2000);
+            // setTimeout(() => navigate("/dash"), 2000);
+            onSuccess()
         } else if (isError) {
             setMessage("");
             console.log('error', error)
@@ -53,7 +56,7 @@ const AddTransaction = ({ onSuccess }) => {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/dash");
+            onSuccess()
         }
     }, [isSuccess, navigate]);
 
@@ -134,19 +137,20 @@ const AddTransaction = ({ onSuccess }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setMessage(" ");
         if (!transactionDetails.billingDay) {
-            alert("יש לבחור תאריך חיוב");
+            setMessage("יש לבחור תאריך חיוב");
             return;
         }
         if (!selectedService || !selectedCustomer) {
-            alert("בחר שירות ולקוח!");
+            setMessage("בחר שירות ולקוח!");
             return;
         }
         if (
             transactionDetails.alerts &&
             (!transactionDetails.typeAlerts || !transactionDetails.alertsLevel)
         ) {
-            alert("בחר סוג ורמת התראות!");
+            setMessage("בחר סוג ורמת התראות!");
             return;
         }
 
@@ -165,9 +169,6 @@ const AddTransaction = ({ onSuccess }) => {
                 };
                 console.log(transactionWhithCustomer);
             }
-
-
-
             onSuccess()
 
         } catch (err) {
@@ -178,15 +179,15 @@ const AddTransaction = ({ onSuccess }) => {
 
 
     const nextStep = () => {
-        if (currentStep === 1 && !selectedService) {
+        if (currentStep === 2 && !selectedService) {
             alert("יש לבחור שירות לפני המעבר לשלב הבא.");
             return;
         }
-        if (currentStep === 1 && selectedService.type === "hourly" && transactionDetails.hours < 1) {
+        if (currentStep === 2 && selectedService.type === "hourly" && transactionDetails.hours < 1) {
             alert("יש לבחור מספר שעות לפני המעבר לשלב הבא.");
             return;
         }
-        if (currentStep === 1) {
+        if (currentStep === 2) {
             // updatePrice()
             console.log(transactionDetails);
             if (!transactionDetails.price) {
@@ -194,24 +195,60 @@ const AddTransaction = ({ onSuccess }) => {
                 return;
             }
         }
-        if (currentStep === 2 && !selectedCustomer) {
+        if (currentStep === 1 && !selectedCustomer) {
             alert("יש לבחור לקוח לפני המעבר לשלב הבא.");
             return;
         }
         setCurrentStep((prev) => prev + 1);
+        setStep((prev) => prev + 1)
     };
 
     const prevStep = () => {
         setCurrentStep((prev) => prev - 1);
+        setStep((prev) => prev - 1)
     };
 
     return (
         <div className="add-transaction-card">
             <div className="transaction-header">
-                <h3>הוספת עסקה</h3>
+                <h3>הוספת עסקה חדשה</h3>
+
                 {/* <button className="close-button" onClick={() => navigate("/dash")}>&times;</button> */}
             </div>
+            <StepIndicator currentStep={step} />
             {currentStep === 1 && (
+                <div className="transaction-body">
+                    <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
+                    <select id="customer" onChange={handleCustomerChange} required>
+                        <option value="">-- בחר לקוח --</option>
+                        {customers.map((customer) => (
+                            <option key={customer._id} value={customer._id}>
+                                {customer.full_name}
+                            </option>
+                        ))}
+                    </select>
+                    <button className="add-button" type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
+                        + הוסף לקוח חדש
+                    </button>
+                    <div className="customerDetayls">
+                        {selectedCustomer && (
+
+                            <div>
+                                <div className="row">
+                                    <h4>שם:</h4><p>{selectedCustomer.full_name}</p>
+                                </div>
+                                <div className="row">
+                                    <h4>טלפון:</h4><p>{selectedCustomer.phone}</p>
+                                </div>
+                                <div className="row">
+                                    <h4>כתובת:</h4><p>{selectedCustomer.address}</p>
+                                </div>
+                            </div>
+                        )}</div>
+
+                </div>
+            )}
+            {currentStep === 2 && (
                 <div className="transaction-body">
                     <label htmlFor="service">בחר שירות: <span className="required-asterisk">*</span></label>
                     <select id="service" onChange={handleServiceChange} required>
@@ -226,7 +263,7 @@ const AddTransaction = ({ onSuccess }) => {
                         + הוסף שירות חדש
                     </button>
                     {selectedService && (
-                        <div>
+                        <div className="serviceRowBox">
                             <label >סוג שירות: {types[selectedService.type]}</label>
                             {/* <label htmlFor="description">תיאור:</label>
                             <input
@@ -274,53 +311,43 @@ const AddTransaction = ({ onSuccess }) => {
                 </div>
             )}
 
-            {currentStep === 2 && (
-                <div className="transaction-body">
-                    <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
-                    <select id="customer" onChange={handleCustomerChange} required>
-                        <option value="">-- בחר לקוח --</option>
-                        {customers.map((customer) => (
-                            <option key={customer._id} value={customer._id}>
-                                {customer.full_name}
-                            </option>
-                        ))}
-                    </select>
-                    <button className="add-button" type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
-                        + הוסף לקוח חדש
-                    </button>
-                    {selectedCustomer && (
-                        <div>
-                            <p>שם: {selectedCustomer.full_name}</p>
-                            <p>טלפון: {selectedCustomer.phone}</p>
-                            <p>כתובת: {selectedCustomer.address}</p>
-                        </div>
-                    )}
-                </div>
-            )}
+
 
             {currentStep === 3 && (
                 <div className="transaction-body">
-                    <label>סכום עסקה:</label>
-                    <p className="transaction-price">{transactionDetails.price} ₪</p>
-                    <label htmlFor="description">תיאור:</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={transactionDetails.description}
-                        onChange={handleInputChange}
-                    />
-                    <label htmlFor="billingDay">תאריך חיוב: <span className="required-asterisk">*</span></label>
-                    <input
-                        type="date"
-                        id="billingDay"
-                        name="billingDay"
-                        value={transactionDetails.billingDay}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <div className="transaction-row">
+                        <div className="field-group">
+                            <label>סכום עסקה:</label>
+                            <p className="transaction-price">{transactionDetails.price} ₪</p>
+                        </div>
 
-                    <label htmlFor="alerts">הפעל התראות
-                        <input
+                        <div className="field-group date">
+                            <label htmlFor="billingDay">
+                                תאריך חיוב: <span className="required-asterisk">*</span>
+                            </label>
+                            <input
+                                type="date"
+                                id="billingDay"
+                                name="billingDay"
+                                value={transactionDetails.billingDay}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="field-group full-width">
+                        <label htmlFor="description">תיאור:</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={transactionDetails.description}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+
+                    <div className="field-group full-width"> <label htmlFor="alerts">הפעל התראות
+                        <input className="noFocus"
                             type="checkbox"
                             id="alerts"
                             name="alerts"
@@ -329,17 +356,20 @@ const AddTransaction = ({ onSuccess }) => {
                         />
 
                     </label>
+                    </div>
+
+
+
 
                     {transactionDetails.alerts && (
                         <div className="stepBox">
                             <label>סוג התראות:</label>
-                            {[
-                                { value: 'email only', name: 'מייל בלבד' },
-                                { value: 'phone only', name: 'טלפון בלבד' },
-                                { value: 'email and phone', name: 'מייל וטלפון' },
-                                { value: 'human', name: 'אנושי' },
+                            {[{ value: 'email and phone', name: 'מייל וטלפון' },
+                            { value: 'email only', name: 'מייל בלבד' },
+                            { value: 'phone only', name: 'טלפון בלבד' },
+                            { value: 'human', name: 'אנושי' },
                             ].map((type) => (
-                                <div key={type.value}>
+                                <div className="alertRow" key={type.value}>
                                     <input
                                         type="radio"
                                         name="typeAlerts"
@@ -357,7 +387,7 @@ const AddTransaction = ({ onSuccess }) => {
                                 { value: 'weekly', name: 'שבועי' },
                                 { value: 'nudnik', name: 'נודניק' }
                             ].map((level) => (
-                                <div key={level.value}>
+                                <div className="alertRow" key={level.value}>
                                     <input
                                         type="radio"
                                         name="alertsLevel"
@@ -374,15 +404,26 @@ const AddTransaction = ({ onSuccess }) => {
             )}
 
             <div className="navigation-buttons">
-                {currentStep > 1 && <button className="navigation-buttons" onClick={prevStep}>חזור</button>}
-                {currentStep < 3 && <button className="navigation-buttons" onClick={() => nextStep()}>הבא</button>}
-                {currentStep === 3 && (
-                    <button className="submit-button" type="submit" onClick={handleSubmit}>
-                        סיים
-                    </button>
-                )}
-                {message && <p className={`message ${messageType}`}>{message}</p>}
-            </div>
+  <div className="nav-left">
+    {currentStep > 1 && (
+      <button className="navButton" onClick={prevStep}>חזור</button>
+    )}
+  </div>
+    {message && <p className={`message ${messageType}`}>{message}</p>}
+
+  <div className="nav-right">
+    {currentStep < 3 && (
+      <button className="navButton" onClick={nextStep}>הבא</button>
+    )}
+    {currentStep === 3 && (
+      <button className="submit-button navButton" type="submit" onClick={handleSubmit}>
+        סיים
+      </button>
+    )}
+  </div>
+
+</div>
+
 
 
             <Modal isOpen={isCustomerModalOpen} onClose={() => setCustomerModalOpen(false)}>

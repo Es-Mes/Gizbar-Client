@@ -11,9 +11,10 @@
 
 .transaction-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    border-bottom: 2px solid var(--bgSoft);
+    color: var(--text);
+    /* border-bottom: 2px solid var(--bgSoft); */
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
@@ -40,14 +41,19 @@ h3 {
 .transaction-body {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    height: 45vh;
+    display: flex;
+    justify-content: space-evenly;
+    /* justify-content: center;
+    align-items: center; */
     /* font-size: 16px; */
     /* text-align: right;  */
 }
 
 .transaction-body label {
     font-weight: bold;
-    color: #333;
+    color:var(--bgSoft);
+    width: 100%;
     /* display: flex;
     align-items: center; */
 }
@@ -61,14 +67,7 @@ h3 {
     border-radius: 8px;
     font-size: 16px;
     transition: 0.3s;
-
-    /* box-sizing: border-box; */
 }
-
-/* .transaction-body select{
-    width: calc(80% - 40px);
-
-} */
 input:focus,
 select:focus,
 textarea:focus {
@@ -76,6 +75,65 @@ textarea:focus {
     outline: none;
     box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
 }
+.noFocus:focus{
+    box-shadow: none;
+}
+.row{
+    display: flex;
+    gap: 13px;
+}
+.alertRow{
+  width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+.serviceRowBox{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.stepBox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.transaction-row {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* למובייל */
+  margin-bottom: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 130px;
+  max-width: 50%;
+}
+.date{
+    flex-direction: column;
+    min-width: 270px;
+    max-width: 70%;
+}
+
+.transaction-price {
+  font-weight: bold;
+  margin: 4px 0 0;
+}
+
+.full-width {
+  min-width: 100%;
+  margin-bottom: 16px;
+}
+
+.required-asterisk {
+  color: red;
+}
+
 
 .add-container {
     display: flex;
@@ -98,12 +156,39 @@ textarea:focus {
 .add-button:hover {
     background: #218838;
 }
-
 .navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }
+.navButton{
+    border: solid 2px var(--text);
+    color: var(--text);
+    padding: 5px;
+    border-radius: 5px;
+    width: 70px;
+      transition: transform 0.2s ease;
+
+}
+.navButton:hover{
+    background-color: var(--hover);
+    transform: scale(1.05);
+}
+
+.nav-left,
+.nav-right {
+  flex: 1;
+}
+
+.nav-left {
+  text-align: start; /* ב-RTL זה יהיה ימין */
+}
+
+.nav-right {
+  text-align: end; /* ב-RTL זה יהיה שמאל */
+}
+
 
 .add-button {
     background: var(--bgSoft);
@@ -116,21 +201,20 @@ textarea:focus {
     transition: 0.3s;
 }
 
-.add-button:hover {
+
+
+.add-button:hover,.submit-button:hover{
     background: var(--text);
+    color: var(  --bgWhite);
 }
 
-.submit-button {
-    background: #ff9800;
-}
 
-.submit-button:hover {
-    background: #e68900;
-}
+
+
 
 .message {
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 10px;
 }
 
@@ -141,48 +225,3 @@ textarea:focus {
 .message.error {
     color: red;
 }
-
-/* .add-button,
-.navigation-buttons button{
-    background-color: var(--bgSoft);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.add-button:hover {
-    background-color: var(--text);
-} */
-/* 
-.transaction-price {
-    font-size: 18px;
-    font-weight: bold;
-    color: #28a745;
-}
-
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    
-}
-
-.submit-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: background 0.3s;
-}
-
-.submit-button:hover {
-    background-color: #218838;
-} */

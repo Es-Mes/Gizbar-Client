@@ -16,12 +16,12 @@
     gap: 15px;
 }
 
-label {
+.edit-service-form label {
     font-weight: bold;
     color: #333;
 }
 
-input {
+.edit-service-form input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -29,7 +29,7 @@ input {
     transition: 0.3s;
 }
 
-input:focus {
+.edit-service-form input:focus {
     border-color: var(--bgSoft);
     outline: none;
     box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
@@ -50,7 +50,7 @@ input:focus {
     background: var(--text);
 }
 
-button:disabled {
+.edit-service-form button:disabled {
     background: #6c757d;
     cursor: not-allowed;
 }

@@ -18,15 +18,15 @@ import { useGetAgentQuery } from "../../app/apiSlice";
 import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
 const HomeMain = () => {
    const { _id, phone } = useAuth()
-   const { data: agent, isLoading, error } = useGetAgentQuery({phone});
+   const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
    console.log(agent);
-   
-  const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions } = useGetAllTransactionsQuery({phone});
-  const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({phone});
-  console.log(transactionsAsCustomer);
-  
-   console.log(transactions,errorLoadingTransactions);
-   
+
+   const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions } = useGetAllTransactionsQuery({ phone });
+   const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({ phone });
+   console.log(transactionsAsCustomer);
+
+   console.log(transactions, errorLoadingTransactions);
+
    const navigate = useNavigate();
    const chartRef = useRef(null);
    const expenseChartRef = useRef(null);
@@ -496,44 +496,15 @@ const HomeMain = () => {
 
             <div className="dashboard-row ">
                <div className="income-outcome-summary">
-                  {/* <div className="dashboard-card color3">
-                  <p style={{
-                     color: "var(--text)", fontWeight: "bold"
-                  }}>סכום שעומד להכנס:<br /> <div style={{ padding: "5px" }}>{totalExpectedIncome} ₪</div></p>
-                  <button>
-                     <Link to="transactions/income/list?filter=pending">לפירוט לחץ</Link>
-                  </button></div>
-               <div className="dashboard-card color1">
-                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>סכום שכבר נכנס:<br /> <div style={{ padding: "5px" }}>{totalIncome} ₪</div></p>
-                  <button>
-                     <Link to="transactions/income/list?filter=recent">לפירוט לחץ</Link>
-                  </button>
-                  </div> */}
+
                   <div className="dashboard-card color2" onClick={handleClickDelayedIncome} style={{ cursor: "pointer" }}>
                      <div style={{ color: "var(--text)", fontWeight: "bold", fontSize: "18px" }}>עסקאות בפיגור:<br /><div style={{ padding: "5px" }}>{delayedTransactionsIncome} ₪</div></div>
-                     {/* <button>
-                     <Link to="transactions/income/list?filter=delay">לפירוט לחץ</Link>
-                  </button> */}
                   </div>
                </div>
                <div className="income-outcome-summary">
-                  {/* <div className="dashboard-card color3" >
-                  <p style={{ fontWeight: "bold", color: "var(--text)" }}>חיובים שעומדים לצאת: <br /> <div style={{ padding: "5px" }}>{totalExpectedOutcome} ₪</div></p>
-                  <button>
-                     <Link to="transactions/customer">לפירוט לחץ</Link>
-                  </button>
-                  </div>
-               <div className="dashboard-card color1">
-                  <p style={{ color: "var(--text)", fontWeight: "bold" }}>חיובים שיצאו מחשבונך:<br /> <div style={{ padding: "5px" }}>{totalOutcome} ₪</div></p>
-                  <button>
-                     <Link to="transactions/customer">לפירוט לחץ</Link>
-                  </button>
-                  </div> */}
+
                   <div className="dashboard-card color2" onClick={handleClickDelayedExpenses} style={{ cursor: "pointer" }}>
                      <div style={{ color: "var(--text)", fontWeight: "bold", fontSize: "18px" }}>חיובים בפיגור:<br /> <div style={{ padding: "5px" }}>{delayedTransactionsOutcome} ₪</div></div>
-                     {/* <button>
-                     <Link to="transactions/customer">לפירוט לחץ</Link>
-                  </button> */}
                   </div>
                </div>
             </div>
@@ -655,8 +626,7 @@ const HomeMain = () => {
          <Modal isOpen={isTransactionModalOpen} onClose={() => setTransactionModalOpen(false)}>
             <AddTransaction
                onSuccess={() => {
-                  setTransactionModalOpen(false);
-                  // Handle successful service addition if necessary
+                  setTimeout(() => setTransactionModalOpen(false), 2000);
                }}
             />
          </Modal>
