@@ -4,7 +4,7 @@ import { GrEdit, GrCheckmark, GrClose, GrMoreVertical, GrFormUp } from "react-ic
 import { LuBellRing } from "react-icons/lu";
 
 import { BsCashCoin, BsCreditCard } from "react-icons/bs";
-import { usePayInCashMutation } from "../TransactionsApiSlice";
+import { usePayInCashMutation, useSendReminderMutation } from "../TransactionsApiSlice";
 import PaymentModal from "../../../modals/PaymentModal";
 import "./TransactionItem.css"
 
@@ -24,7 +24,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [openUpwards, setOpenUpwards] = useState(false);
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל טלפון
+    const [alertMethod, setAlertMethod] = useState("email"); // ברירת מחדל טלפון
 
     const isIncome = transaction.agent.first_name ? false : true
 
@@ -53,13 +53,14 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
     }
 
     const [payInCash, { isLoading, isSuccess, isError, error, data }] = usePayInCashMutation();
+    const [sendReminder, { isLoading: is_loading, isSuccess: is_success, isError: is_error, error: err }] = useSendReminderMutation();
 
     const confirmPayInCash = () => {
         payInCash({ _id: editedTransaction._id })
             .then((response) => {
                 console.log(response);
                 setIsCashModalOpen(false);
-            onUpdate(response.data); 
+                onUpdate(response.data);
             })
             .catch((err) => console.error("שגיאה בתשלום במזומן", err));
     };
@@ -92,8 +93,9 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
 
     }
 
-    const sendAlert = () => {
+    const sendAlert = async () => {
         console.log(`נשלחה התראה באמצעות: ${alertMethod} ללקוח: ${editedTransaction.customer.full_name}`);
+        await sendReminder({ type: alertMethod, _id: editedTransaction._id })
         setIsAlertModalOpen(false);
     };
 
@@ -124,20 +126,20 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
                     ) : (<span>-</span>)}
                     {showActions && (
                         <div className={`actions-dropdown floating-menu ${openUpwards ? "open-up" : ""}`}>
-                            {isIncome &&(<div onClick={() => { setIsCashModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                            {isIncome && (<div onClick={() => { setIsCashModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCashCoin size={20} /> תשלום במזומן
                             </div>)}
-                            {isIncome &&(<div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                            {isIncome && (<div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום באשראי
                             </div>)}
 
-                            {isIncome &&(<div className="action-item" onClick={() => setShowAlertsModal(true)}>
+                            {isIncome && (<div className="action-item" onClick={() => setShowAlertsModal(true)}>
                                 <GrEdit size={20} /> עריכת נודניק
                             </div>)}
-                            {isIncome &&(<div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
+                            {isIncome && (<div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
                                 <LuBellRing size={20} /> שליחת התראה
                             </div>)}
-                            {!isIncome &&(<div onClick={() => {  setShowActions(!showActions) }} className="action-item">
+                            {!isIncome && (<div onClick={() => { setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום חוב באשראי(בפיתוח)
                             </div>)}
 
@@ -183,16 +185,16 @@ const [alertMethod, setAlertMethod] = useState("phone"); // ברירת מחדל 
             )}
             {/* מודל תשלום באשראי */}
             <PaymentModal isOpen={isPaymentModalOpen} onClose={() => setPaymentModalOpen(false)} transaction={editedTransaction} />
-           
+
             {/* מודל שליחת התראה  */}
             {isAlertModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h3>בחר אמצעי לשליחת התראה</h3>
                         <select value={alertMethod} onChange={(e) => setAlertMethod(e.target.value)}>
-                            <option value="phone">טלפון</option>
+                            <option value="call">טלפון</option>
                             <option value="email">מייל</option>
-                            <option value="both">טלפון + מייל</option>
+                            <option value="emailAndCall">טלפון + מייל</option>
                             <option value="human">שליחה לפקידה</option>
                         </select>
                         <div className="modal-actions">
