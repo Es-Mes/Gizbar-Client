@@ -41,7 +41,15 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
             query: ({ _id }) => ({
                 url: `/api/agent/transaction/payCash`,
                 method: "PUT",
-                body: {_id},
+                body: { _id },
+            }),
+            invalidatesTags: ["Transactions"],
+        }),
+        sendReminder: build.mutation({
+            query: ({ type, _id }) => ({
+                url: `/api/agent/transaction/sendReminder/${type}`,
+                method: "POST",
+                body: { _id }
             }),
             invalidatesTags: ["Transactions"],
         }),
@@ -54,5 +62,6 @@ export const {
     useAddTransactionMutation,
     useUpdateTransactionMutation,
     useDeleteTransactionMutation,
-    usePayInCashMutation
+    usePayInCashMutation,
+    useSendReminderMutation
 } = transactionsApiSlice;

@@ -132,7 +132,7 @@ const TransactionsAsProvider = () => {
     }, [filterBy, transactionsAsProvider]);
 
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <p>בטעינה...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!isReady) return <p>טוען עסקאות...</p>
     return (
@@ -143,8 +143,8 @@ const TransactionsAsProvider = () => {
                         <GrFormNextLink />
                     </button>
                     <h2>{header}</h2>
-                </div>               
-                    <TransactionsList transactions={transactionsToDisplay} />               
+                </div>
+                <TransactionsList transactions={transactionsToDisplay} />
             </div>
         </div>
     )
