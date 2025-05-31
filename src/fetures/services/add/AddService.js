@@ -7,10 +7,9 @@ import './AddService.css';
 
 const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
+    console.log(phone);
+    
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
-
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [serviceData, setServiceData] = useState({
         name: "",
@@ -47,7 +46,7 @@ const AddService = ({ onSuccess }) => {
                     setShowSuccessMessage(true); // הצג הודעת הצלחה
                     setTimeout(() => {
                     setShowSuccessMessage(false); // הסתר את ההודעה
-                    onSuccess()
+                    onSuccess(data)
                 }, 2000); // עיכוב של 2 שניות (2000ms)
                 }
             }

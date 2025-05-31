@@ -19,9 +19,13 @@ import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from
 const HomeMain = () => {
    const { _id, phone } = useAuth()
    const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
+   console.log(error);
+
    console.log(agent);
 
    const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions } = useGetAllTransactionsQuery({ phone });
+   console.log(errorLoadingTransactions);
+
    const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({ phone });
    console.log(transactionsAsCustomer);
 
@@ -448,9 +452,9 @@ const HomeMain = () => {
 
 
    if (isLoading) return <p>Loading...</p>;
-   if (error) return <p>Error: {error}</p>;
+   if (error) return <p>Error: {error?.data?.message}</p>;
    if (isLoadingTransactions) return <p>Loading transactions...</p>;
-   if (errorLoadingTransactions) return <p>Error: {errorLoadingTransactions}</p>;
+   if (errorLoadingTransactions) return <p>Error: {errorLoadingTransactions?.data?.message}</p>;
    return (
       <>
          {/* <h2>{today} - מה קורה החודש?</h2> */}
@@ -580,9 +584,9 @@ const HomeMain = () => {
                סליקת אשראי לגביה מיידית
             </Link>
 
-            <Link to="../dash/UnderConstruction" className="nav-button">
+            {/* <Link to="../dash/UnderConstruction" className="nav-button">
                הוראת קבע
-            </Link>
+            </Link> */}
 
          </div>
 
@@ -623,7 +627,10 @@ const HomeMain = () => {
             </div>
          </div> */}
 
-         <Modal isOpen={isTransactionModalOpen} onClose={() => setTransactionModalOpen(false)}>
+         <Modal isOpen={isTransactionModalOpen}
+            onClose={() => setTransactionModalOpen(false)}
+            disableOverlayClick={true}
+         >
             <AddTransaction
                onSuccess={() => {
                   setTimeout(() => setTransactionModalOpen(false), 2000);

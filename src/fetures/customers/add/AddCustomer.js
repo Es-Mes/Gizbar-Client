@@ -38,7 +38,7 @@ const AddCustomer = ({ onSuccess }) => {
                 setTimeout(() => {
                     setShowSuccessMessage(false); // הסתר את ההודעה
                     if (onSuccess) {
-                        onSuccess(); // קריאה ל־onSuccess אם הוגדר
+                        onSuccess(data); // קריאה ל־onSuccess אם הוגדר
                     }
                 }, 2000); // עיכוב של 2 שניות (2000ms)
             }

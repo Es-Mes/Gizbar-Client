@@ -96,7 +96,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 15vh;
-    width: 18%;
+    width: 23%;
     color: var(--text);
     background-color: var(--bgSoft);
     border: none;
@@ -297,7 +297,7 @@ body {
     .QuickActions button,
     .nav-button {
         height: 15vh;
-        width: 30%;
+        width: 48%;
     }
 
 }

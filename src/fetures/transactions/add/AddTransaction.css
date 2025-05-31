@@ -2,7 +2,7 @@
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    padding: 20px;
     margin: 0;
     max-width: 600px; 
     text-align: right;
@@ -26,7 +26,7 @@ h3 {
 
 .transaction-header h3 {
     font-size: 18px;
-    color: var(--bgSoft);
+    color: var(--text);
     margin: 0;
 }
 
@@ -41,7 +41,7 @@ h3 {
 .transaction-body {
     display: flex;
     flex-direction: column;
-    height: 55vh;
+    height: 50vh;
     display: flex;
     justify-content: space-evenly;
     /* justify-content: center;
@@ -96,11 +96,12 @@ textarea:focus {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    gap: 10px;
+    gap: 15px;
 }
 
 .transaction-row {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   justify-content: space-between;
   align-items: center;
@@ -110,7 +111,7 @@ textarea:focus {
 
 .field-group {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-width: 130px;
   max-width: 50%;
 }
@@ -121,8 +122,8 @@ textarea:focus {
 }
 
 .transaction-price {
-  font-weight: bold;
-  margin: 4px 0 0;
+width: 100%;
+margin: 4px 0 0;
 }
 
 .full-width {
@@ -168,12 +169,19 @@ textarea:focus {
     padding: 5px;
     border-radius: 5px;
     width: 70px;
-      transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transform: scale(1.02);
+
 
 }
 .navButton:hover{
     background-color: var(--hover);
-    transform: scale(1.05);
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.navButton:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-left,

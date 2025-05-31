@@ -95,6 +95,7 @@ const AddTransaction = ({ onSuccess }) => {
                     price: service.price
                 }));
             }
+        setCurrentStep((prev) => prev + 1);
         };
     }
     const handleCustomerChange = (event) => {
@@ -106,6 +107,7 @@ const AddTransaction = ({ onSuccess }) => {
                 ...prev,
                 customer: customer._id
             }));
+            setCurrentStep((prev) => prev + 1);
         }
     };
 
@@ -201,12 +203,10 @@ const AddTransaction = ({ onSuccess }) => {
             return;
         }
         setCurrentStep((prev) => prev + 1);
-        setStep((prev) => prev + 1)
     };
 
     const prevStep = () => {
         setCurrentStep((prev) => prev - 1);
-        setStep((prev) => prev - 1)
     };
 
     return (
@@ -216,12 +216,12 @@ const AddTransaction = ({ onSuccess }) => {
 
                 {/* <button className="close-button" onClick={() => navigate("/dash")}>&times;</button> */}
             </div>
-            <StepIndicator currentStep={step} />
+            <StepIndicator currentStep={currentStep - 1} />
             {currentStep === 1 && (
                 <div className="transaction-body">
                     <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
-                    <select id="customer" onChange={handleCustomerChange} required>
-                        <option value="">-- בחר לקוח --</option>
+                    <select id="customer" onChange={handleCustomerChange} value={transactionDetails.customer}required>
+                        <option value="">--  בחר לקוח קיים --</option>
                         {customers.map((customer) => (
                             <option key={customer._id} value={customer._id}>
                                 {customer.full_name}
@@ -252,8 +252,8 @@ const AddTransaction = ({ onSuccess }) => {
             {currentStep === 2 && (
                 <div className="transaction-body">
                     <label htmlFor="service">בחר שירות: <span className="required-asterisk">*</span></label>
-                    <select id="service" onChange={handleServiceChange} required>
-                        <option value="">-- בחר שירות --</option>
+                    <select id="service" onChange={handleServiceChange} value={transactionDetails.service} required>
+                        <option value="">-- בחר שירות קיים --</option>
                         {filterServices.map((service) => (
                             <option key={service._id} value={service._id}>
                                 {service.name}
