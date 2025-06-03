@@ -27,11 +27,24 @@
 }
 
 .active {
-  background-color: var(--bgSoft);
+  background-color: var(--bgSoftLight2);
+}
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 var(--bgSoftLight2);
+  }
+  70% {
+    box-shadow: 0 0 10px 8px rgba(40, 167, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
 }
 
 .completed {
-  background-color: #28a745;
+  background-color: var(--bgSoftLight2);
+  box-shadow: 0 0 10px 4px var(--bgSoftLight2); 
+  /* animation: pulseGlow 2s infinite; */
 }
 
 .label {

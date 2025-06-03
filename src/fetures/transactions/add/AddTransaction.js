@@ -34,6 +34,7 @@ const AddTransaction = ({ onSuccess }) => {
     const [isServiceModalOpen, setServiceModalOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
+    const [clicked, setClicked] = useState(false);
 
     const types = {
         global: 'גלובלי',
@@ -95,7 +96,7 @@ const AddTransaction = ({ onSuccess }) => {
                     price: service.price
                 }));
             }
-        setCurrentStep((prev) => prev + 1);
+            setCurrentStep((prev) => prev + 1);
         };
     }
     const handleCustomerChange = (event) => {
@@ -157,6 +158,7 @@ const AddTransaction = ({ onSuccess }) => {
         }
 
         try {
+            nextStep()
             console.log("transactionData before sending:", transactionDetails);
             const transaction = await addTransaction({ phone, transaction: transactionDetails }).unwrap();
 
@@ -171,6 +173,7 @@ const AddTransaction = ({ onSuccess }) => {
                 };
                 console.log(transactionWhithCustomer);
             }
+            setClicked(true);
             onSuccess()
 
         } catch (err) {
@@ -220,7 +223,7 @@ const AddTransaction = ({ onSuccess }) => {
             {currentStep === 1 && (
                 <div className="transaction-body">
                     <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
-                    <select id="customer" onChange={handleCustomerChange} value={transactionDetails.customer}required>
+                    <select id="customer" onChange={handleCustomerChange} value={transactionDetails.customer} required>
                         <option value="">--  בחר לקוח קיים --</option>
                         {customers.map((customer) => (
                             <option key={customer._id} value={customer._id}>
@@ -317,7 +320,7 @@ const AddTransaction = ({ onSuccess }) => {
             {currentStep === 3 && (
                 <div className="transaction-body">
                     <div className="transaction-row">
-                        <div className="field-group">
+                        <div className="field-group transaction-amount">
                             <label>סכום עסקה:</label>
                             <p className="transaction-price">{transactionDetails.price} ₪</p>
                         </div>
@@ -364,7 +367,7 @@ const AddTransaction = ({ onSuccess }) => {
 
                     {transactionDetails.alerts && (
                         <div className="stepBox">
-                            <label>סוג התראות:</label>
+                            <label>סוג:</label>
                             {[{ value: 'email and phone', name: 'מייל וטלפון' },
                             { value: 'email only', name: 'מייל בלבד' },
                             { value: 'phone only', name: 'טלפון בלבד' },
@@ -382,7 +385,7 @@ const AddTransaction = ({ onSuccess }) => {
                                 </div>
                             ))}
 
-                            <label>רמת התראות:</label>
+                            <label>רמה:</label>
                             {[
                                 { value: 'once', name: 'פעם אחת' },
                                 { value: 'weekly', name: 'שבועי' },
@@ -405,25 +408,25 @@ const AddTransaction = ({ onSuccess }) => {
             )}
 
             <div className="navigation-buttons">
-  <div className="nav-left">
-    {currentStep > 1 && (
-      <button className="navButton" onClick={prevStep}>חזור</button>
-    )}
-  </div>
-    {message && <p className={`message ${messageType}`}>{message}</p>}
+                <div className="nav-left">
+                    {currentStep > 1 && (
+                        <button className="navButton" onClick={prevStep}>חזור</button>
+                    )}
+                </div>
+                {message && <p className={`message ${messageType}`}>{message}</p>}
 
-  <div className="nav-right">
-    {currentStep < 3 && (
-      <button className="navButton" onClick={nextStep}>הבא</button>
-    )}
-    {currentStep === 3 && (
-      <button className="submit-button navButton" type="submit" onClick={handleSubmit}>
-        סיים
-      </button>
-    )}
-  </div>
+                <div className="nav-right">
+                    {currentStep < 3 && (
+                        <button className="navButton" onClick={nextStep}>הבא</button>
+                    )}
+                    {currentStep === 3 && (
+                        <button className="submit-button navButton" type="submit" onClick={handleSubmit} disabled={clicked}>
+                            סיים
+                        </button>
+                    )}
+                </div>
 
-</div>
+            </div>
 
 
 
