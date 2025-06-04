@@ -178,6 +178,9 @@
         font-weight: lighter;
 
     }
+    .menuButton{
+        margin-right: 2rem !important;
+    }
 
 
 @media screen and (max-width: 908px) {

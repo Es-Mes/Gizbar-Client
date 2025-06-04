@@ -39,7 +39,7 @@ const NavBar = ({ toggleMenu }) => {
   return (
     <div className="navbar">
       <div className="navbar-title">
-      <button className="menu-button" onClick={toggleMenu}>
+      <button className=" menu-button menuButton" onClick={toggleMenu}>
         <FaBars size={24} />
       </button>
         <div className="navbar-logo-box">

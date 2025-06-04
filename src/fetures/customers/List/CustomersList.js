@@ -27,7 +27,7 @@ const CustomersList = () => {
     const location = useLocation();
 
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
-
+    const [specificCustomer,setSpecificCustomer] = useState(null)
     const [openMenuCustomerId, setOpenMenuCustomerId] = useState(null);
     const [openUpwardsId, setOpenUpwardsId] = useState(null);
 
@@ -207,7 +207,7 @@ const CustomersList = () => {
 
                             <td className="edit_btn">
                             </td>
-                            <td onClick={openTransactionModal} className="btn-customer-list">
+                            <td onClick={()=> {openTransactionModal(); setSpecificCustomer(customer._id)}} className="btn-customer-list">
                                 <CiCoinInsert size={20} />
 
                             </td>
@@ -280,7 +280,7 @@ const CustomersList = () => {
                 onClose={() => setIsTransactionModalOpen(false)}
                 disableOverlayClick={true}
             >
-                <AddTransaction
+                <AddTransaction specificCustomer={specificCustomer}
                     onSuccess={() => {
                         setTimeout(() => setIsTransactionModalOpen(false), 2000);
                     }}

@@ -10,7 +10,7 @@ import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
 import { useGetAgentQuery } from "../../../app/apiSlice";
 import StepIndicator from "./StepIndicator";
-const AddTransaction = ({ onSuccess }) => {
+const AddTransaction = ({ onSuccess,specificCustomer }) => {
     const { _id, phone } = useAuth();
     const { data: agent, isLoading } = useGetAgentQuery({ phone })
     const services = agent?.services || [];
@@ -99,6 +99,15 @@ const AddTransaction = ({ onSuccess }) => {
             setCurrentStep((prev) => prev + 1);
         };
     }
+    const handleCustomerInput = () => {
+        const customerId = specificCustomer;
+        const customer = customers.find((cust) => cust._id === customerId);
+        setSelectedCustomer(customer);
+        
+    };
+    useEffect(() => {
+        handleCustomerInput()
+    },[])
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
         const customer = customers.find((cust) => cust._id === customerId);
@@ -224,7 +233,7 @@ const AddTransaction = ({ onSuccess }) => {
                 <div className="transaction-body">
                     <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
                     <select id="customer" onChange={handleCustomerChange} value={transactionDetails.customer} required>
-                        <option value="">--  בחר לקוח קיים --</option>
+                        <option value="">{selectedCustomer? selectedCustomer.full_name : "--  בחר לקוח קיים --"}</option>
                         {customers.map((customer) => (
                             <option key={customer._id} value={customer._id}>
                                 {customer.full_name}
@@ -243,6 +252,9 @@ const AddTransaction = ({ onSuccess }) => {
                                 </div>
                                 <div className="row">
                                     <h4>טלפון:</h4><p>{selectedCustomer.phone}</p>
+                                </div>
+                                <div className="row">
+                                    <h4>אימייל:</h4><p>{selectedCustomer.email}</p>
                                 </div>
                                 <div className="row">
                                     <h4>כתובת:</h4><p>{selectedCustomer.address}</p>
