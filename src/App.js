@@ -17,7 +17,6 @@ import AddTransaction from "./fetures/transactions/add/AddTransaction"
 import TransactionsAsProvider from "./fetures/transactions/list/TransactionsAsProvider"
 import AddService from "./fetures/services/add/AddService"
 import ServicesList from "./fetures/services/list/ServicesList"
-import SingleService from "./fetures/services/view/SingleService"
 import useAuth from "./hooks/useAuth"
 import UnderConstruction from "./component/UnderConstruction"
 import AllTransactions from "./fetures/transactions/list/AllTransactions"
@@ -34,6 +33,7 @@ import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCu
 import { useDispatch } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
 import { useGetAgentQuery } from "./app/apiSlice"
+import SingleCustomer from "./fetures/customers/view/SingleCustomer"
 
 const App = () => {
     const dispatch = useDispatch()
@@ -48,8 +48,6 @@ const App = () => {
     }, [dispatch])
 
     const { phone } = useAuth();
-    // console.log(phone);
-
     // const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
 
     // if (isLoading) return <p>טוען את הנתונים האישיים שלך ...</p>;
@@ -72,11 +70,11 @@ const App = () => {
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<AddCustomer />} />
+                            <Route path=":customerId" element={<SingleCustomer />} />
                         </Route>
                         <Route path="services" element={<Outlet />}>
                             <Route index element={<ServicesList />} />
                             <Route path="add" element={<AddService />} />
-                            <Route path=":userId" element={<SingleService />} />
                         </Route>
                         <Route path="transactions/:type" element={<Outlet />}>
                             <Route index element={<TransactionsMenu />} />
