@@ -114,6 +114,18 @@
     bottom: 100%; /* כשאין מקום למטה, פותח כלפי מעלה */
 }
 
+.actions-dropdown {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.actions-dropdown.open-up,
+.actions-dropdown:not(.open-up) {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
 
 .action-item {
     padding: 8px;

@@ -3,30 +3,32 @@ import { useEffect, useRef, useState } from "react";
 import { useRefreshMutation } from "./authApiSlice";
 import { UseSelector, useSelector } from "react-redux";
 import { selectToken } from "./authSlice";
+import { useDispatch } from "react-redux";
+import { setToken } from "./authSlice";
+
+
 
 const PersistsLogin = () => {
     const token = useSelector(selectToken)
     const effectRan = useRef(false)
     const navigate = useNavigate();
-
+    const dispatch = useDispatch()
     const [trueSuccess, setTrueSuccess] = useState(false)
 
     const [refresh, {
         isUninitialized, isLoading, isSuccess, isError, error
     }] = useRefreshMutation()
+      const needsReauth = useSelector((state) => state.auth.needsReauth);
 
     useEffect(() => {
         if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
             const verifyRefreshToken = async () => {
                 console.log("verify refresh token");
                 try {
-                    //const response=
-                    await refresh()
-                    //const {accessToken}=
+                    await refresh().unwrap() // unwrap זורק שגיאה אם נכשל
                     setTrueSuccess(true)
-                }
-                catch (err) {
-                    console.error(err)
+                } catch (err) {
+                    console.error('Refresh failed:', err)
                 }
             }
             if (!token) verifyRefreshToken()
@@ -37,7 +39,7 @@ const PersistsLogin = () => {
     if (isLoading) {
         console.log("loading");
         content = <h1>טוען נתונים</h1>
-    } else if (isError) {
+    } else if (isError || needsReauth) {
         console.log("error");
         content = <div>
             <h6 className="errorMsg">
@@ -47,10 +49,6 @@ const PersistsLogin = () => {
                 חזור לדף ההתחברות
             </button>
         </div>
-        // content = <p className="errorMsg">
-        //     {`${error?.data?.message}-`}
-        //     <Link to="../login">please login again</Link>
-        // </p>
     } else if (isSuccess && trueSuccess) {
         // console.log("success");
         content = <Outlet />

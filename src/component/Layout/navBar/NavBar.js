@@ -92,14 +92,14 @@ const NavBar = ({ toggleMenu }) => {
             )} */}
             <div className="navbar-icons">
               <NavLink className="navbar-nav-link  icon-tooltip" activClassName="active" to="settings/personal">
-                <MdPerson className="fa-icon" size={20} /><p className="tooltip-text">ניהול חשבון</p>
+                <MdPerson className="fa-icon" size={20} /><p className="tooltip-text">ניהול חשבון</p><p className="display-in-wide">ניהול חשבון</p>
               </NavLink>
               {/* <NavLink className="btn" to="/letters"> */}
               <NavLink className="nav-link  icon-tooltip" to="/dash/UnderConstruction">
-                <FaEnvelopeOpenText className="fa-icon" size={20} /><p className="tooltip-text">ההודעות שלי</p>
+                <FaEnvelopeOpenText className="fa-icon" size={20} /><p className="tooltip-text">ההודעות שלי</p><p className="display-in-wide">ההודעות שלי</p>
               </NavLink>
               <div className="btn  icon-tooltip" onClick={logOutClick}>
-                <FaArrowRightFromBracket className="fa-icon" size={20} /><p className="tooltip-text">יציאה</p>
+                <FaArrowRightFromBracket className="fa-icon" size={20} /><p className="tooltip-text">יציאה</p><p  className="display-in-wide">יציאה</p>
               </div>
             </div>
           </div>

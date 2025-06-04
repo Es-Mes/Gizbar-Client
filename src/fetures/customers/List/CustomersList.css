@@ -8,7 +8,7 @@
     max-width: 1200px;
     margin: auto;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--bgWhite);
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -22,7 +22,10 @@
 }
 
 .customers-list-top {
-    display: flex;
+   display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 120px;
     align-items: center;
     justify-content: space-between;
     background-color: var(--bgGray);
@@ -47,18 +50,28 @@
     cursor: pointer;
     transition: 0.3s;
     text-decoration: none;
+    align-self: flex-start;
 
 }
 
 .customers-list-add-btn:hover,
 .customers-list-top button:hover {
-    background: var(--bgDark);
+    background: var(--text);
+}
+.customers-list-top input{
+    align-self: flex-start;
+}
+.customNum{
+    justify-self: flex-end;
+}
+.icon-box{
+    font-size: 3rem;
 }
 
 .customers-list-table {
     width: 100%;
-    background-color: var(--bgWhite);
-    max-width: 90vw;
+    /* background-color: var(--bgWhite); */
+    max-width: 85vw;
     align-self: center;
     /* border-radius: 0 0 20px 20px; */
     margin-top: 10px;
@@ -84,22 +97,24 @@
     font-weight: bold;
 }
 
-/* .tHeads tr {
-    background-color:pink;
-    border-bottom: solid 1px pink;
-} */
-
-.customers-list-table td {
+.customers-list-table td,
+.customers-list-table th {
     padding: 12px;
-    /* border: solid 1px pink; */
-    /* border-radius: 3px; */
+    text-align: center;
     border-bottom: 1px solid #ddd;
-    /* border:none; */
+    position: relative;
+    overflow: visible;
+}
+.customers-list-table th{
+  background-color: var(--bgSoft);
+    color: white;
+    font-size: 16px;
 }
 
-/* .customers-list-table tr:hover {
-    background: #f1f1f1;
-} */
+.customers-list-table tr:hover {
+    background-color: #f4f4f4;
+    transition: background-color 0.2s ease-in-out;
+}
 
 .customers-list-table .td-no-border {
     border: none;
@@ -135,17 +150,6 @@
     min-width: 80px;
 }
 
-/* .customers-list-btn:hover {
-    background-color: rgba(255, 148, 166, 0.808);
-} */
-
-/* .customers-list-view {
-    background: white;
-    color: #28a745;
-} */
-
-
-
 .delete-byn-list {
     cursor: pointer;
 }
@@ -160,24 +164,7 @@
     color: red;
 }
 
-/* .customers-list-btns {
-    display: flex;
-    gap: 10px;
-} */
-
-/* .customers-title {
-    font-size: 2rem;
-    font-weight: lighter;
-    min-height: 10vh;
-    color: var(--bgPink);
-    background-color: #fff;
-    padding-top: 20px;
-    font-family: var(--fontFamily);
-    border-radius: 20px 20px 0px 0;
-} */
-
 .btn-customer-list:hover {
-    background-color: rgba(151, 59, 226, 0.648);
     cursor: pointer;
 }
 
@@ -188,4 +175,17 @@
 .tHeads tr:hover {
     background-color: var(--bgSoft);
     cursor: text;
+}
+
+
+/* טבלה רספונסיבית */
+@media (max-width: 788px) {
+    .customers-list-table {
+        font-size: 14px;
+    }
+
+    .customers-list-table th,
+    .tcustomers-list-table td {
+        padding: 8px;
+    }
 }

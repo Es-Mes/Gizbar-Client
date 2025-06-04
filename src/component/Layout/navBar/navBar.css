@@ -139,6 +139,7 @@
       }
       
       .tooltip-text {
+        display: none;
         visibility: hidden;
         opacity: 0;
         transition: opacity 0.3s;
@@ -189,6 +190,12 @@
         color: var(--bgWhite);
         font-family: var(--fontFamily);
         font-size: large;
+    }
+     .display-in-wide{
+        display: none;
+    }
+    .tooltip-text{
+        display: block;
     }
 
 }

@@ -1,5 +1,5 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setToken, logout } from '../fetures/auth/authSlice'
+import { setToken, logout,setNeedsReauth } from '../fetures/auth/authSlice'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.REACT_APP_BASE_URL,
@@ -26,6 +26,9 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
     } else {
       api.dispatch(logout())
     }
+  }
+  if(result?.error?.status === 403){
+      api.dispatch(setNeedsReauth());
   }
   
 //   נחלץ את .data אם יש

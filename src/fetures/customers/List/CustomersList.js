@@ -1,25 +1,109 @@
 import "./CustomersList.css"
+import React, { useState, useEffect, useRef } from "react";
 import Search from "../../../component/search/Search"
 import { useDeleteCustomerMutation } from "../customersApiSlice"
-import { Link, useSearchParams } from "react-router-dom"
-import { GrView, GrEdit, GrFormTrash } from "react-icons/gr";
+import { Link, useSearchParams, useLocation } from "react-router-dom"
+import { LuBellRing } from "react-icons/lu";
+import { CiCoinInsert } from "react-icons/ci";
+import { FiUserPlus } from "react-icons/fi";
+import { PiEyeThin } from "react-icons/pi";
+import { GrView, GrEdit, GrFormTrash, GrMoreVertical, GrFormUp } from "react-icons/gr";
 import { useDispatch } from "react-redux"
 import useAuth from "../../../hooks/useAuth"
-import { useState } from "react"
 import Modal from "../../../modals/Modal"
 import EditCustomer from "../edit/EditCustomer"
 import AddCustomer from "../add/AddCustomer"
 import { useGetAgentQuery } from "../../../app/apiSlice";
+import AddTransaction from "../../transactions/add/AddTransaction";
 
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
     const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
     const customers = agent?.customers || [];
 
+    //תצוגת הטבלה
+    const tableRef = useRef(null);
+    const [isNarrow, setIsNarrow] = useState(false);
+    const location = useLocation();
+
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+
+    const [openMenuCustomerId, setOpenMenuCustomerId] = useState(null);
+    const [openUpwardsId, setOpenUpwardsId] = useState(null);
+
     const [isEditModelOpen, setEditModelOpen] = useState(false)
     const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [isAddModelOpen, setAddModelOpen] = useState(false)
     const [deleteCustomer, { isSuccess: isDeleteSuccess }] = useDeleteCustomerMutation()
+
+    const actionsRefs = useRef({});
+
+    const toggleActions = (event, customerId) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        // אם אין מספיק מקום למטה (פחות מ-150px), נפתח למעלה
+        if (spaceBelow < 150 && spaceAbove > 150) {
+            setOpenUpwardsId(customerId);
+        } else {
+            setOpenUpwardsId(null);
+        }
+
+        // אם כבר פתוח ללקוח הזה – סגור, אחרת פתח
+        setOpenMenuCustomerId(prev => (prev === customerId ? null : customerId));
+    };
+
+    const closeMenu = () => {
+        setOpenMenuCustomerId(null);
+        setOpenUpwardsId(null);
+    };
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const currentRef = openMenuCustomerId
+                ? actionsRefs.current[openMenuCustomerId]
+                : null;
+
+            if (currentRef && !currentRef.contains(event.target)) {
+                setOpenMenuCustomerId(null);
+                setOpenUpwardsId(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+    useEffect(() => {
+        const table = tableRef.current;
+        if (!table) return;
+
+        const checkWidth = () => {
+            const width = table.offsetWidth;
+            setIsNarrow(width < 640);
+            console.log("width checked:", width);
+        };
+
+        const observer = new ResizeObserver(([entry]) => {
+            const width = entry.contentRect.width;
+            setIsNarrow(width < 640);
+            console.log("ResizeObserver:", width);
+        });
+
+        observer.observe(table);
+
+        // דחיית הקריאה הראשונית עד שה־DOM יתייצב
+        const timeout = setTimeout(checkWidth, 100);
+
+        return () => {
+            clearTimeout(timeout);
+            observer.disconnect();
+        };
+    }, [location.pathname]);
+
 
     const openEditModel = (customer) => {
         setSelectedCustomer(customer);
@@ -28,6 +112,10 @@ const CustomersList = () => {
 
     const addCustomerClick = () => {
         setAddModelOpen(true);
+    }
+    const openTransactionModal = () =>
+    {
+        setIsTransactionModalOpen(true);
     }
     const deleteClick = async (customer) => {
         if (window.confirm("?בטוח שברצונך למחוק את הלקוח")) {
@@ -67,29 +155,35 @@ const CustomersList = () => {
 
     return (
         <div className="customers-list">
-            <h2 className="customers-title">לקוחות</h2>
+            <h1 style={{ color: 'var(--text)' }} className="customers-title">לקוחות</h1>
             <div className="customers-list-top">
+
+                <button onClick={addCustomerClick}>
+                    הוספת לקוח <FiUserPlus />
+
+                </button>
                 <input
                     type="text"
                     placeholder={'חפש לפי שם לקוח'}
                     onChange={handleChange}
                     value={searchParams.get("q") || ""}
                 />
-                <button onClick={addCustomerClick}>
-                    הוספת לקוח
-                </button>
+                <div className="icon-box">👥</div>
+                <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר הלקוחות שלך -  {customers.length}</h3>
             </div>
-            <table className="customers-list-table">
+            <table ref={tableRef} className="customers-list-table">
                 <thead className="tHeads">
                     <tr>
-                        <td className="td-no-border">שם</td>
+                        <td className="td-no-border">שם לקוח</td>
                         <td className="td-no-border">טלפון</td>
-                        <td className="td-no-border">אימייל</td>
-                        <td className="td-no-border">כתובת</td>
-                        <td className="td-no-border">עיר</td>
-                        <td className="td-no-border">צפייה</td>
-                        <td className="td-no-border">עריכה</td>
-                        <td className="td-no-border">מחיקה</td>
+                        {!isNarrow && <>
+                            <td className="td-no-border">אימייל</td>
+                            <td className="td-no-border">עיר</td>
+                        </>}
+                        <td className="td-no-border">מספר גביות</td>
+                        <td className="td-no-border">הוסף גביה</td>
+                        <td className="td-no-border">צפייה בלקוח</td>
+                        <td className="td-no-border">פעולות</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -103,29 +197,66 @@ const CustomersList = () => {
                             <td>
                                 {customer.phone}
                             </td>
-                            <td>
+                            {!isNarrow && <td className="email">
                                 {customer.email}
-                            </td>
-                            <td>
-                                {customer.address}
-                            </td>
-                            <td>
+                            </td>}
+                            {!isNarrow && <td className="city">
                                 {customer.city}
+                            </td>}
+
+
+                            <td className="edit_btn">
+                            </td>
+                            <td onClick={openTransactionModal} className="btn-customer-list">
+                                <CiCoinInsert size={20} />
+
                             </td>
                             <td className="btn-customer-list">
-                                {/* <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view"> */}
-                                <GrView size={20} color="green" />
-                                {/* </Link> */}
+                                <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view">
+                                    <PiEyeThin size={20} />
+                                </Link>
                             </td>
-                            <td className="btn-customer-list edit_btn" onClick={() => openEditModel(customer)}>
-                                {/* <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view"> */}
-                                <GrEdit size={20} color="teal" />
-                                {/* </Link> */}
-                            </td>
-                            <td className="btn-customer-list delete-byn-list" onClick={() => deleteClick(customer)}>
-                                <GrFormTrash size={20} color="red" />
-                            </td>
+                            <td style={{ position: "relative" }} ref={(el) => (actionsRefs.current[customer._id] = el)}
+                            >
+                                <span
+                                    onClick={(event) => { toggleActions(event, customer._id) }} style={{ cursor: "pointer" }}>
+                                    {openMenuCustomerId === customer._id ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
+                                </span>
+                                {openMenuCustomerId === customer._id && (
+                                    <div className={`actions-dropdown floating-menu ${openUpwardsId === customer._id ? "open-up" : ""}`}>
 
+                                        <div
+                                            className="action-item"
+                                            onClick={() => {
+                                                openEditModel(customer);
+                                                closeMenu();
+                                            }}
+                                        >
+                                            <GrEdit size={20} /> עריכה
+                                        </div>
+
+                                        <div
+                                            className="action-item"
+                                            onClick={closeMenu} // אם אין פעולה, רק סוגר
+                                        >
+                                            <LuBellRing size={20} /> שלח הודעה
+                                        </div>
+
+                                        <div
+                                            onClick={() => {
+                                                deleteClick(customer);
+                                                closeMenu();
+                                            }}
+                                            className="action-item"
+                                        >
+                                            <GrFormTrash size={20} /> מחיקה
+                                        </div>
+
+
+
+                                    </div>
+                                )}
+                            </td>
                             {/* <td className="td-no-border">
                                 <div className="customers-list-btns">
                                 <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view">תצוגה</Link>
@@ -143,6 +274,17 @@ const CustomersList = () => {
             <Modal isOpen={isAddModelOpen} onClose={() => setAddModelOpen(false)}>
                 <AddCustomer
                     onSuccess={() => setAddModelOpen(false)} />
+            </Modal>
+
+            <Modal isOpen={isTransactionModalOpen}
+                onClose={() => setIsTransactionModalOpen(false)}
+                disableOverlayClick={true}
+            >
+                <AddTransaction
+                    onSuccess={() => {
+                        setTimeout(() => setIsTransactionModalOpen(false), 2000);
+                    }}
+                />
             </Modal>
 
         </div>

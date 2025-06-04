@@ -5,7 +5,6 @@
   --bgSoftLight: #8b7bdac8;
   --bgSoftLight2: #755dedba;
   --bgSoftLight3: #7f6ddc;
-  --bgWhite:#f4f4ee;
   --bgGray:rgba#f8f9fa;
   --bgClear:#765cf8;
   --bgPink: #668dc7d6;
@@ -14,7 +13,7 @@
   /* --text: #6e5ec0b0; */
 
   --textSoft: #d6dbe7;
-  --bgWhite: whitesmoke;
+  --bgWhite: rgba(249, 248, 250, 0.9);
   --blue: rgb(26, 26, 163);
   --green: rgb(15, 165, 15);
   --darkGreen: rgb(3, 36, 3);

@@ -42,7 +42,7 @@ const HomeMain = () => {
    const text = cssVars.getPropertyValue('--bgSoftLight3').trim();
 
    //הכנסות בחודש הנוכחי 
-   const [isTransactionModalOpen, setTransactionModalOpen] = useState(false);
+   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
    const [monthIncome, setMonthIncome] = useState(0);
    const [monthOutcome, setMonthOutcome] = useState(0);
 
@@ -469,7 +469,7 @@ const HomeMain = () => {
                         <h2>{totalIncome} ₪</h2>
                      </div>
                      <div className="chart-container">
-                        <canvas ref={chartRef}></canvas>
+                        <canvas onClick={(e) => e.stopPropagation()} ref={chartRef}></canvas>
                      </div>
                   </div>}
 
@@ -486,7 +486,7 @@ const HomeMain = () => {
                      <h2>{totalOutcome} ₪</h2>
                   </div>
                   <div className="chart-container">
-                     <canvas ref={expenseChartRef}></canvas>
+                     <canvas onClick={(e) => e.stopPropagation()} ref={expenseChartRef}></canvas>
                   </div>
                </div>}
 
@@ -567,7 +567,7 @@ const HomeMain = () => {
 
          <h1 className="actionsHedder">פעולות מהירות</h1>
          <div className="QuickActions">
-            <button type="button" onClick={() => { setTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
+            <button type="button" onClick={() => { setIsTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
                הוסף עסקה חדשה לגביה
             </button>
             <Link to="../dash/UnderConstruction" className="nav-button">
@@ -626,12 +626,12 @@ const HomeMain = () => {
          </div> */}
 
          <Modal isOpen={isTransactionModalOpen}
-            onClose={() => setTransactionModalOpen(false)}
+            onClose={() => setIsTransactionModalOpen(false)}
             disableOverlayClick={true}
          >
             <AddTransaction
                onSuccess={() => {
-                  setTimeout(() => setTransactionModalOpen(false), 2000);
+                  setTimeout(() => setIsTransactionModalOpen(false), 2000);
                }}
             />
          </Modal>
