@@ -4,7 +4,7 @@
     max-width: 500px;
     margin: auto;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--bgGray);
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: right;
@@ -14,6 +14,11 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+.modelTitle{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 label {
@@ -36,7 +41,7 @@ input:focus {
 }
 
 .editCustom {
-    background: var(--bgSoft);
+    background: var(--text);
     color: white;
     padding: 12px;
     border: none;
@@ -44,10 +49,14 @@ input:focus {
     cursor: pointer;
     font-size: 18px;
     transition: 0.3s;
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transform: scale(1.02);
 }
 
 .editCustom:hover {
-    background: var(--text);
+  background-color:var(--hoverBtnModel);
+    transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .editCustom:disabled {

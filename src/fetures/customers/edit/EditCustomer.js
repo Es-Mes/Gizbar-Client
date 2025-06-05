@@ -33,12 +33,12 @@ const EditCustomer = ({ customer, onSuccess }) => {
             console.log(data);
             if (data) {
                 if (!data.error) {
-                    if(onSuccess){
+                    if (onSuccess) {
                         onSuccess();
                     }
                 }
             }
-           
+
         } catch (err) {
             console.error("Error adding customer:", err);
 
@@ -47,6 +47,11 @@ const EditCustomer = ({ customer, onSuccess }) => {
     return (
         <div className='edit-customer-container'>
             <form onSubmit={handleSubmit} className='edit-customer-form'>
+
+                <div className='modelTitle'>
+                    <h1 className="loading-title">ערוך לקוח</h1>
+                    <div style={{ fontSize: "3rem" }}>👤</div>
+                </div>
                 <label htmlFor="full_name">שם מלא: <span className="required-asterisk">*</span>
                 </label>
                 <input

@@ -1,58 +1,70 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useRefreshMutation } from "./authApiSlice";
-import { UseSelector, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectToken } from "./authSlice";
-import { useDispatch } from "react-redux";
-import { setToken } from "./authSlice";
-
-
 
 const PersistsLogin = () => {
-    const token = useSelector(selectToken)
-    console.log("token:", token)
-    const effectRan = useRef(false)
-    const navigate = useNavigate();
-    const dispatch = useDispatch()
-    const [trueSuccess, setTrueSuccess] = useState(false)
+  const token = useSelector(selectToken);
+  const needsReauth = useSelector((state) => state.auth.needsReauth);
+  const [trueSuccess, setTrueSuccess] = useState(false);
+  const effectRan = useRef(false);
+  const navigate = useNavigate();
 
-    const [refresh, {
-        isUninitialized, isLoading, isSuccess, isError, error
-    }] = useRefreshMutation()
-      const needsReauth = useSelector((state) => state.auth.needsReauth);
+  const [refresh, {
+    isUninitialized,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  }] = useRefreshMutation();
 
-    useEffect(() => {
-            const verifyRefreshToken = async () => {
-                console.log("verify refresh token");
-                try {
-                    await refresh().unwrap() // unwrap זורק שגיאה אם נכשל
-                    setTrueSuccess(true)
-                } catch (err) {
-                    console.error('Refresh failed:', err)
-                }
-            }
-            if (!token){
-            verifyRefreshToken()
-            } 
-    }, [token,refresh])
-    let content
+  useEffect(() => {
+    const verifyRefreshToken = async () => {
+      try {
+        await refresh().unwrap();
+        setTrueSuccess(true);
+      } catch (err) {
+        console.error("Refresh failed:", err);
+      }
+    };
+
+    if (!token && !effectRan.current) {
+      verifyRefreshToken();
+    }
+
+    return () => {
+      effectRan.current = true;
+    };
+  }, [token, refresh]);
+
+  // 💡 תעדוף: טוען → שגיאה (אם אין הצלחה) → תוכן תקין → כלום
+  if (isLoading) {
+    return <h1>טוען נתונים...</h1>;
+  }
+
+  const shouldShowError =
+    (isError || needsReauth) &&
+    !(isSuccess && trueSuccess) &&
+    !(token && isUninitialized);
+
+  if (shouldShowError) {
     return (
-    <>
-        {isLoading && <h1>טוען נתונים...</h1>}
-        {(isError || needsReauth) && (
-            <div>
-                <h6 className="errorMsg">
-                    תוקף החיבור פג. אנא התחבר מחדש.
-                </h6>
-                <button onClick={() => navigate("/login")}>
-                    חזור לדף ההתחברות
-                </button>
-            </div>
-        )}
-        {((isSuccess && trueSuccess) || (token && isUninitialized)) && <Outlet />}
-    </>
-);
+      <div>
+        <h6 className="errorMsg">תוקף החיבור פג. אנא התחבר מחדש.</h6>
+        <button onClick={() => navigate("/login")}>
+          חזור לדף ההתחברות
+        </button>
+      </div>
+    );
+  }
 
-}
+  if ((isSuccess && trueSuccess) || (token && isUninitialized)) {
+    return <Outlet />;
+  }
 
-export default PersistsLogin
+  // במקרה שאין עדיין מידע, לא להציג כלום
+  return null;
+};
+
+export default PersistsLogin;

@@ -2,16 +2,16 @@
   --bg: #ffffff86;
   /* --bgSoft: rgb(133, 158, 212); */
   --bgSoft: #8b7bda;
+  --hoverBtnModel:#d3a6ec;
   --bgSoftLight: #8b7bdac8;
   --bgSoftLight2: #755dedba;
   --bgSoftLight3: #7f6ddc;
-  --bgGray:rgba#f8f9fa;
+  --bgGray:#f8f9fa;
   --bgClear:#765cf8;
   --bgPink: #668dc7d6;
   --hover: #c189c94b;
   --text: #3a256d;
-  /* --text: #6e5ec0b0; */
-
+--message:"#f9a825";
   --textSoft: #d6dbe7;
   --bgWhite: rgba(249, 248, 250, 0.9);
   --blue: rgb(26, 26, 163);
