@@ -22,7 +22,7 @@
 }
 
 .customers-list-top {
-   display: flex;
+    display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     max-height: 120px;
@@ -58,15 +58,39 @@
 .customers-list-top button:hover {
     background: var(--text);
 }
-.customers-list-top input{
+
+.customers-list-top input {
     align-self: flex-start;
 }
-.customNum{
+
+.customNum {
     justify-self: flex-end;
 }
-.icon-box{
+
+.hover-grow-icon {
     font-size: 3rem;
+    display: inline-block;
+    transition: transform 0.1s ease;
+    transform: scale(1.3);
+    /* מגדיל ב־30% */
 }
+
+/* .hover-grow-icon:hover {
+     animation: shrinkBounce 0.1s ease;
+} */
+
+@keyframes shrinkBounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9); /* קיטון עדין */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 .customers-list-table {
     width: 100%;
@@ -105,8 +129,9 @@
     position: relative;
     overflow: visible;
 }
-.customers-list-table th{
-  background-color: var(--bgSoft);
+
+.customers-list-table th {
+    background-color: var(--bgSoft);
     color: white;
     font-size: 16px;
 }

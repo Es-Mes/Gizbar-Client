@@ -15,7 +15,8 @@
     flex-direction: column;
     gap: 15px;
 }
-.modelTitle{
+
+.modelTitle {
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -49,14 +50,14 @@ input:focus {
     cursor: pointer;
     font-size: 18px;
     transition: 0.3s;
-     transition: transform 0.2s ease, box-shadow 0.2s ease;
-      transform: scale(1.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform: scale(1.02);
 }
 
 .editCustom:hover {
-  background-color:var(--hoverBtnModel);
+    background-color: var(--hoverBtnModel);
     transform: scale(0.98);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .editCustom:disabled {

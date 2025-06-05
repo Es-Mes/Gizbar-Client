@@ -162,7 +162,7 @@ const CustomersList = () => {
                     onChange={handleChange}
                     value={searchParams.get("q") || ""}
                 />
-                <div className="icon-box">👥</div>
+                <div className="hover-grow-icon">👥</div>
                 <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר הלקוחות שלך -  {customers.length}</h3>
             </div>
             <table ref={tableRef} className="customers-list-table">
