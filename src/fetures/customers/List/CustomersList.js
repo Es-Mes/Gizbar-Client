@@ -15,6 +15,7 @@ import EditCustomer from "../edit/EditCustomer"
 import AddCustomer from "../add/AddCustomer"
 import { useGetAgentQuery } from "../../../app/apiSlice";
 import AddTransaction from "../../transactions/add/AddTransaction";
+import DeleteCustomer from "../delete/DeleteCustomer";
 
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
@@ -27,13 +28,14 @@ const CustomersList = () => {
     const location = useLocation();
 
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
-    const [specificCustomer,setSpecificCustomer] = useState(null)
+    const [specificCustomer, setSpecificCustomer] = useState(null)
     const [openMenuCustomerId, setOpenMenuCustomerId] = useState(null);
     const [openUpwardsId, setOpenUpwardsId] = useState(null);
 
     const [isEditModelOpen, setEditModelOpen] = useState(false)
     const [selectedCustomer, setSelectedCustomer] = useState(null)
     const [isAddModelOpen, setAddModelOpen] = useState(false)
+    const [isDeleteModelOpen, setDeleteModelOpen] = useState(false)
     const [deleteCustomer, { isSuccess: isDeleteSuccess }] = useDeleteCustomerMutation()
 
     const actionsRefs = useRef({});
@@ -110,27 +112,19 @@ const CustomersList = () => {
         setEditModelOpen(true);
     }
 
+    const openDeleteModel = (customer) => {
+        console.log("openDeleteModel");
+        setSpecificCustomer(customer)
+        setDeleteModelOpen(true);
+    }
+
     const addCustomerClick = () => {
         setAddModelOpen(true);
     }
-    const openTransactionModal = () =>
-    {
+    const openTransactionModal = () => {
         setIsTransactionModalOpen(true);
     }
-    const deleteClick = async (customer) => {
-        if (window.confirm("?בטוח שברצונך למחוק את הלקוח")) {
-            console.log(customer);
-
-            const result = await deleteCustomer({ phone, _id: customer._id });
-
-            if ('error' in result && result.error.status === 403) {
-                alert("אין אפשרות למחוק לקוח שיש לו עסקאות.");
-            } else if ('data' in result) {
-                alert("הלקוח נמחק בהצלחה");
-            }
-
-        }
-    }
+    
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -207,7 +201,7 @@ const CustomersList = () => {
 
                             <td className="edit_btn">
                             </td>
-                            <td onClick={()=> {openTransactionModal(); setSpecificCustomer(customer._id)}} className="btn-customer-list">
+                            <td onClick={() => { openTransactionModal(); setSpecificCustomer(customer._id) }} className="btn-customer-list">
                                 <CiCoinInsert size={20} />
 
                             </td>
@@ -244,7 +238,8 @@ const CustomersList = () => {
 
                                         <div
                                             onClick={() => {
-                                                deleteClick(customer);
+                                                console.log("clicked");
+                                                openDeleteModel(customer);
                                                 closeMenu();
                                             }}
                                             className="action-item"
@@ -274,6 +269,11 @@ const CustomersList = () => {
             <Modal isOpen={isAddModelOpen} onClose={() => setAddModelOpen(false)}>
                 <AddCustomer
                     onSuccess={() => setAddModelOpen(false)} />
+            </Modal>
+            <Modal isOpen={isDeleteModelOpen} onClose={() => setDeleteModelOpen(false)}>
+                <DeleteCustomer
+                    customer={specificCustomer}
+                    onSuccess={() => setDeleteModelOpen(false)} />
             </Modal>
 
             <Modal isOpen={isTransactionModalOpen}

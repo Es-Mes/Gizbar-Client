@@ -7,6 +7,27 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   animation: fadeIn 1.2s ease-in-out;
 }
+.backgroung-screen{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background: linear-gradient(to bottom right, #dec0f0, #fffde7);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeIn 1.2s ease-in-out;
+}
+.modelBtn{
+  padding: 5px;
+  color: var(--bgWhite);
+  background-color:var(--text) ;
+  
+  border: none;
+  border-radius: 5px;
+}
+.modelBtn:hover{
+color: var(--text);
+  background-color:#d3a6ec ;
+}
 
 .loading-box {
   background-color: white;
@@ -21,6 +42,9 @@
   font-size: 3rem;
   animation: spin 2s linear infinite;
   margin-bottom: 15px;
+}
+.fade-icon {
+  animation: fadeInOut 2.5s ease-in-out infinite;
 }
 
 .loading-title {
@@ -48,4 +72,12 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }

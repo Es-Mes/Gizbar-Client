@@ -10,6 +10,7 @@ import { setToken } from "./authSlice";
 
 const PersistsLogin = () => {
     const token = useSelector(selectToken)
+    console.log("token:", token)
     const effectRan = useRef(false)
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -21,7 +22,6 @@ const PersistsLogin = () => {
       const needsReauth = useSelector((state) => state.auth.needsReauth);
 
     useEffect(() => {
-        if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
             const verifyRefreshToken = async () => {
                 console.log("verify refresh token");
                 try {
@@ -31,33 +31,28 @@ const PersistsLogin = () => {
                     console.error('Refresh failed:', err)
                 }
             }
-            if (!token) verifyRefreshToken()
-        }
-        return () => effectRan.current = true
-    }, [])
+            if (!token){
+            verifyRefreshToken()
+            } 
+    }, [token,refresh])
     let content
-    if (isLoading) {
-        console.log("loading");
-        content = <h1>טוען נתונים</h1>
-    } else if (isError || needsReauth) {
-        console.log("error");
-        content = <div>
-            <h6 className="errorMsg">
-                תוקף החיבור פג. אנא התחבר מחדש.
-            </h6>
-            <button color="primery" onClick={() => navigate("/login")}>
-                חזור לדף ההתחברות
-            </button>
-        </div>
-    } else if (isSuccess && trueSuccess) {
-        // console.log("success");
-        content = <Outlet />
-    } else if (token && isUninitialized) {
-        // console.log("token and Uninitialized");
-        // console.log(isUninitialized);
-        content = <Outlet />
-    }
-    return content
+    return (
+    <>
+        {isLoading && <h1>טוען נתונים...</h1>}
+        {(isError || needsReauth) && (
+            <div>
+                <h6 className="errorMsg">
+                    תוקף החיבור פג. אנא התחבר מחדש.
+                </h6>
+                <button onClick={() => navigate("/login")}>
+                    חזור לדף ההתחברות
+                </button>
+            </div>
+        )}
+        {((isSuccess && trueSuccess) || (token && isUninitialized)) && <Outlet />}
+    </>
+);
+
 }
 
 export default PersistsLogin
