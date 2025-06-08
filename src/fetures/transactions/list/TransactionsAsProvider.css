@@ -24,7 +24,22 @@
 }
 
 
-
+.newTransactionBtn{
+    position: absolute;
+    left: 0;
+    background: var(--bgSoft);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    align-self:flex-start;
+}
+.small{
+    font-size: 1.5rem;
+}
 
 .toggle-view {
     cursor: pointer;

@@ -10,6 +10,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
 
     const [deleteCustomer, { isSuccess: isDeleteSuccess }] = useDeleteCustomerMutation()
+        const [clicked, setClicked] = useState(false);
     const [message, setMessage] = useState(null)
     const deleteClick = async (customer) => {
         console.log(customer);
@@ -19,6 +20,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
                 setMessage("אין אפשרות למחוק לקוח שיש לו עסקאות!");
             }
             else{
+                setClicked(true)
                 setMessage("הלקוח נמחק בהצלחה");
             setTimeout(() => {
                 onSuccess()
@@ -26,7 +28,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
             }
         }
         catch (err) {
-            setMessage(`שגיאה במחיקת הלקוח ${err}`)
+            setMessage(`שגיאה במחיקת הלקוח ${err.error}`)
         }
     }
 
@@ -43,7 +45,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
                 {message && <p style={{color:"#f9a825"}}>{message}</p>}
                 <div className='navigation-buttons'>
                     <button className='modelBtn' onClick={onSuccess}>ביטול</button>
-                    <button className='modelBtn' onClick={() => { deleteClick(customer) }}>אישור</button>
+                    <button className='modelBtn' onClick={() => { deleteClick(customer) }} disabled={clicked}>אישור</button>
                 </div>
             </div>
         </div>

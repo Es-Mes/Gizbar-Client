@@ -6,14 +6,15 @@ import TransactionsList from './TransactionsList';
 import { GrFormNextLink } from "react-icons/gr";
 import './TransactionsAsProvider.css'
 import { useGetAllTransactionsQuery } from '../TransactionsApiSlice';
+import AddTransaction from '../add/AddTransaction';
+import Modal from '../../../modals/Modal';
 
 Chart.register(...registerables); // הרשמת כל האפשרויות של Chart.js
 
 const TransactionsAsProvider = () => {
-    const { _id, phone } = useAuth()
+    const { phone } = useAuth()
     const { data: transactionsAsProvider = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({ phone });
-    const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsProvider)
-    const [isReady, setIsReady] = useState(false);
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // ניהול השנה הנוכחית ב-state
     const chartRef = useRef(null); // רפרנס לגרף
     const navigate = useNavigate();
@@ -106,35 +107,34 @@ const TransactionsAsProvider = () => {
 
     /*/////סינון לפי סוג עסקה FilterBy*/////
 
-    useEffect(() => {
-        if (!transactionsAsProvider || transactionsAsProvider.length === 0) return;
-        const today = new Date();
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const filteredTransactions = useMemo(() => {
+    if (!transactionsAsProvider || transactionsAsProvider.length === 0) return [];
 
-        let filtered = transactionsAsProvider;
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
-        if (filterBy === "recentMonth") {
-            setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
-            filtered = [...transactionsAsProvider].filter(transaction => {
-                const billingDate = new Date(transaction.billingDay);
-                return billingDate >= startOfMonth && billingDate < startOfNextMonth;
-            });
-        } else if (filterBy === "delayed") {
-            setHeader("עסקאות בפיגור");
-            filtered = transactionsAsProvider.filter(t => t.status === "notPaid");
-        } else {
-            setHeader("כל העסקאות");
-        }
+    if (filterBy === "recentMonth") {
+        setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
+        return transactionsAsProvider.filter(transaction => {
+            const billingDate = new Date(transaction.billingDay);
+            return billingDate >= startOfMonth && billingDate < startOfNextMonth;
+        });
+    }
 
-        setTransactionsToDisplay(filtered);
-        setIsReady(true); // רק אחרי העדכון!
-    }, [filterBy, transactionsAsProvider]);
+    if (filterBy === "delayed") {
+        setHeader("עסקאות בפיגור");
+        return transactionsAsProvider.filter(t => t.status === "notPaid");
+    }
+
+    setHeader("כל העסקאות");
+    return transactionsAsProvider;
+}, [transactionsAsProvider, filterBy]);
+
 
 
     if (isLoading) return <p>בטעינה...</p>;
-    if (error) return <p>Error: {error}</p>;
-    if (!isReady) return <p>טוען עסקאות...</p>
+    if (error) return <p>Error: {error?.data?.message}</p>;
     return (
         <div className='transactions_first_page'>
             <div className="transactions-display">
@@ -142,10 +142,24 @@ const TransactionsAsProvider = () => {
                     <button className="backButton" onClick={() => navigate(-1)}>
                         <GrFormNextLink />
                     </button>
-                    <h2>{header}</h2>
+                    <h2>{header}</h2><button className='newTransactionBtn'  onClick={() => { setIsTransactionModalOpen(true)}}>
+                    עסקה חדשה <div className="rotating-coin small">💰</div>
+
+                </button>
                 </div>
-                <TransactionsList transactions={transactionsToDisplay} />
+                
+                <TransactionsList transactions={filteredTransactions} />
             </div>
+            <Modal isOpen={isTransactionModalOpen}
+            onClose={() => setIsTransactionModalOpen(false)}
+            disableOverlayClick={true}
+         >
+            <AddTransaction
+               onSuccess={() => {
+                  setTimeout(() => setIsTransactionModalOpen(false), 2000);
+               }}
+            />
+         </Modal>
         </div>
     )
 }

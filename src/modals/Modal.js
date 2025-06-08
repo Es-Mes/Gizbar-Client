@@ -5,7 +5,7 @@ const Modal = ({ isOpen, onClose, children, disableOverlayClick = false }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay"
+        <div className="modal-overlay "
             onClick={() => {
                 if (!disableOverlayClick) {
                     onClose();

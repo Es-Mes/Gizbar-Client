@@ -19,6 +19,7 @@ const PaymentForm = ({ initialCustomerData }) => {
         Mosad: process.env.REACT_APP_MOSAD,
         ApiValid: process.env.REACT_APP_API_IFRAME,
         Comment: "",
+        CallBack: process.env.REACT_APP_BASE_URL,
     });
 
     const [paymentStatus, setPaymentStatus] = useState(null);

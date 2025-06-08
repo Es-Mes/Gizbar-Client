@@ -24,7 +24,7 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
         }),
         updateTransaction: build.mutation({
             query: ({ phone, transaction }) => ({
-                url: `/api/agent/${phone}/transactions/update/${transaction._id}`,
+                url: `/api/agent/${phone}/transactions/update`,
                 method: "PUT",
                 body: transaction,
             }),
@@ -32,8 +32,9 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
         }),
         deleteTransaction: build.mutation({
             query: ({ phone, _id }) => ({
-                url: `/api/agent/${phone}/transactions/delete/${_id}`,
-                method: "DELETE",
+                url: `/api/agent/${phone}/transactions/cancele`,
+                method: "put",
+                body: { _id },
             }),
             invalidatesTags: ["Transactions"],
         }),

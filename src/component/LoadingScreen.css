@@ -17,6 +17,12 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   animation: fadeIn 1.2s ease-in-out;
 }
+.modalForm{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: space-between;
+}
 .modelBtn{
   padding: 7px;
   color: var(--bgWhite);
@@ -58,6 +64,24 @@
   align-items: center;
   animation: bouncePlus 1.8s ease-in-out infinite;
 }
+.rotating-coin {
+  font-size: 2rem;
+  display: inline-block;
+  animation: coinSpin 1.6s linear infinite;
+  transform-origin: center;
+}
+.cash-bill {
+  font-size: 3rem;
+  display: inline-block;
+  animation: flutterCash 1s ease-in-out infinite;
+}
+
+.bill{
+  font-size: 2.5rem;
+  display: inline-block;
+  animation: flutterCashAdel 1s ease-in-out infinite;
+}
+
 
 .loading-title {
   font-size: 1.8rem;
@@ -69,6 +93,13 @@
   font-size: 1.1rem;
   color:var(--text);
 }
+button:disabled {
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 
 /* Animations */
 @keyframes fadeIn {
@@ -107,4 +138,26 @@
   75% {
     transform: translateY(-1px);
   }
+}
+@keyframes coinSpin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+@keyframes flutterCash {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes flutterCashAdel {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-7deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(7deg); }
+  100% { transform: rotate(0deg); }
 }

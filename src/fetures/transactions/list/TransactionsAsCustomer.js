@@ -11,42 +11,41 @@ const TransactionsAsCustomer = () => {
     const {phone} = useAuth();    
     const { data: transactionsAsCustomer = [], isLoading: isLoading, error: error } = useGetAllTransactionsAsCustomerQuery({ phone })
     console.log(transactionsAsCustomer);
-    const [transactionsToDisplay, setTransactionsToDisplay] = useState(transactionsAsCustomer)
-    const [isReady, setIsReady] = useState(false);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const filterBy = searchParams.get("filter");
 
     const [header, setHeader] = useState("כל העסקאות")
 
-
-    useEffect(() => {
+    /*/////סינון לפי סוג עסקה FilterBy*/////
+    
+        const filteredTransactions = useMemo(() => {
+        if (!transactionsAsCustomer || transactionsAsCustomer.length === 0) return [];
+    
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-
-        let filtered = transactionsAsCustomer;
-
+    
         if (filterBy === "recentMonth") {
-            setHeader(`הוצאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
-            filtered = [...transactionsAsCustomer].filter(transaction => {
+            setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
+            return transactionsAsCustomer.filter(transaction => {
                 const billingDate = new Date(transaction.billingDay);
                 return billingDate >= startOfMonth && billingDate < startOfNextMonth;
             });
-        } else if (filterBy === "delayed") {
-            setHeader("הוצאות בפיגור");
-            filtered = transactionsAsCustomer.filter(t => t.status === "notPaid");
-        } else {
-            setHeader("כל ההוצאות");
         }
-
-        setTransactionsToDisplay(filtered);
-        setIsReady(true); // רק אחרי העדכון!
-    }, [filterBy, transactionsAsCustomer]);
+    
+        if (filterBy === "delayed") {
+            setHeader("עסקאות בפיגור");
+            return transactionsAsCustomer.filter(t => t.status === "notPaid");
+        }
+    
+        setHeader("כל העסקאות");
+        return transactionsAsCustomer;
+    }, [transactionsAsCustomer, filterBy]);
+    
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>שגיאה: {error.data?.message || "אירעה שגיאה"}</p>;
-    if (!isReady) return <p>טוען עסקאות...</p>
     return (
         <div className='transactions_first_page'>
             <div className='transactions-display'></div>
@@ -56,7 +55,7 @@ const TransactionsAsCustomer = () => {
                 </button>
                 <h2>{header}</h2>
             </div>
-            <TransactionsList transactions={transactionsToDisplay} />
+            <TransactionsList transactions={filteredTransactions} />
         </div>
     )
 }

@@ -224,7 +224,8 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
     return (
         <div className="add-transaction-card">
             <div className="transaction-header">
-                <h3>הוספת עסקה חדשה</h3>
+                {/* <div className="rotating-coin">🪙</div> */}
+                <h2>הוספת עסקה חדשה</h2>
 
                 {/* <button className="close-button" onClick={() => navigate("/dash")}>&times;</button> */}
             </div>
