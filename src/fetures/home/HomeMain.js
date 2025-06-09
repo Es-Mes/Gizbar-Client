@@ -474,7 +474,7 @@ const HomeMain = () => {
                   </div>}
 
                {monthIncome <= 0 &&
-                  <div className="dashboard-card-large">
+                  <div className="dashboard-card-large" onClick={handleClickAllIncome}>
                      <h4>עוד לא היו הכנסות לבינתיים :)</h4>
                   </div>}
 
@@ -491,7 +491,7 @@ const HomeMain = () => {
                </div>}
 
                {monthOutcome <= 0 &&
-                  <div className="dashboard-card-large">
+                  <div className="dashboard-card-large" onClick={handleClickAllOutcome}>
                      <h4>עדיין אין עסקאות יוצאות</h4>
                   </div>}
             </div>

@@ -118,17 +118,17 @@ const TransactionsAsProvider = () => {
         setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
         return transactionsAsProvider.filter(transaction => {
             const billingDate = new Date(transaction.billingDay);
-            return billingDate >= startOfMonth && billingDate < startOfNextMonth;
+            return billingDate >= startOfMonth && billingDate < startOfNextMonth && transaction.status != "canceled";
         });
     }
 
     if (filterBy === "delayed") {
         setHeader("עסקאות בפיגור");
-        return transactionsAsProvider.filter(t => t.status === "notPaid");
+        return transactionsAsProvider.filter(t => t.status === "notPaid" && t.status != "canceled");
     }
 
     setHeader("כל העסקאות");
-    return transactionsAsProvider;
+    return transactionsAsProvider.filter(t =>  t.status != "canceled");
 }, [transactionsAsProvider, filterBy]);
 
 

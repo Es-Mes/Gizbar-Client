@@ -55,7 +55,8 @@ export const LoginPage = () => {
 
 
       <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
-  <h2>מזדהים ומתחברים</h2>
+                  <div className="rotating-coin">🪙</div>
+<h2>מזדהים ומתחברים</h2>
   <div className="field">
     <label htmlFor="phone">טלפון</label>
     <input

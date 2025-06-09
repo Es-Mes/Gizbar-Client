@@ -37,6 +37,9 @@
     text-decoration: none;
     align-self:flex-start;
 }
+.newTransactionBtn:hover{
+    background-color: var(--text);
+}
 .small{
     font-size: 1.5rem;
 }

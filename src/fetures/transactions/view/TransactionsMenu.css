@@ -1,13 +1,31 @@
-.TransactionsMenu{
+.TransactionsMenu {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 110px);
-    justify-content: space-evenly;
-}
-.TransactionsMenu h2{
+    justify-content: flex-end;
+    /* background-image:url("/loginImg.jpg") ; */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     padding: 20px;
+    /* אופציונלי */
 }
-.income-summary{
+
+.TransactionsMenu h2 {
+    padding: 20px;
+     color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+.blur-wrapper {
+  /* background-color: rgba(0, 0, 0, 0.3); 
+  backdrop-filter: blur(5px);
+  padding: 1em 2em;
+  border-radius: 10px;
+  display: inline-block; */
+}
+
+.income-summary {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -15,12 +33,14 @@
     width: 100%;
     /* margin-top: 20px; */
 }
-.menu-card{
+
+.menu-card {
     width: 30%;
     height: 100px;
     font-size: large;
 }
-.menu-card:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+
+.menu-card:hover {
+    box-shadow: 0 4px 10px var(--bgSoftLight);
+    transform: translateY(-3px)
 }

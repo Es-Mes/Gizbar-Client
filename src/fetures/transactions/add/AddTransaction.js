@@ -10,9 +10,10 @@ import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
 import { useGetAgentQuery } from "../../../app/apiSlice";
 import StepIndicator from "./StepIndicator";
-const AddTransaction = ({ onSuccess,specificCustomer }) => {
+const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const { _id, phone } = useAuth();
     const { data: agent, isLoading } = useGetAgentQuery({ phone })
+
     const services = agent?.services || [];
     const filterServices = services.filter((service) => service.active === true);
     const customers = agent?.customers || [];
@@ -22,7 +23,6 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
         useAddTransactionMutation();
 
     const [currentStep, setCurrentStep] = useState(1);
-    const [step, setStep] = useState(0); // 0 - פרטי הלקוח, 1 - פרטי העסקה, 2 - פרטי הגביה
     const [selectedService, setSelectedService] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [transactionDetails, setTransactionDetails] = useState({
@@ -30,6 +30,7 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
         alerts: false,
     });
 
+    const [isBankAccountModalOpen, setBankAccountModalOpen] = useState(false)
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
     const [isServiceModalOpen, setServiceModalOpen] = useState(false);
     const [message, setMessage] = useState("");
@@ -76,8 +77,13 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
 
     const handleServiceChange = (event) => {
         const serviceId = event.target.value;
+        console.log(`serviceId : ${serviceId}`);
+
         const service = services.find((srv) => srv._id === serviceId);
-        setSelectedService(service);
+        console.log(service);
+        if (service) {
+            setSelectedService(service);
+        }
         if (service) {
             setTransactionDetails((prev) => ({
                 ...prev,
@@ -96,28 +102,30 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
                     price: service.price
                 }));
             }
-            setCurrentStep((prev) => prev + 1);
+            // setCurrentStep((prev) => prev + 1);
         };
     }
     const handleCustomerInput = () => {
         const customerId = specificCustomer;
         const customer = customers.find((cust) => cust._id === customerId);
         setSelectedCustomer(customer);
-        
+
     };
     useEffect(() => {
         handleCustomerInput()
-    },[])
+    }, [])
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
         const customer = customers.find((cust) => cust._id === customerId);
-        setSelectedCustomer(customer);
+        if (customer) {
+            setSelectedCustomer(customer);
+        }
         if (customer) {
             setTransactionDetails((prev) => ({
                 ...prev,
                 customer: customer._id
             }));
-            setCurrentStep((prev) => prev + 1);
+            // setCurrentStep((prev) => prev + 1);
         }
     };
 
@@ -195,31 +203,40 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
     const nextStep = () => {
         setMessage("");
         if (currentStep === 2 && !selectedService) {
-            setMessage("יש לבחור שירות לפני המעבר לשלב הבא.");
+            setMessage("יש לבחור שירות לפני המעבר לשלב הבא");
             return;
         }
         if (currentStep === 2 && selectedService.type === "hourly" && transactionDetails.hours < 1) {
-            setMessage("יש לבחור מספר שעות לפני המעבר לשלב הבא.");
+            setMessage("יש לבחור מספר שעות לפני המעבר לשלב הבא");
             return;
         }
         if (currentStep === 2) {
             // updatePrice()
             console.log(transactionDetails);
             if (!transactionDetails.price) {
-                setMessage("יש להכניס מחיר לפני המעבר לשלב הבא.");
+                setMessage("יש להכניס מחיר לפני המעבר לשלב הבא");
                 return;
             }
         }
         if (currentStep === 1 && !selectedCustomer) {
-            setMessage("יש לבחור לקוח לפני המעבר לשלב הבא.");
+            setMessage("יש לבחור לקוח לפני המעבר לשלב הבא");
             return;
         }
         setCurrentStep((prev) => prev + 1);
     };
 
     const prevStep = () => {
+        setMessage("");
         setCurrentStep((prev) => prev - 1);
     };
+
+    //עסקה פעם ראשונה או שאין פרטי בנק
+    if (!agent?.bankAccount) {
+        return <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
+            bankAccount
+        </Modal>
+    }
+
 
     return (
         <div className="add-transaction-card">
@@ -234,7 +251,7 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
                 <div className="transaction-body">
                     <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
                     <select id="customer" onChange={handleCustomerChange} value={transactionDetails.customer} required>
-                        <option value="">{selectedCustomer? selectedCustomer.full_name : "--  בחר לקוח קיים --"}</option>
+                        <option value="">{selectedCustomer ? selectedCustomer.full_name : "--  בחר לקוח קיים --"}</option>
                         {customers.map((customer) => (
                             <option key={customer._id} value={customer._id}>
                                 {customer.full_name}
@@ -303,25 +320,28 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
                                     />
                                 </div>)}
                             {(selectedService.type === "hourly") &&
-                                (<div>
-                                    <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
-                                    <input
-                                        type="Number"
-                                        id="pricePerHour"
-                                        name="pricePerHour"
-                                        value={transactionDetails.pricePerHour || selectedService.price}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                    <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
-                                    <input
-                                        type="Number"
-                                        id="hours"
-                                        name="hours"
-                                        value={transactionDetails.hours}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
+                                (<div className="perHourBox">
+                                    <div>
+                                        <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
+                                        <input
+                                            type="Number"
+                                            id="pricePerHour"
+                                            name="pricePerHour"
+                                            value={transactionDetails.pricePerHour || selectedService.price}
+                                            onChange={handleInputChange}
+                                            required
+                                        /></div>
+                                    <div>
+                                        <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
+                                        <input
+                                            type="Number"
+                                            id="hours"
+                                            name="hours"
+                                            value={transactionDetails.hours}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
                                 </div>)}
                         </div>
                     )}
@@ -426,7 +446,7 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
                         <button className="navButton" onClick={prevStep}>חזור</button>
                     )}
                 </div>
-                {message && <p className={`message ${messageType}`}>{message}</p>}
+                {message && <p className={`message ${messageType}`} style={{ color: "#f9a825" }}>{message}</p>}
 
                 <div className="nav-right">
                     {currentStep < 3 && (
@@ -469,6 +489,9 @@ const AddTransaction = ({ onSuccess,specificCustomer }) => {
                         handleServiceChange({ target: { value: newService._id } });
                     }}
                 />
+            </Modal>
+            <Modal isOpen={isBankAccountModalOpen} onClose={setBankAccountModalOpen(false)}>
+                bankAccount
             </Modal>
 
         </div>

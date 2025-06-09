@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { GrEdit, GrCheckmark, GrClose, GrMoreVertical, GrFormUp } from "react-icons/gr";
 import { LuBellRing } from "react-icons/lu";
+import { IoTrashOutline } from "react-icons/io5";
 
 import { BsCashCoin, BsCreditCard } from "react-icons/bs";
 import { usePayInCashMutation, useSendReminderMutation, useUpdateTransactionMutation } from "../TransactionsApiSlice";
@@ -18,7 +19,7 @@ const alertsLevelMapping = {
     nudnik: "נודניק",
 };
 
-const TransactionItem = ({ transaction, onUpdate }) => {
+const TransactionItem = ({ transaction }) => {
     const { phone } = useAuth();
     const [editedTransaction, setEditedTransaction] = useState({ ...transaction });
     const [isPaymentModalOpen, setPaymentModalOpen] = useState(false); // מודל תשלום באשראי
@@ -59,53 +60,78 @@ const TransactionItem = ({ transaction, onUpdate }) => {
     const [sendReminder] = useSendReminderMutation();
     const [updateTransaction] = useUpdateTransactionMutation();
 
-    const confirmPayInCash = () => {
-        payInCash({ _id: editedTransaction._id })
-            .then((response) => {
-                console.log(response);
+    const confirmPayInCash = async () => {
+        setPayInCashClicked(true);
+        try {
+            const result = await payInCash({ _id: editedTransaction._id });
+
+            if (result?.data) {
+                console.log("תשלום במזומן עבר בהצלחה:", result.data);
+                setAlertMessage("התשלום במזומן עודכן בהצלחה");
                 setIsCashModalOpen(false);
-                setPayInCashClicked(true)
-                onUpdate(response.data);
-            })
-            .catch((err) => console.error("שגיאה בתשלום במזומן", err));
+            } else if (result?.error) {
+                const status = result.error.status;
+                const msg = result.error.data?.message || result.error.message || "שגיאה לא צפויה";
+                console.error("שגיאה בתשלום במזומן:", msg);
+                setAlertMessage(`שגיאה (${status}): ${msg}`);
+            }
+        } catch (err) {
+            const message = err?.data?.message || err?.message || "שגיאה כללית";
+            console.error("שגיאת מערכת בתשלום במזומן:", message);
+            setAlertMessage(`שגיאה בתשלום: ${message}`);
+        } finally {
+            setPayInCashClicked(false);
+            setTimeout(() => {
+                setAlertMessage("");
+            }, 3000);
+        }
     };
 
+
     const sendAlert = async () => {
-        if(alertMessage === ""){
-            setAlertMessage("לא נבחרה אופציה")
+        if (alertMethod === "") {
+            setAlertMessage("לא נבחרה אופציה");
             return;
         }
-        try{
-            console.log(alertMethod);
-            const result = await sendReminder({ type: alertMethod, _id: editedTransaction._id })
-            setAlertClicked(true)
-            if(result && !result.error){
-            console.log(`נשלחה התראה באמצעות: ${alertMethod} ללקוח: ${editedTransaction.customer.full_name}`);
-                switch(alertMethod){
+
+        try {
+            const result = await sendReminder({ type: alertMethod, _id: editedTransaction._id });
+            setAlertClicked(true);
+
+            if (result?.data) {
+                const name = editedTransaction?.customer?.full_name || "הלקוח";
+                switch (alertMethod) {
                     case "human":
-                    setAlertMessage(`תשלח תזכורת באמצעות מזכירה ללקוח ${editedTransaction.customer.full_name}  `)
-                    break;
-                    case "phone only":
-                    setAlertMessage(`תזכורת טלפונית נשלחה בהצלחה ללקוח ${editedTransaction.customer.full_name}  `)
-                    break;
-                    case "email only":
-                    setAlertMessage(`נשלחה תזכורת במייל ללקוח ${editedTransaction.customer.full_name}  `)
-                    break;
-                    case "email and phone":
-                    setAlertMessage(`נשלחה תזכורת במייל ובטלפון ללקוח ${editedTransaction.customer.full_name}  `)
+                        setAlertMessage(`תשלח תזכורת באמצעות מזכירה ל${name}`);
+                        break;
+                    case "call":
+                        setAlertMessage(`תזכורת טלפונית נשלחה בהצלחה ל${name}`);
+                        break;
+                    case "email":
+                        setAlertMessage(`נשלחה תזכורת במייל ל${name}`);
+                        break;
+                    case "emailAndCall":
+                        setAlertMessage(`נשלחה תזכורת במייל ובטלפון ל${name}`);
+                        break;
+                    default:
+                        setAlertMessage(`נשלחה התראה ל${name}`);
                 }
+                setTimeout(() => {
+                    setIsAlertModalOpen(false);
+                    setAlertMessage("");
+                    setAlertClicked(false);
+                }, 2000);
+            } else if (result?.error) {
+                const status = result.error.status;
+                const msg = result.error.data?.message || result.error.message || "שגיאה כללית";
+                setAlertMessage(`שגיאה (${status}): ${msg}`);
             }
-            setTimeout(() => {
-                setIsAlertModalOpen(false)
-                setAlertMessage("")
-                setAlertClicked(false)
-            }, 2000)
+        } catch (err) {
+            const message = err?.data?.message || err?.message || "שגיאה לא צפויה";
+            setAlertMessage(`שגיאה בשליחת ההתראה: ${message}`);
         }
-        catch(err){
-            setAlertMessage(`שגיאה בשליחת ההתראה ${err.error}`)
-        }
-       
     };
+
 
     const handleSave = async () => {
         try {
@@ -158,7 +184,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
             <tr>
                 <td>{editedTransaction.serviceName || "שירות ללא שם"}</td>
                 <td>{`₪${editedTransaction.price}`}</td>
-                <td>{editedTransaction.status === "paid" ? "שולם" : "לא שולם"}</td>
+                <td>{editedTransaction.status === "paid" ? "שולם" : (editedTransaction.status == "canceled" ? "בוטל" : "לא שולם")}</td>
                 {isIncome && <td>{editedTransaction.customer.full_name || ''}</td>}
                 {!isIncome && <td>{editedTransaction.agent.first_name || ''}</td>}
                 <td>{new Date(editedTransaction.createdAt).toLocaleDateString("he-IL")}</td>
@@ -171,7 +197,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                     {alertsLevelMapping[editedTransaction.alertsLevel] || "לא מוגדר"}
                 </td>
                 <td style={{ position: "relative" }} ref={actionsRef}>
-                    {editedTransaction.status !== "paid" ? (
+                    {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge")? (
                         <span
                             onClick={(event) => { toggleActions(event); toggleMenu() }} style={{ cursor: "pointer" }}>
                             {showActions ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
@@ -195,7 +221,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                                 <LuBellRing size={20} /> שליחת התראה
                             </div>)}
                             {isIncome && (<div className="action-item" onClick={() => setDeleteModalOpen(true)}>
-                                <LuBellRing size={20} /> מחיקת עסקה
+                                <IoTrashOutline size={20} /> מחיקת עסקה
                             </div>)}
                             {!isIncome && (<div onClick={() => { setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום חוב באשראי(בפיתוח)
@@ -217,7 +243,7 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                             <br />
                             <p className="question">האם אתה מאשר<br /> קבלת תשלום במזומן על העסקה?</p>
                             <br />
-                            <h3 style={{color:"#f9a825" }}>פרטי העסקה:</h3>
+                            <h3 style={{ color: "#f9a825" }}>פרטי העסקה:</h3>
                             <br />
                             <p className="details"><strong>סכום:</strong> ₪{editedTransaction.price}</p>
                             <p className="details"><strong>לקוח:</strong> {editedTransaction.customer.full_name}</p>
@@ -245,28 +271,32 @@ const TransactionItem = ({ transaction, onUpdate }) => {
                     <div className="backgroung-screen">
                         <div className="loading-box">
                             <div className="bill">🔔</div>
-                            <h3 style={{color:"#3a256d"}}>בחר אמצעי לשליחת התראה</h3>
+                            <h3 style={{ color: "#3a256d" }}>בחר אמצעי לשליחת התראה</h3>
                             <div className="stepBox">
-                            {/* <label>סוג:</label> */}
-                            {[{ value: 'email and phone', name: 'מייל וטלפון' },
-                            { value: 'email only', name: 'מייל בלבד' },
-                            { value: 'phone only', name: 'טלפון בלבד' },
-                            { value: 'human', name: 'אנושי' },
-                            ].map((type) => (
-                                <div className="alertRow" key={type.value}>
-                                    <input
-                                        type="radio"
-                                        name="typeAlerts"
-                                        value={type.value}
-                                        onChange={(e) => setAlertMethod(e.target.value)}
-                                    />
-                                    {type.name}
-                                </div>
-                            ))}
+                                {/* <label>סוג:</label> */}
+                                {[{ value: 'emailAndCall', name: 'מייל וטלפון' },
+                                { value: 'email', name: 'מייל בלבד' },
+                                { value: 'call', name: 'טלפון בלבד' },
+                                { value: 'human', name: 'אנושי' },
+                                ].map((type) => (
+                                    <div className="alertRow" key={type.value}>
+                                        <input
+                                            type="radio"
+                                            name="typeAlerts"
+                                            value={type.value}
+                                            onChange={(e) => setAlertMethod(e.target.value)}
+                                        />
+                                        {type.name}
+                                    </div>
+                                ))}
                             </div>
-                                            {alertMessage && <p style={{ color: "#f9a825" }}>{alertMessage}</p>}
-<div className='navigation-buttons'>
-                                <button className="modelBtn" onClick={() => setIsAlertModalOpen(false)}>ביטול</button>
+                            {alertMessage && <p style={{ color: "#f9a825" }}>{alertMessage}</p>}
+                            <div className='navigation-buttons'>
+                                <button className="modelBtn" onClick={() => {
+                                    setIsAlertModalOpen(false)
+                                    setAlertMessage("");
+                                    setAlertClicked(false);
+                                }}>ביטול</button>
                                 <button className="modelBtn" onClick={sendAlert} disabled={alertClicked}>שלח</button>
                             </div>
                         </div>

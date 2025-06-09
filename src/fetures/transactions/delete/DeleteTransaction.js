@@ -36,7 +36,7 @@ const DeleteTransaction = ({ transaction, onSuccess }) => {
         <div className="backgroung-screen">
             <div className="loading-box">
                 <div className=" fade-icon icon-rotate">🪙</div>
-                <p className="loading-subtitle">האם אתה בטוח שברצונך למחוק את העסקה?</p>
+                <p className="loading-subtitle">האם אתה בטוח שברצונך לבטל את העסקה?</p>
                 <h1 className="loading-title">{` ${transaction.serviceName || "שירות ללא שם"} -  ₪${transaction.price}`}</h1>
                 <p>{`לקוח: ${transaction.customer.full_name}`}</p>
                 <p>{`תאור: ${transaction.description || ''}`}</p>

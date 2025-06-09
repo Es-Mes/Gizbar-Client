@@ -110,8 +110,8 @@ const TransactionsMenu = () => {
     };
 
     
-        return (< div className='TransactionsMenu'>
-            {isIncome && 
+        return (< div className='TransactionsMenu' style={{ backgroundImage: 'url("/loginImg.jpg")' }}>
+            {/* {isIncome && 
             (<div className="income-chart-container">
                 <div className="chart-header">
                     <button onClick={() => setCurrentYear(currentYear - 1)}>&lt; שנה קודמת</button>
@@ -123,9 +123,11 @@ const TransactionsMenu = () => {
                     ההכנסה הממוצעת לחודש בשנת {currentYear}: <strong>{averageIncome} ₪</strong>
                 </p>
             </div>
-        )}   
+        )}    */}
            
-            {isIncome && (<div><h2>איזה הכנסות תרצה לראות?</h2>
+            {isIncome && (<div><div className='blur-wrapper'>
+                <h2>איזה הכנסות תרצה לראות?</h2>
+            </div>
             <div className="income-summary">
                 <div className="dashboard-card menu-card" onClick={handleClickAllIncome} style={{ cursor: "pointer" }}>
                     <p style={{
