@@ -36,11 +36,11 @@ const TransactionsAsCustomer = () => {
     
         if (filterBy === "delayed") {
             setHeader("עסקאות בפיגור");
-            return transactionsAsCustomer.filter(t => t.status === "notPaid" && t.status != "canceled");
+            return transactionsAsCustomer.filter(t => t.status === "notPaid" && t.status !== "canceled");
         }
     
         setHeader("כל העסקאות");
-        return  transactionsAsCustomer.filter(t => t.status != "canceled");
+        return  transactionsAsCustomer.filter(t => t.status !== "canceled");
     }, [transactionsAsCustomer, filterBy]);
     
 

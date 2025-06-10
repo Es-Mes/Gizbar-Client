@@ -102,8 +102,14 @@
     padding: 20px;
     font-family: var(--fontFamily);
     border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
+    border-radius: 12px;
+    /* overflow: hidden; */
+}
+.customers-list-table thead th:first-child {
+    border-top-right-radius: 12px;
+}
+.customers-list-table thead th:last-child {
+    border-top-right-radius: 12px;
 }
 
 .tHeads {
