@@ -31,7 +31,7 @@ const TransactionItem = ({ transaction }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [openUpwards, setOpenUpwards] = useState(false);
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-    const [alertMethod, setAlertMethod] = useState("email"); // ברירת מחדל טלפון
+    const [alertMethod, setAlertMethod] = useState("");
     const [payInCashClicked, setPayInCashClicked] = useState(false);
     const [payInCashMessage, setPayInCashMessage] = useState("")
     const [alertClicked, setAlertClicked] = useState(false);

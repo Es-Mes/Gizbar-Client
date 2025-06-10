@@ -95,8 +95,11 @@ const NavBar = ({ toggleMenu }) => {
                 <MdPerson className="fa-icon" size={20} /><p className="tooltip-text">ניהול חשבון</p><p className="display-in-wide">ניהול חשבון</p>
               </NavLink>
               {/* <NavLink className="btn" to="/letters"> */}
-              <NavLink className="nav-link  icon-tooltip" to="/dash/UnderConstruction">
-                <FaEnvelopeOpenText className="fa-icon" size={20} /><p className="tooltip-text">ההודעות שלי</p><p className="display-in-wide">ההודעות שלי</p>
+              <NavLink className="nav-link  icon-tooltip">
+                <FaEnvelopeOpenText className="fa-icon" size={20}  />
+                {/* <p className="tooltip-text">ההודעות שלי</p> */}
+                <p className="tooltip-text">לא פעיל, בפיתוח...</p>
+                <p className="display-in-wide">ההודעות שלי</p>
               </NavLink>
               <div className="btn  icon-tooltip" onClick={logOutClick}>
                 <FaArrowRightFromBracket className="fa-icon" size={20} /><p className="tooltip-text">יציאה</p><p  className="display-in-wide">יציאה</p>

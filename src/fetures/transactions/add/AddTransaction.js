@@ -56,12 +56,6 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         }
     }, [isSuccess, isError, navigate]);
 
-    useEffect(() => {
-        if (isSuccess) {
-            onSuccess()
-        }
-    }, [isSuccess, navigate]);
-
     //עדכון המחיר הגלובלי
     const updatePrice = () => {
         console.log('transaction details before update price: ', transactionDetails);
@@ -81,52 +75,60 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
         const service = services.find((srv) => srv._id === serviceId);
         console.log(service);
-        if (service) {
-            setSelectedService(service);
+        if (!service) {
+            return;
+
         }
-        if (service) {
+        setSelectedService(service);
+
+        setTransactionDetails((prev) => ({
+            ...prev,
+            service: service._id,
+            serviceType: service.type,
+            description: service.description
+        }));
+        if (service.type === 'hourly') {
             setTransactionDetails((prev) => ({
                 ...prev,
-                service: service._id,
-                serviceType: service.type,
-                description: service.description
+                pricePerHour: service.price
             }));
-            if (service.type === 'hourly') {
-                setTransactionDetails((prev) => ({
-                    ...prev,
-                    pricePerHour: service.price
-                }));
-            } else {
-                setTransactionDetails((prev) => ({
-                    ...prev,
-                    price: service.price
-                }));
-            }
+        } else {
+            setTransactionDetails((prev) => ({
+                ...prev,
+                price: service.price
+            }));
+
             // setCurrentStep((prev) => prev + 1);
         };
     }
-    const handleCustomerInput = () => {
-        const customerId = specificCustomer;
-        const customer = customers.find((cust) => cust._id === customerId);
-        setSelectedCustomer(customer);
-
-    };
     useEffect(() => {
-        handleCustomerInput()
-    }, [])
+        if (specificCustomer && customers.length > 0) {
+            const customer = customers.find((cust) => cust._id === specificCustomer);
+            if (customer) {
+                setSelectedCustomer(customer);
+                setTransactionDetails(prev => ({
+                    ...prev,
+                    customer: customer._id
+                }));
+            }
+        }
+    }, [specificCustomer, customers]);
+
+
     const handleCustomerChange = (event) => {
         const customerId = event.target.value;
         const customer = customers.find((cust) => cust._id === customerId);
         if (customer) {
-            setSelectedCustomer(customer);
+            return;
         }
-        if (customer) {
-            setTransactionDetails((prev) => ({
-                ...prev,
-                customer: customer._id
-            }));
-            // setCurrentStep((prev) => prev + 1);
-        }
+        setSelectedCustomer(customer);
+
+        setTransactionDetails((prev) => ({
+            ...prev,
+            customer: customer._id
+        }));
+        // setCurrentStep((prev) => prev + 1);
+
     };
 
     const handleInputChange = (event) => {
@@ -231,11 +233,11 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     };
 
     //עסקה פעם ראשונה או שאין פרטי בנק
-    if (!agent?.bankAccount) {
-        return <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
-            bankAccount
-        </Modal>
-    }
+    // if (!agent?.bankAccount) {
+    //     return <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
+            
+    //     </Modal>
+    // }
 
 
     return (
@@ -490,9 +492,9 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                     }}
                 />
             </Modal>
-            <Modal isOpen={isBankAccountModalOpen} onClose={setBankAccountModalOpen(false)}>
+            {/* <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
                 bankAccount
-            </Modal>
+            </Modal> */}
 
         </div>
     );

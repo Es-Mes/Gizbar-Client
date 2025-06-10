@@ -26,7 +26,7 @@
   z-index: 1;
 }
 
-.active {
+.step .active {
   background-color: var(--bgSoftLight2);
 }
 @keyframes pulseGlow {
