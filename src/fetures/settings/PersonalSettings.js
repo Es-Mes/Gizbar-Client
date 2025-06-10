@@ -2,14 +2,22 @@ import { useState } from "react";
 import React from 'react';
 import { useSelector } from "react-redux";
 import "./PersonalSettings.css";
+import useAuth from "../../hooks/useAuth";
+import { useGetAgentQuery } from "../../app/apiSlice";
 
 const PersonalSettings = () => {
-  const user = useSelector((state) => state.agent.agent || {});
-  const [editableUser, setEditableUser] = useState(user);
+  const {phone} = useAuth()
+  const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
+  console.log(agent);
+  
+
+  const [editableUser, setEditableUser] = useState(agent);
 
   const handleChange = (e) => {
     setEditableUser({ ...editableUser, [e.target.name]: e.target.value });
   };
+  if (isLoading) return <p>טוען...</p>;
+   if (error) return <p>Error: {error?.data?.message}</p>;
 
   return (
     <div className="settings-container">

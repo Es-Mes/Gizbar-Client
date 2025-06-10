@@ -67,22 +67,22 @@ const TransactionItem = ({ transaction }) => {
 
             if (result?.data) {
                 console.log("תשלום במזומן עבר בהצלחה:", result.data);
-                setAlertMessage("התשלום במזומן עודכן בהצלחה");
+                setPayInCashMessage("התשלום במזומן עודכן בהצלחה");
                 setIsCashModalOpen(false);
             } else if (result?.error) {
                 const status = result.error.status;
                 const msg = result.error.data?.message || result.error.message || "שגיאה לא צפויה";
                 console.error("שגיאה בתשלום במזומן:", msg);
-                setAlertMessage(`שגיאה (${status}): ${msg}`);
+                setPayInCashMessage(`שגיאה (${status}): ${msg}`);
             }
         } catch (err) {
             const message = err?.data?.message || err?.message || "שגיאה כללית";
             console.error("שגיאת מערכת בתשלום במזומן:", message);
-            setAlertMessage(`שגיאה בתשלום: ${message}`);
+            setPayInCashMessage(`שגיאה בתשלום: ${message}`);
         } finally {
-            setPayInCashClicked(false);
             setTimeout(() => {
-                setAlertMessage("");
+                setPayInCashMessage("");
+                setPayInCashClicked(false);
             }, 3000);
         }
     };
@@ -197,7 +197,7 @@ const TransactionItem = ({ transaction }) => {
                     {alertsLevelMapping[editedTransaction.alertsLevel] || "לא מוגדר"}
                 </td>
                 <td style={{ position: "relative" }} ref={actionsRef}>
-                    {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge")? (
+                    {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge") ? (
                         <span
                             onClick={(event) => { toggleActions(event); toggleMenu() }} style={{ cursor: "pointer" }}>
                             {showActions ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
@@ -247,6 +247,7 @@ const TransactionItem = ({ transaction }) => {
                             <br />
                             <p className="details"><strong>סכום:</strong> ₪{editedTransaction.price}</p>
                             <p className="details"><strong>לקוח:</strong> {editedTransaction.customer.full_name}</p>
+                            {payInCashMessage && <p style={{ color: "#f9a825" }}>{payInCashMessage}</p>}
                             <div className="navigation-buttons">
                                 <button className="modelBtn" onClick={() => setIsCashModalOpen(false)}>ביטול</button>
                                 <button className="modelBtn" onClick={confirmPayInCash} disabled={payInCashClicked}>אישור</button>

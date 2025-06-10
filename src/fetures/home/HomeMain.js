@@ -183,7 +183,11 @@ const HomeMain = () => {
    //גרף ההכנסות לחודש זה
 
    useEffect(() => {
-      if (chartRef.current) {
+      if (chartRef.current &&
+         totalIncome !== undefined &&
+         totalExpectedIncome !== undefined &&
+         delayedTransactionsIncome !== undefined
+      ) {
          if (chartInstance.current) {
             chartInstance.current.destroy(); // הורס את התרשים הישן לפני יצירת אחד חדש
          }
@@ -224,7 +228,12 @@ const HomeMain = () => {
    //גרף ההוצאות לחודש זה
 
    useEffect(() => {
-      if (expenseChartRef.current) {
+      if (
+         expenseChartRef.current &&
+         totalOutcome !== undefined &&
+         totalExpectedOutcome !== undefined &&
+         delayedTransactionsOutcome !== undefined
+      ) {
          if (OutcomeChartInstance.current) {
             OutcomeChartInstance.current.destroy(); // הורס את התרשים הישן לפני יצירת אחד חדש
          }
