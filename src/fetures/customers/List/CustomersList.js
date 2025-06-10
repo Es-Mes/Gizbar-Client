@@ -168,16 +168,16 @@ const CustomersList = () => {
             <table ref={tableRef} className="customers-list-table">
                 <thead className="tHeads">
                     <tr>
-                        <td className="td-no-border">שם לקוח</td>
-                        <td className="td-no-border">טלפון</td>
+                        <th className="td-no-border first">שם לקוח</th>
+                        <th className="td-no-border">טלפון</th>
                         {!isNarrow && <>
-                            <td className="td-no-border">אימייל</td>
-                            <td className="td-no-border">עיר</td>
+                            <th className="td-no-border">אימייל</th>
+                            <th className="td-no-border">עיר</th>
                         </>}
-                        <td className="td-no-border">מספר גביות</td>
-                        <td className="td-no-border">הוסף גביה</td>
-                        <td className="td-no-border">צפייה בלקוח</td>
-                        <td className="td-no-border">פעולות</td>
+                        <th className="td-no-border">מספר גביות</th>
+                        <th className="td-no-border">הוסף גביה</th>
+                        <th className="td-no-border">צפייה בלקוח</th>
+                        <th className="td-no-border last">פעולות</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -109,7 +109,7 @@
     border-top-right-radius: 12px;
 }
 .customers-list-table thead th:last-child {
-    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
 }
 
 .tHeads {
@@ -147,9 +147,9 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.customers-list-table .td-no-border {
+/* .customers-list-table .td-no-border {
     border: none;
-}
+} */
 
 .btn-customer-list {
     text-align: center;
