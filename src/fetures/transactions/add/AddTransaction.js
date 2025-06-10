@@ -75,28 +75,28 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
         const service = services.find((srv) => srv._id === serviceId);
         console.log(service);
-        if (!service) {
-            return;
+        if (service) {
+            setSelectedService(service);
 
-        }
-        setSelectedService(service);
-
-        setTransactionDetails((prev) => ({
-            ...prev,
-            service: service._id,
-            serviceType: service.type,
-            description: service.description
-        }));
-        if (service.type === 'hourly') {
             setTransactionDetails((prev) => ({
                 ...prev,
-                pricePerHour: service.price
+                service: service._id,
+                serviceType: service.type,
+                description: service.description
             }));
-        } else {
-            setTransactionDetails((prev) => ({
-                ...prev,
-                price: service.price
-            }));
+            if (service.type === 'hourly') {
+                setTransactionDetails((prev) => ({
+                    ...prev,
+                    pricePerHour: service.price
+                }));
+            } else {
+                setTransactionDetails((prev) => ({
+                    ...prev,
+                    price: service.price
+                }));
+
+            }
+
 
             // setCurrentStep((prev) => prev + 1);
         };
@@ -119,14 +119,15 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         const customerId = event.target.value;
         const customer = customers.find((cust) => cust._id === customerId);
         if (customer) {
-            return;
+            setSelectedCustomer(customer);
+            setTransactionDetails((prev) => ({
+                ...prev,
+                customer: customer._id
+            }));
+            // setCurrentStep((prev) => prev + 1);
         }
-        setSelectedCustomer(customer);
 
-        setTransactionDetails((prev) => ({
-            ...prev,
-            customer: customer._id
-        }));
+
         // setCurrentStep((prev) => prev + 1);
 
     };
@@ -235,7 +236,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     //עסקה פעם ראשונה או שאין פרטי בנק
     // if (!agent?.bankAccount) {
     //     return <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
-            
+
     //     </Modal>
     // }
 
