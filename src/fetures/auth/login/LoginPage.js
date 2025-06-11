@@ -1,5 +1,5 @@
 import "./loginPage.css"
-import { useLoginMutation } from "../authApiSlice"
+import { useChangePasswordMutation, useForgotPasswordMutation, useLoginMutation } from "../authApiSlice"
 import { useEffect, useState } from "react"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"
@@ -14,11 +14,46 @@ export const LoginPage = () => {
   // const { _id, phone, roles } = useAuth()
   const { _id, phone } = useAuth()
   const [login, { isError, error, isLoading, isSuccess, data }] = useLoginMutation()
+  const [forgotPassword, { isError: isSendPassErr, error: sendPassErr, isLoading: isSendPassLoading }] = useForgotPasswordMutation()
+  const [changePassword, { isError: isChangePassErr, error: changePassErr, isLoading: isChangePassLoading }] = useChangePasswordMutation()
   const navigate = useNavigate()
   let userObj = {}
+  const RESEND_TIMEOUT = 60; // בשניות
+
+  const [loginStep, setLoginStep] = useState("login");
+
+  const [phoneSendPass, setPhoneSendPass] = useState(null)
+  const [code, setCode] = useState(null)
+  const [newPassword, setNewPassword] = useState(null)
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [errMsg, setErrorMsg] = useState("")
+  const [successMsg, setSuccessMsg] = useState("")
+
+  //ספירה לאחור לשליחת קוד חדש
+  const [canResend, setCanResend] = useState(false);
+  const [countdown, setCountdown] = useState(RESEND_TIMEOUT);
+
 
   const [showPassword, setShowPassword] = useState(false); // ניהול תצוגת הסיסמה
-  const [isModalOpen,setModelOpen] = useState(false)
+
+  useEffect(() => {
+    if (!canResend) {
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [canResend]);
+
   useEffect(() => {
     if (isSuccess) {
       console.log(userObj);
@@ -42,66 +77,251 @@ export const LoginPage = () => {
     // document.getElementById("loginForm").requestSubmit(); // ניסוי לשליחה ידנית
   }
 
+  const sendForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(`sendForgotPassword ${phoneSendPass}`);
+      const result = await forgotPassword({ phone: phoneSendPass });
+
+      // בדיקה אם יש error מהשרת
+      if (result.error) {
+        const message = result.error.data?.message || "שגיאה לא ידועה";
+        console.error("שגיאת שרת:", message);
+        setErrorMsg("שגיאת שרת");
+        if (message === "Agent not found")
+          setErrorMsg("משתמש לא קיים");
+        return; // לא עוברים לשלב הבא
+      }
+
+      // הצלחה
+      console.log("שליחה מחדש של הקוד...");
+      setCanResend(false);
+      setCountdown(RESEND_TIMEOUT);
+      setLoginStep("showChangePass");
+      console.log("הקוד נשלח בהצלחה");
+    } catch (error) {
+      console.error("שגיאת רשת:", error);
+      setErrorMsg("שגיאת רשת בלתי צפויה. נסה שוב.");
+    }
+  };
+
+
+  const sendChangePassword = async (e) => {
+    setPasswordError("")
+    e.preventDefault()
+    if (newPassword !== confirmPassword) {
+      setPasswordError('הסיסמאות אינן תואמות');
+      return;
+    }
+    try{
+      console.log(`sendChangePass code${code} new${newPassword} phone${phone}`);
+      const result = await changePassword({phone,code,newPassword});
+      if (result.error) {
+        const message = result.error.data?.message || "שגיאה לא ידועה";
+        console.error("שגיאת שרת:", message);
+        setErrorMsg("שגיאת שרת");
+        if (message === "Agent not found")
+          setErrorMsg("משתמש לא קיים");
+        if (message === "Unauthorized, wrong old password")
+          setErrorMsg("סיסמא קודמת לא תקינה");
+        if (message === "Invalid or expired reset code")
+          setErrorMsg("קוד טלפוני לא תקין");
+        return; // לא עוברים לשלב הבא
+      }
+      setTimeout(() => {
+        setErrorMsg("הסיסמא שונתה בהצלחה, הנך מועבר לדף הכניסה")
+        setLoginStep("login")
+      },2000)
+    } catch (error) {
+      console.error("שגיאת רשת:", error);
+      setErrorMsg("שגיאת רשת בלתי צפויה. נסה שוב.");
+    }
+
+    
+
+  }
+
   const handleGoHome = () => {
     navigate("/")
   }
-  if(isLoading){
+  if (isLoading) {
 
-    return(<><LoadingScreen/></>) 
+    return (<><LoadingScreen /></>)
   }
-  return (
-    <div className='login-page'>
-      <div className="login-form">
+  switch (loginStep) {
+    case "phone":
+      return (
+        <div className='login-page'>
+          <div className="login-form">
+            <form id="loginForm" className='login-page-form'>
+              <div className="rotating-coin">🪙</div>
+              <h2>הכנס טלפון לזיהוי</h2>
+              <div className="field">
+                <label htmlFor="phone">טלפון</label>
+                <input
+                  type="text"
+                  name="phone"
+                  id="phone"
+                  required
+                  onChange={(e) => { setPhoneSendPass(e.target.value) }}
+                />
+              </div>
+              <p style={{ color: "#f9a825" }}>{errMsg}</p>
+              <button disabled={isSendPassLoading} onClick={sendForgotPassword}>
+                {isSendPassLoading ? 'בתהליך...' : 'הבא'}
+              </button>
+            </form>
+
+            <div className="toRegist">
+              <Link onClick={() => { setLoginStep("login") }}>חזרה לעמוד הכניסה</Link>
+            </div>
+          </div>
+          <img className="loginImg" src="/loginImg.jpg" alt="" />
+        </div>
+      )
+    case "showChangePass":
+      return (
+        <div className='login-page'>
+          <div className="login-form">
+            <form id="loginForm" className='login-page-form'>
+              <div className="rotating-coin">🪙</div>
+              <h2>שינוי סיסמא</h2>
+              <p>קוד טלפוני נשלח למספר שהזנת</p>
+              <div className="field">
+                <div className="password-wrapper">
+
+                  <input
+                    type="text"
+                    placeholder="הכנס קוד טלפוני"
+                    name="phonePassword"
+                    id="phonePassword"
+                    onChange={(e) => { setCode(e.target.value) }}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="field">
+                <label htmlFor="password">סיסמא חדשה</label>
+                <div className="password-wrapper">
+
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="newPassword"
+                    id="newPassword"
+                    onChange={(e) => { setNewPassword(e.target.value) }}
+                    required
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+              </div>
+              <div className="field">
+                <label htmlFor="password">אימות סיסמא חדשה</label>
+                <div className="password-wrapper">
+
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="newPassword2"
+                    id="newPassword2"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+              </div>
+              {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+              {isChangePassErr && (
+                <p style={{ color: "#f9a825" }}>{errMsg}</p>
+
+              )}
+              <button disabled={isChangePassLoading} onClick={sendChangePassword}>
+                {isSendPassLoading ? 'בתהליך...' : 'הבא'}
+              </button>
+            </form>
+
+            <div className="toRegist">
+              {!canResend ? (
+                <span style={{ color: "gray" }}>
+                  ניתן לשלוח שוב בעוד {countdown} שניות
+                </span>
+              ) : (
+                <Link onClick={sendForgotPassword}>לא קיבלתי, שלח שוב קוד טלפוני</Link>)}
+              <Link onClick={() => {
+                setLoginStep("login");
+                setPasswordError("")
+              }}>חזרה לעמוד הכניסה</Link>
+            </div>
+          </div>
+          <img className="loginImg" src="/loginImg.jpg" alt="" />
+        </div>
+      )
+    case "login":
+      return (
+        <div className='login-page'>
+          <div className="login-form">
+            <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
+              <div className="rotating-coin">🪙</div>
+              <h2>מזדהים ומתחברים</h2>
+              <div className="field">
+                <label htmlFor="phone">טלפון</label>
+                <input
+                  type="text"
+                  name="phone"
+                  id="phone"
+                  required
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="password">סיסמה</label>
+                <div className="password-wrapper">
+
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    required
+                  />
+                  <span
+                    className="eye-icon"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+              </div>
+              {isError && (
+                <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
+                  {error && error.data?.message}
+                </Alert>
+              )}
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? 'בתהליך...' : 'כניסה'}
+              </button>
+            </form>
+
+            <div className="toRegist">
+              <NavLink onClick={() => { setLoginStep("phone") }}> שכחתי סיסמה</NavLink>
+              <NavLink to='/regist'> עדיין לא השתמשת במערכת? לחץ כאן</NavLink>
+            </div>
+          </div>
+          <img className="loginImg" src="/loginImg.jpg" alt="" />
+        </div>
+      )
+  }
 
 
-      <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
-                  <div className="rotating-coin">🪙</div>
-<h2>מזדהים ומתחברים</h2>
-  <div className="field">
-    <label htmlFor="phone">טלפון</label>
-    <input
-      type="text"
-      name="phone"
-      id="phone"
-      required
-    />
-  </div>
-  <div className="field">
-    <label htmlFor="password">סיסמה</label>
-    <div className="password-wrapper">
-      
-      <input
-        type={showPassword ? "text" : "password"}
-        name="password"
-        id="password"
-        required
-      />
-      <span
-        className="eye-icon"
-        onClick={() => setShowPassword((prev) => !prev)}
-      >
-        {showPassword ? <FaEyeSlash /> : <FaEye />}
-      </span>
-    </div>
-  </div>
-  {isError && (
-    <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
-      {error && error.data?.message}
-    </Alert>
-  )}
-  <button type="submit" disabled={isLoading}>
-    {isLoading ? 'בתהליך...' : 'כניסה'}
-  </button>
-</form>
 
-      <div className="toRegist">
-      <NavLink onClick={() => {setModelOpen(true)}}> שכחתי סיסמה</NavLink>
-      <NavLink to='/regist'> עדיין לא השתמשת במערכת? לחץ כאן</NavLink>
-      </div>
-      </div>
-      <img className="loginImg" src="/loginImg.jpg" alt="" />
-    </div>
-  )
+
+
 }
 
 export default LoginPage

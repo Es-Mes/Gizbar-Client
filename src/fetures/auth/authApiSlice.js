@@ -83,39 +83,25 @@ const authApiSlice=apiSlice.injectEndpoints({
                 credentials: 'include', // זה החלק החשוב!
                 body:{phone}
             }),
-            async onQueryStarted(arg,{dispatch,queryFulfilled }){
-                try{
-                    const {data}=await queryFulfilled
-                    console.log(data);
-                    if(data.accessToken){
-                        dispatch(setToken({accessToken:data.accessToken}))
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-            },
         }),
         changePassword:build.mutation({
             query:({phone,newPassword, oldPassword, code})=>({
                 url:"/api/auth/changePassword",
-                method:"POST",
+                method:"PUT",
                 credentials: 'include', // זה החלק החשוב!
                 body:{phone, newPassword, oldPassword, code}
             }),
-            async onQueryStarted(arg,{dispatch,queryFulfilled }){
-                try{
-                    const {data}=await queryFulfilled
-                    console.log(data);
-                    if(data.accessToken){
-                        dispatch(setToken({accessToken:data.accessToken}))
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-            },
+        }),
+        changePasswordWithTWT:build.mutation({
+            query:({phone,newPassword, oldPassword, code})=>({
+                url:`/api/agent/${phone}/changePassword`,
+                method:"PUT",
+                credentials: 'include', // זה החלק החשוב!
+                body:{phone, newPassword, oldPassword, code}
+            }),
         }),
 
     })
 })
 
-export const {useLoginMutation,useRegistMutation,useSendLogoutMutation,useRefreshMutation,useChangePasswordMutation,useForgotPasswordMutation}=authApiSlice
+export const {useLoginMutation,useRegistMutation,useSendLogoutMutation,useRefreshMutation,useChangePasswordMutation,useForgotPasswordMutation,useChangePasswordWithTWTMutation}=authApiSlice
