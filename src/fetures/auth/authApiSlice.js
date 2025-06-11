@@ -76,46 +76,46 @@ const authApiSlice=apiSlice.injectEndpoints({
                 }
             },
         }),
-        // forgotPassword:build.mutation({
-        //     query:({phone})=>({
-        //         url:"/api/auth/forgotPassword",
-        //         method:"POST",
-        //         credentials: 'include', // זה החלק החשוב!
-        //         body:{phone}
-        //     }),
-        //     async onQueryStarted(arg,{dispatch,queryFulfilled }){
-        //         try{
-        //             const {data}=await queryFulfilled
-        //             console.log(data);
-        //             if(data.accessToken){
-        //                 dispatch(setToken({accessToken:data.accessToken}))
-        //             }
-        //         }catch(err){
-        //             console.log(err);
-        //         }
-        //     },
-        // }),
-        // changePassword:build.mutation({
-        //     query:({phone})=>({
-        //         url:"/api/auth/changePassword",
-        //         method:"POST",
-        //         credentials: 'include', // זה החלק החשוב!
-        //         body:{phone, newPassword, oldPassword, code}
-        //     }),
-        //     async onQueryStarted(arg,{dispatch,queryFulfilled }){
-        //         try{
-        //             const {data}=await queryFulfilled
-        //             console.log(data);
-        //             if(data.accessToken){
-        //                 dispatch(setToken({accessToken:data.accessToken}))
-        //             }
-        //         }catch(err){
-        //             console.log(err);
-        //         }
-        //     },
-        // }),
+        forgotPassword:build.mutation({
+            query:({phone})=>({
+                url:"/api/auth/forgotPassword",
+                method:"POST",
+                credentials: 'include', // זה החלק החשוב!
+                body:{phone}
+            }),
+            async onQueryStarted(arg,{dispatch,queryFulfilled }){
+                try{
+                    const {data}=await queryFulfilled
+                    console.log(data);
+                    if(data.accessToken){
+                        dispatch(setToken({accessToken:data.accessToken}))
+                    }
+                }catch(err){
+                    console.log(err);
+                }
+            },
+        }),
+        changePassword:build.mutation({
+            query:({phone,newPassword, oldPassword, code})=>({
+                url:"/api/auth/changePassword",
+                method:"POST",
+                credentials: 'include', // זה החלק החשוב!
+                body:{phone, newPassword, oldPassword, code}
+            }),
+            async onQueryStarted(arg,{dispatch,queryFulfilled }){
+                try{
+                    const {data}=await queryFulfilled
+                    console.log(data);
+                    if(data.accessToken){
+                        dispatch(setToken({accessToken:data.accessToken}))
+                    }
+                }catch(err){
+                    console.log(err);
+                }
+            },
+        }),
 
     })
 })
 
-export const {useLoginMutation,useRegistMutation,useSendLogoutMutation,useRefreshMutation}=authApiSlice
+export const {useLoginMutation,useRegistMutation,useSendLogoutMutation,useRefreshMutation,useChangePasswordMutation,useForgotPasswordMutation}=authApiSlice

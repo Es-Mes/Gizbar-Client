@@ -140,7 +140,7 @@ const TransactionsAsProvider = () => {
             <div className="transactions-display">
                 <div className="header-with-button">
                     <button className="backButton" onClick={() => navigate(-1)}>
-                        <GrFormNextLink />
+                        <GrFormNextLink className='GrFormNextLink' /><p className='backText'>חזור</p>
                     </button>
                     <h2>{header}</h2><button className='newTransactionBtn'  onClick={() => { setIsTransactionModalOpen(true)}}>
                     עסקה חדשה <div className="rotating-coin small">💰</div>

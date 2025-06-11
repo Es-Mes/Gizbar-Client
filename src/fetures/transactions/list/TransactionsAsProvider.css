@@ -11,16 +11,24 @@
     right: 0;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 2rem;
     cursor: pointer;
-        color: var(--bgSoft);
-        transition: transform 0.2s ease;
-
+    color: var(--gold);
+    transition: transform 0.2s ease;
+    
+  }
+  .GrFormNextLink{
+    background-color: #755ded6e;
+    border-radius: 50%;
+    padding: 5px;
   }
   
 .backButton:hover{
     transform: scale(1.2) translateX(5px);
 
+}
+.backText{
+    font-size: 1.2rem;
 }
 
 

@@ -6,6 +6,8 @@ import { Chart, registerables } from 'chart.js';
 import { useParams } from 'react-router-dom/dist/umd/react-router-dom.development';
 import { useGetAllTransactionsQuery } from '../TransactionsApiSlice';
 import { BsPhone } from 'react-icons/bs';
+import { GrFormNextLink } from "react-icons/gr";
+
 import useAuth from '../../../hooks/useAuth';
 
 Chart.register(...registerables);
@@ -124,7 +126,9 @@ const TransactionsMenu = () => {
                 </p>
             </div>
         )}    */}
-           
+           {/* <button className="backButton" onClick={() => navigate(-1)}>
+                                   <GrFormNextLink className='GrFormNextLink' /><p className='backText'>חזור</p>
+            </button> */}
             {isIncome && (<div><div className='blur-wrapper'>
                 <h2>איזה הכנסות תרצה לראות?</h2>
             </div>

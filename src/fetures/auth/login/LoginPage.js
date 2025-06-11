@@ -18,7 +18,7 @@ export const LoginPage = () => {
   let userObj = {}
 
   const [showPassword, setShowPassword] = useState(false); // ניהול תצוגת הסיסמה
-
+  const [isModalOpen,setModelOpen] = useState(false)
   useEffect(() => {
     if (isSuccess) {
       console.log(userObj);
@@ -69,6 +69,7 @@ export const LoginPage = () => {
   <div className="field">
     <label htmlFor="password">סיסמה</label>
     <div className="password-wrapper">
+      
       <input
         type={showPassword ? "text" : "password"}
         name="password"
@@ -94,7 +95,8 @@ export const LoginPage = () => {
 </form>
 
       <div className="toRegist">
-       <NavLink to='/regist'> עדיין לא השתמשת במערכת? לחץ כאן</NavLink>
+      <NavLink onClick={() => {setModelOpen(true)}}> שכחתי סיסמה</NavLink>
+      <NavLink to='/regist'> עדיין לא השתמשת במערכת? לחץ כאן</NavLink>
       </div>
       </div>
       <img className="loginImg" src="/loginImg.jpg" alt="" />
