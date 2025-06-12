@@ -40,6 +40,9 @@
   transform: scale(0.98);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.downBtn{
+  margin-top: 15px;
+}
 
 .loading-box {
   background-color: white;

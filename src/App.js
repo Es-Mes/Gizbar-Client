@@ -30,12 +30,13 @@ import PaymentPage from "./component/payment/PaymentPage"
 import { useEffect } from "react";
 import TransactionsMenu from "./fetures/transactions/view/TransactionsMenu"
 import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCustomer"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
-import { useGetAgentQuery } from "./app/apiSlice"
 import SingleCustomer from "./fetures/customers/view/SingleCustomer"
 
+
 const App = () => {
+
     const dispatch = useDispatch()
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken')
@@ -47,20 +48,14 @@ const App = () => {
         }
     }, [dispatch])
 
-    const { phone } = useAuth();
-    // const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
-
-    // if (isLoading) return <p>טוען את הנתונים האישיים שלך ...</p>;
-    // if (error) return <p>שגיאה בטעינת הנתונים  :(</p>;
-
     return <Router>
         <ScrollToTop />
         <Routes>
             <Route exact path="/" element={<Navigate to="/login" />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="regist" element={<RegistPage />} />
+            <Route element={<PersistsLogin />}>
             <Route path="/dash" element={<DashLayout />}>
-                <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
                         {/* <Route path ="" */}
                         <Route path="UnderConstruction" element={<UnderConstruction />} />

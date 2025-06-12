@@ -9,6 +9,7 @@ import { Link } from "react-router-dom"
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import LoadingScreen from "../../../component/LoadingScreen";
+import { useSelector } from "react-redux";
 
 export const LoginPage = () => {
   // const { _id, phone, roles } = useAuth()
@@ -79,6 +80,7 @@ export const LoginPage = () => {
 
   const sendForgotPassword = async (e) => {
     e.preventDefault();
+    setErrorMsg("")
     try {
       console.log(`sendForgotPassword ${phoneSendPass}`);
       const result = await forgotPassword({ phone: phoneSendPass });
@@ -108,14 +110,15 @@ export const LoginPage = () => {
 
   const sendChangePassword = async (e) => {
     setPasswordError("")
+    setErrorMsg("")
     e.preventDefault()
     if (newPassword !== confirmPassword) {
       setPasswordError('הסיסמאות אינן תואמות');
       return;
     }
     try{
-      console.log(`sendChangePass code${code} new${newPassword} phone${phone}`);
-      const result = await changePassword({phone,code,newPassword});
+      console.log(`sendChangePass code${code} new${newPassword} phone${phoneSendPass}`);
+      const result = await changePassword({phone:phoneSendPass,code,newPassword});
       if (result.error) {
         const message = result.error.data?.message || "שגיאה לא ידועה";
         console.error("שגיאת שרת:", message);
@@ -132,6 +135,7 @@ export const LoginPage = () => {
         setErrorMsg("הסיסמא שונתה בהצלחה, הנך מועבר לדף הכניסה")
         setLoginStep("login")
       },2000)
+      setErrorMsg("")
     } catch (error) {
       console.error("שגיאת רשת:", error);
       setErrorMsg("שגיאת רשת בלתי צפויה. נסה שוב.");
@@ -173,7 +177,7 @@ export const LoginPage = () => {
             </form>
 
             <div className="toRegist">
-              <Link onClick={() => { setLoginStep("login") }}>חזרה לעמוד הכניסה</Link>
+              <Link onClick={() => { setLoginStep("login");setErrorMsg("") }}>חזרה לעמוד הכניסה</Link>
             </div>
           </div>
           <img className="loginImg" src="/loginImg.jpg" alt="" />
@@ -254,7 +258,7 @@ export const LoginPage = () => {
                   ניתן לשלוח שוב בעוד {countdown} שניות
                 </span>
               ) : (
-                <Link onClick={sendForgotPassword}>לא קיבלתי, שלח שוב קוד טלפוני</Link>)}
+                <Link style={{color:"#4c3b75dc"}} onClick={sendForgotPassword}>לא קיבלתי, שלח שוב קוד טלפוני</Link>)}
               <Link onClick={() => {
                 setLoginStep("login");
                 setPasswordError("")
