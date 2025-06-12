@@ -6,7 +6,7 @@ const SessionExpiredModal = ({handleLoginRedirect}) => {
       const navigate = useNavigate();
     
   return (
-    <div className="loading-screen">
+    <div className="loading-screen full-screen">
       <div className="loading-box">
         <div className="bill">⏰</div>
         <h1 className="loading-title">תוקף החיבור פג</h1>

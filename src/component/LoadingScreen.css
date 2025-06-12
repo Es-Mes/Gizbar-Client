@@ -7,6 +7,14 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   animation: fadeIn 1.2s ease-in-out;
 }
+.full-screen{
+  position: fixed;
+  top:0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  z-index: 2000;
+}
 .backgroung-screen{
   display: flex;
   justify-content: center;
