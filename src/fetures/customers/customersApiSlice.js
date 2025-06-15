@@ -8,12 +8,12 @@ const customersApiSlice = apiSlice.injectEndpoints({
         //     }),
         //     providesTags: ["Customers"],
         // }),
-        // getCustomer: build.query({
-        //     query: ({ phone, _id }) => ({
-        //         url: `/api/agent/${phone}/customers/${_id}`,
-        //     }),
-        //     providesTags: ["Customers"],
-        // }),
+        getCustomer: build.query({
+            query: ({ phone, _id }) => ({
+                url: `/api/agent/${phone}/customers/${_id}`,
+            }),
+            providesTags: ["Customers"],
+        }),
         addCustomer: build.mutation({
             query: ({ phone, customer }) => ({
                 url: `/api/agent/${phone}/customers/add`,

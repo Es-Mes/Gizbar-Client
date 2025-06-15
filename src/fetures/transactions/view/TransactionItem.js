@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { GrEdit, GrCheckmark, GrClose, GrMoreVertical, GrFormUp } from "react-icons/gr";
 import { LuBellRing } from "react-icons/lu";
 import { IoTrashOutline } from "react-icons/io5";
@@ -24,6 +26,8 @@ const TransactionItem = ({ transaction }) => {
     const [editedTransaction, setEditedTransaction] = useState({ ...transaction });
     const [isPaymentModalOpen, setPaymentModalOpen] = useState(false); // מודל תשלום באשראי
     const [isCashModalOpen, setIsCashModalOpen] = useState(false); // מודל אישור תשלום במזומן
+    const [isSendLinkModalOpen, setSendLinkModalOpen] = useState(false)
+    const [sendLinkClicked, setSendLinkClicked] = useState(false)
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
     const [showAlertsModal, setShowAlertsModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -34,6 +38,7 @@ const TransactionItem = ({ transaction }) => {
     const [alertMethod, setAlertMethod] = useState("");
     const [payInCashClicked, setPayInCashClicked] = useState(false);
     const [payInCashMessage, setPayInCashMessage] = useState("")
+
     const [alertClicked, setAlertClicked] = useState(false);
     const [alertMessage, setAlertMessage] = useState("")
 
@@ -59,6 +64,8 @@ const TransactionItem = ({ transaction }) => {
     const [payInCash] = usePayInCashMutation();
     const [sendReminder] = useSendReminderMutation();
     const [updateTransaction] = useUpdateTransactionMutation();
+
+
 
     const confirmPayInCash = async () => {
         setPayInCashClicked(true);
@@ -86,6 +93,23 @@ const TransactionItem = ({ transaction }) => {
             }, 3000);
         }
     };
+
+    const sendPayLink = () => {
+        setSendLinkClicked(true)
+        const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+        const link = `${baseUrl}/payment/${phone}/${transaction._id}`;
+        console.log(`link ${link}`);
+
+
+
+    }
+    const handleCopy = () => {
+         const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+        const link = `${baseUrl}/payment/${phone}/${transaction._id}`;
+  navigator.clipboard.writeText(link)
+    .then(() => toast.success("הקישור הועתק!"))
+    .catch(() => toast.error("העתקה נכשלה."));
+};
 
 
     const sendAlert = async () => {
@@ -211,6 +235,9 @@ const TransactionItem = ({ transaction }) => {
                             {isIncome && (<div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום באשראי
                             </div>)}
+                            {isIncome && (<div onClick={() => { setSendLinkModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                                <BsCreditCard size={20} /> שליחת לינק לתשלום
+                            </div>)}
                             {isIncome && (<div className="action-item" onClick={() => setShowEditModal(true)}>
                                 <GrEdit size={20} /> עריכת פרטי עסקה
                             </div>)}
@@ -251,6 +278,27 @@ const TransactionItem = ({ transaction }) => {
                             <div className="navigation-buttons">
                                 <button className="modelBtn" onClick={() => setIsCashModalOpen(false)}>ביטול</button>
                                 <button className="modelBtn" onClick={confirmPayInCash} disabled={payInCashClicked}>אישור</button>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
+
+            )}
+
+            {isSendLinkModalOpen && (
+
+                <Modal isOpen={isSendLinkModalOpen} onClose={() => { setSendLinkModalOpen(false) }}>
+                    <div className="backgroung-screen">
+                        <div className="loading-box">
+                            <div className="credit-swipe">💳</div>
+                            <h3 className="loading-title">שליחת קישור לתשלום</h3>
+
+                            <p className="question">בחר באפשרות המתאימה עבורך:</p>
+
+                            <div className="navigation-buttons">
+                                <button className="modelBtn bigBtn" onClick={sendPayLink} disabled={sendLinkClicked}>שלח מייל אוטומטי</button>
+                                <button className="modelBtn bigBtn" onClick={handleCopy}>🔗העתק קישור</button>
+
                             </div>
                         </div>
                     </div>

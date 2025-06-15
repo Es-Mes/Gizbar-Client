@@ -2,6 +2,14 @@ import apiSlice from "../../app/apiSlice";
 
 const transactionsApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({
+        getTransactionById: build.query({
+            query: ({ agentPhone, transactionId }) => ({
+                url: `/api/agent/${agentPhone}/transactions/${transactionId}`,
+            }),
+            providesTags: (result, error, { transactionId }) => [
+                { type: "Transactions", id: transactionId },
+            ],
+        }),
         getAllTransactions: build.query({
             query: ({ phone }) => ({
                 url: `/api/agent/${phone}/transactions`,
@@ -58,6 +66,7 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetTransactionByIdQuery,
     useGetAllTransactionsQuery,
     useGetAllTransactionsAsCustomerQuery,
     useAddTransactionMutation,

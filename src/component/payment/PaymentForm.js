@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import "jspdf-font"; // מייבא פונטים בעברית
 import Modal from "../../modals/Modal";
 
-const PaymentForm = ({ initialCustomerData }) => {
+const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
     const iframeRef = useRef(null);
     const initialData = initialCustomerData || {};
     const [customerData, setCustomerData] = useState({
@@ -16,8 +16,8 @@ const PaymentForm = ({ initialCustomerData }) => {
         Currency: 1, // שקלים
         PaymentType: "Ragil",
         Tashlumim: 1,
-        Mosad: process.env.REACT_APP_MOSAD,
-        ApiValid: process.env.REACT_APP_API_IFRAME,
+        Mosad: initialAgentData? initialAgentData.mosad : process.env.REACT_APP_MOSAD,
+        ApiValid: initialAgentData? initialAgentData.apiValid : process.env.REACT_APP_API_IFRAME,
         Comment: "",
         CallBack: process.env.REACT_APP_BASE_URL,
     });
@@ -208,6 +208,23 @@ const PaymentForm = ({ initialCustomerData }) => {
                     { label: "סכום לתשלום", name: "Amount", type: "number" },
                     { label: "מספר תשלומים", name: "Tashlumim", type: "number" },
                 ].map(({ label, name, type = "text" }) => (
+                     (initialAgentData)?  <label key={name} className="form-label">
+                        {label}:
+                        <input
+                            className="TextBox"
+                            type={type}
+                            name={name}
+                            value={customerData[name]}
+                            onChange={handleChange}
+                            min={name === "Tashlumim" || name === "Amount" ? "1" : undefined} // מינימום לערכים מספריים
+                            required
+                            readOnly
+                        />
+                        {errors[name] && (
+                            <span className="error">{errors[name]}</span>
+                        )}
+                    </label>
+                    : 
                     <label key={name} className="form-label">
                         {label}:
                         <input

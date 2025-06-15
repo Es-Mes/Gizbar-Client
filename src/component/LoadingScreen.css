@@ -51,6 +51,10 @@
 .downBtn{
   margin-top: 15px;
 }
+.bigBtn{
+  padding: 15px;
+  background-color: #3b256ddf;
+}
 
 .loading-box {
   background-color: white;
@@ -104,6 +108,14 @@
   font-size: 1.1rem;
   color:var(--text);
 }
+.credit-swipe {
+  font-size: 3rem;
+  display: inline-block;
+  animation: swipeCard 2s ease-in-out infinite;
+}
+
+
+
 button:disabled {
   background-color: #ccc;
   color: #888;
@@ -171,4 +183,11 @@ button:disabled {
   50% { transform: rotate(0deg); }
   75% { transform: rotate(7deg); }
   100% { transform: rotate(0deg); }
+}
+@keyframes swipeCard {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(10px); }
+  50%  { transform: translateX(0); }
+  75%  { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
 }

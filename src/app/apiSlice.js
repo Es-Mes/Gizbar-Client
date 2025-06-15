@@ -11,8 +11,14 @@ const apiSlice = createApi({
       providesTags: ['Agent']
 
     }),
+    getAgentApiPaymentDetails: builder.query({
+            query: ({ agentId }) => ({
+                url: `/api/agent/${agentId}`,
+            }),
+            providesTags:  ['Agent'],
+        }),
   }),
 })
 
 export default apiSlice
-export const { useGetAgentQuery } = apiSlice
+export const { useGetAgentQuery,useGetAgentApiPaymentDetailsQuery } = apiSlice

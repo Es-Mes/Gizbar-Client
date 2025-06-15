@@ -54,6 +54,10 @@ const App = () => {
             <Route exact path="/" element={<Navigate to="/login" />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="regist" element={<RegistPage />} />
+
+            <Route path="/payment/:agentPhone/:transactionId" element={<PaymentPage />} />
+
+
             <Route path="/dash" element={<DashLayout />}>
                 <Route element={<PersistsLogin />}>
                     <Route element={<RequireAuth allowRoles={['admin', 'user']} />}>
