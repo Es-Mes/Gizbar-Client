@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { toast } from 'react-toastify';
+
 import { useAddCustomerMutation } from "../customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
 const AddCustomer = ({ onSuccess }) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
     const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
+        const [message, setMessage] = useState(null)
+
 
     const [customerData, setCustomerData] = useState({
         full_name: "",
@@ -13,8 +17,6 @@ const AddCustomer = ({ onSuccess }) => {
         address: "",
         city: "",
     });
-
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // ניהול הצגת ההודעה
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,11 +34,10 @@ const AddCustomer = ({ onSuccess }) => {
             console.log(data);
             if (data) {
                 if (!data.error) {
-                    setShowSuccessMessage(true); // הצג הודעת הצלחה         
+                    toast.success("הלקוח נוסף בהצלחה 👍 ",{icon:false})
                 }
 
                 setTimeout(() => {
-                    setShowSuccessMessage(false); // הסתר את ההודעה
                     if (onSuccess) {
                         onSuccess(data); // קריאה ל־onSuccess אם הוגדר
                     }
@@ -44,7 +45,7 @@ const AddCustomer = ({ onSuccess }) => {
             }
 
         } catch (err) {
-            console.error("Error adding customer:", err);
+            setMessage(`שגיאה בהוספת הלקוח ${err.error}`);
         }
     };
 
@@ -109,8 +110,9 @@ const AddCustomer = ({ onSuccess }) => {
                 </button>
             </form>
 
-            {isSuccess && <p className="success-message">הלקוח נוסף בהצלחה!</p>}
             {isError && <p className="error-message">{error?.data?.message || "שגיאה בהוספת הלקוח"}</p>}
+            {message && <p style={{ color: "#f9a825" }}>{message}</p>}
+
         </div>
     );
 };

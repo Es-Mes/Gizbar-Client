@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch } from "react-redux";
 import useAuth from "../../../hooks/useAuth";
@@ -10,6 +12,7 @@ const AddService = ({ onSuccess }) => {
     console.log(phone);
     
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
+    const [message, setMessage] = useState(null)
 
     const [serviceData, setServiceData] = useState({
         name: "",
@@ -43,7 +46,7 @@ const AddService = ({ onSuccess }) => {
 
             if (data) {
                 if (!data.error) {
-                    setShowSuccessMessage(true); // הצג הודעת הצלחה
+                    toast.success("השירות נוסף בהצלחה 👍 ",{icon:false})
                     setTimeout(() => {
                     setShowSuccessMessage(false); // הסתר את ההודעה
                     onSuccess(data)
@@ -136,7 +139,7 @@ const AddService = ({ onSuccess }) => {
                 </button>
             </form>
 
-            {isSuccess && <p className="success-message">השירות נוסף בהצלחה!</p>}
+            {message && <p style={{ color: "#f9a825" }}>{message}</p>}
             {isError && <p className="error-message">{error?.data?.message || "שגיאה בהוספת השירות"}</p>}
         </div>
     );

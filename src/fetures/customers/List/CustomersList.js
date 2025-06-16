@@ -1,5 +1,6 @@
 import "./CustomersList.css"
 import React, { useState, useEffect, useRef } from "react";
+import { toast } from 'react-toastify';
 import Search from "../../../component/search/Search"
 import { useDeleteCustomerMutation } from "../customersApiSlice"
 import { Link, useSearchParams, useLocation } from "react-router-dom"
@@ -264,7 +265,7 @@ const CustomersList = () => {
             <Modal isOpen={isEditModelOpen} onClose={() => setEditModelOpen(false)}>
                 <EditCustomer
                     customer={selectedCustomer}
-                    onSuccess={() => setEditModelOpen(false)} />
+                    onSuccess={() => {setEditModelOpen(false);toast.success("העריכה נשמרה 👍 ",{icon:false})}} />
             </Modal>
             <Modal isOpen={isAddModelOpen} onClose={() => setAddModelOpen(false)}>
                 <AddCustomer

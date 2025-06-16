@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify';
+
 import '../../../component/LoadingScreen.css';
 import useAuth from '../../../hooks/useAuth';
 import { useDeleteCustomerMutation } from '../customersApiSlice';
@@ -21,7 +23,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
             }
             else {
                 setClicked(true)
-                setMessage("הלקוח נמחק בהצלחה");
+                toast.success("הלקוח נמחק בהצלחה 👍 ",{icon:false})
                 setTimeout(() => {
                     onSuccess()
                 }, 2000)
