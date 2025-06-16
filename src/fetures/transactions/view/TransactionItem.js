@@ -74,7 +74,7 @@ const TransactionItem = ({ transaction }) => {
 
             if (result?.data) {
                 console.log("תשלום במזומן עבר בהצלחה:", result.data);
-                setPayInCashMessage("התשלום במזומן עודכן בהצלחה");
+                toast.success("התשלום עודכן בהצלחה 👍 ",{icon:false})
                 setIsCashModalOpen(false);
             } else if (result?.error) {
                 const status = result.error.status;
@@ -104,12 +104,12 @@ const TransactionItem = ({ transaction }) => {
 
     }
     const handleCopy = () => {
-         const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+        const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
         const link = `${baseUrl}/payment/${phone}/${transaction._id}`;
-  navigator.clipboard.writeText(link)
-    .then(() => toast.success("הקישור הועתק!"))
-    .catch(() => toast.error("העתקה נכשלה."));
-};
+        navigator.clipboard.writeText(link)
+            .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
+            .catch(() => toast.error("העתקה נכשלה."));
+    };
 
 
     const sendAlert = async () => {
@@ -126,20 +126,20 @@ const TransactionItem = ({ transaction }) => {
                 const name = editedTransaction?.customer?.full_name || "הלקוח";
                 switch (alertMethod) {
                     case "human":
-                        setAlertMessage(`תשלח תזכורת באמצעות מזכירה ל${name}`);
+                        toast.success(`תשלח תזכורת באמצעות מזכירה ל${name}`,{icon:false})
                         break;
                     case "call":
-                        setAlertMessage(`תזכורת טלפונית נשלחה בהצלחה ל${name}`);
+                        toast.success(`תזכורת טלפונית נשלחה בהצלחה ל${name}`,{icon:false})
                         break;
                     case "email":
-                        setAlertMessage(`נשלחה תזכורת במייל ל${name}`);
+                        toast.success(`נשלחה תזכורת במייל ל${name}`,{icon:false})
                         break;
                     case "emailAndCall":
-                        setAlertMessage(`נשלחה תזכורת במייל ובטלפון ל${name}`);
+                        toast.success(`נשלחה תזכורת במייל ובטלפון ל${name}`,{icon:false})
                         break;
                     default:
-                        setAlertMessage(`נשלחה התראה ל${name}`);
-                }
+                        toast.success(`נשלחה התראה ל${name}`,{icon:false})
+``                }
                 setTimeout(() => {
                     setIsAlertModalOpen(false);
                     setAlertMessage("");
@@ -263,7 +263,7 @@ const TransactionItem = ({ transaction }) => {
             {isCashModalOpen && (
 
                 <Modal isOpen={isCashModalOpen} onClose={() => { setIsCashModalOpen(false) }}>
-                    <div className="backgroung-screen">
+                    <div className="background-screen">
                         <div className="loading-box">
                             <div className="cash-bill">💵</div>
                             <h3 className="loading-title">אישור תשלום במזומן</h3>
@@ -288,7 +288,7 @@ const TransactionItem = ({ transaction }) => {
             {isSendLinkModalOpen && (
 
                 <Modal isOpen={isSendLinkModalOpen} onClose={() => { setSendLinkModalOpen(false) }}>
-                    <div className="backgroung-screen">
+                    <div className="background-screen">
                         <div className="loading-box">
                             <div className="credit-swipe">💳</div>
                             <h3 className="loading-title">שליחת קישור לתשלום</h3>
@@ -317,7 +317,7 @@ const TransactionItem = ({ transaction }) => {
             {/* מודל שליחת התראה  */}
             {isAlertModalOpen && (
                 <Modal isOpen={isAlertModalOpen} onClose={() => { setIsAlertModalOpen(false) }}>
-                    <div className="backgroung-screen">
+                    <div className="background-screen">
                         <div className="loading-box">
                             <div className="bill">🔔</div>
                             <h3 style={{ color: "#3a256d" }}>בחר אמצעי לשליחת התראה</h3>

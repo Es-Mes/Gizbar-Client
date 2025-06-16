@@ -33,6 +33,7 @@ import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCu
 import { useDispatch, useSelector } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
 import SingleCustomer from "./fetures/customers/view/SingleCustomer"
+import './toast-custom.css';
 
 
 const App = () => {
@@ -88,7 +89,22 @@ const App = () => {
                 </Route>
             </Route>
         </Routes>
-        <ToastContainer />
+        <ToastContainer
+            position="bottom-left"
+            autoClose={3000}
+            hideProgressBar={true}
+            closeOnClick
+            rtl={true}
+            pauseOnHover
+            draggable={false}
+            toastClassName="custom-toast"
+            bodyClassName="custom-toast-body"
+            limit={3}
+            style={{ left: 0, bottom: 20 }} // מצמיד ממש לשמאל
+            toastOptions={{
+                icon: false
+            }}
+        />
     </Router>
 }
 export default App

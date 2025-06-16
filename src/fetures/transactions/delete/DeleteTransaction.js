@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import '../../../component/LoadingScreen.css';
 import useAuth from '../../../hooks/useAuth';
-import { red, yellow } from '@mui/material/colors';
+import { toast } from 'react-toastify';
+
 import { useDeleteTransactionMutation } from '../TransactionsApiSlice';
 
 
 
 const DeleteTransaction = ({ transaction, onSuccess }) => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
-        console.log(transaction);
+    console.log(transaction);
 
     const [deleteTransaction, { isSuccess: isDeleteSuccess }] = useDeleteTransactionMutation()
     const [clicked, setClicked] = useState(false);
@@ -19,10 +20,9 @@ const DeleteTransaction = ({ transaction, onSuccess }) => {
             const result = await deleteTransaction({ phone, _id: transaction._id });
             console.log(result);
             setClicked(true)
-            
-            if(result && !result.error){
-                setMessage("העסקה נמחקה בהצלחה");   
-            }
+
+            if (result && !result.error) {
+toast.success("העסקה נמחקה בהצלחה 👍 ",{icon:false})            }
             setTimeout(() => {
                 onSuccess()
             }, 2000)
@@ -33,7 +33,7 @@ const DeleteTransaction = ({ transaction, onSuccess }) => {
     }
 
     return (
-        <div className="backgroung-screen">
+        <div className="background-screen">
             <div className="loading-box">
                 <div className=" fade-icon icon-rotate">🪙</div>
                 <p className="loading-subtitle">האם אתה בטוח שברצונך לבטל את העסקה?</p>

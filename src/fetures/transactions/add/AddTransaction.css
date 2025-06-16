@@ -91,6 +91,9 @@ textarea:focus {
     display: flex;
     flex-direction: column;
 }
+.alertSmallRow{
+    
+}
 
 .serviceRowBox {
     display: flex;

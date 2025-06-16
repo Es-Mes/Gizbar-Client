@@ -1,0 +1,15 @@
+/* toast-custom.css */
+.custom-toast {
+ background-color: #e4dbf7 !important; /* סגול בהיר */
+  color: #4a0072 !important; /* סגול כהה */
+  border-left: 6px solid #7e57c2; /* פס סגול יותר חזק */
+  border-radius: 10px !important;
+  padding: 12px !important;
+  font-family: 'Varela Round', sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.custom-toast-body {
+  margin: 0;
+  font-size: 16px;
+}

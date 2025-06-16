@@ -6,7 +6,8 @@ import "./PersonalSettings.css";
 import useAuth from "../../hooks/useAuth";
 import { useGetAgentQuery } from "../../app/apiSlice";
 import Modal from "../../modals/Modal";
-// import ChangePasswordModal from "../../modals/ChangePasswordModal";
+import { NavLink } from "react-router-dom";
+import ChangePasswordModal from "../../modals/ChangePasswordModal";
 
 const PersonalSettings = () => {
   const { phone } = useAuth()
@@ -35,10 +36,11 @@ const PersonalSettings = () => {
         <SettingField label="כתובת" name="address" value={editableUser.address} onChange={handleChange} />
         <SettingField label="עיר" name="city" value={editableUser.city} onChange={handleChange} />
       </div>
-      <button onClick={() => { setChangeModalOpen(true) }}></button>
+    
+      <button className="modelBtn" onClick={() => { setChangeModalOpen(true) }}>שינוי סיסמא</button>
     </div>
     <Modal isOpen={isChangePassModalOpen} onClose={() => (setChangeModalOpen(false))}>
-      {/* <ChangePasswordModal onSucsses={() => { setChangeModalOpen(false) }} /> */}
+      <ChangePasswordModal onSucsses={() => { setChangeModalOpen(false) }} />
     </Modal>
   </>
   );

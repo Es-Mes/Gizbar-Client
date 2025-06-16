@@ -7,15 +7,17 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   animation: fadeIn 1.2s ease-in-out;
 }
-.full-screen{
+
+.full-screen {
   position: fixed;
-  top:0;
+  top: 0;
   left: 0;
   right: 0;
   width: 100vw;
   z-index: 2000;
 }
-.backgroung-screen{
+
+.background-screen {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,33 +27,38 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   animation: fadeIn 1.2s ease-in-out;
 }
-.modalForm{
+
+.modalForm {
   display: flex;
   flex-direction: column;
   gap: 15px;
   justify-content: space-between;
 }
-.modelBtn{
+
+.modelBtn {
   padding: 7px;
   color: var(--bgWhite);
-  background-color:var(--text) ;
-  
+  background-color: var(--text);
+
   border: none;
   border-radius: 5px;
-   transition: transform 0.2s ease, box-shadow 0.2s ease;
-      transform: scale(1.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform: scale(1.02);
 
 }
-.modelBtn:hover{
+
+.modelBtn:hover {
   /* color: var(--text); */
-  background-color:var(--hoverBtnModel);
+  background-color: var(--hoverBtnModel);
   transform: scale(0.98);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.downBtn{
+
+.downBtn {
   margin-top: 15px;
 }
-.bigBtn{
+
+.bigBtn {
   padding: 15px;
   background-color: #3b256ddf;
 }
@@ -70,28 +77,32 @@
   animation: spin 2s linear infinite;
   margin-bottom: 15px;
 }
+
 .fade-icon {
   animation: fadeInOut 2.5s ease-in-out infinite;
 }
+
 .add-client-icon {
   font-size: 2rem;
   display: inline-flex;
   align-items: center;
   animation: bouncePlus 1.8s ease-in-out infinite;
 }
+
 .rotating-coin {
   font-size: 2rem;
   display: inline-block;
   animation: coinSpin 1.6s linear infinite;
   transform-origin: center;
 }
+
 .cash-bill {
   font-size: 3rem;
   display: inline-block;
   animation: flutterCash 1s ease-in-out infinite;
 }
 
-.bill{
+.bill {
   font-size: 2.5rem;
   display: inline-block;
   animation: flutterCashAdel 1s ease-in-out infinite;
@@ -106,8 +117,9 @@
 
 .loading-subtitle {
   font-size: 1.1rem;
-  color:var(--text);
+  color: var(--text);
 }
+
 .credit-swipe {
   font-size: 3rem;
   display: inline-block;
@@ -126,68 +138,143 @@ button:disabled {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes popIn {
-  0% { transform: scale(0.95); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 @keyframes fadeInOut {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }
 }
 
 @keyframes bouncePlus {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   25% {
     transform: translateY(-3px);
   }
+
   50% {
     transform: translateY(0);
   }
+
   75% {
     transform: translateY(-1px);
   }
 }
+
 @keyframes coinSpin {
   0% {
     transform: rotateY(0deg);
   }
+
   100% {
     transform: rotateY(360deg);
   }
 }
+
 @keyframes flutterCash {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(10deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(0deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
+
 @keyframes flutterCashAdel {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(-7deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(7deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-7deg);
+  }
+
+  50% {
+    transform: rotate(0deg);
+  }
+
+  75% {
+    transform: rotate(7deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
+
 @keyframes swipeCard {
-  0%   { transform: translateX(0); }
-  25%  { transform: translateX(10px); }
-  50%  { transform: translateX(0); }
-  75%  { transform: translateX(-10px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(10px);
+  }
+
+  50% {
+    transform: translateX(0);
+  }
+
+  75% {
+    transform: translateX(-10px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }

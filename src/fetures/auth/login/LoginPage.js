@@ -116,9 +116,9 @@ export const LoginPage = () => {
       setPasswordError('הסיסמאות אינן תואמות');
       return;
     }
-    try{
+    try {
       console.log(`sendChangePass code${code} new${newPassword} phone${phoneSendPass}`);
-      const result = await changePassword({phone:phoneSendPass,code,newPassword});
+      const result = await changePassword({ phone: phoneSendPass, code, newPassword });
       if (result.error) {
         const message = result.error.data?.message || "שגיאה לא ידועה";
         console.error("שגיאת שרת:", message);
@@ -134,14 +134,14 @@ export const LoginPage = () => {
       setTimeout(() => {
         setErrorMsg("הסיסמא שונתה בהצלחה, הנך מועבר לדף הכניסה")
         setLoginStep("login")
-      },2000)
+      }, 2000)
       setErrorMsg("")
     } catch (error) {
       console.error("שגיאת רשת:", error);
       setErrorMsg("שגיאת רשת בלתי צפויה. נסה שוב.");
     }
 
-    
+
 
   }
 
@@ -177,7 +177,7 @@ export const LoginPage = () => {
             </form>
 
             <div className="toRegist">
-              <Link onClick={() => { setLoginStep("login");setErrorMsg("") }}>חזרה לעמוד הכניסה</Link>
+              <Link onClick={() => { setLoginStep("login"); setErrorMsg("") }}>חזרה לעמוד הכניסה</Link>
             </div>
           </div>
           <img className="loginImg" src="/loginImg.jpg" alt="" />
@@ -201,6 +201,7 @@ export const LoginPage = () => {
                     id="phonePassword"
                     onChange={(e) => { setCode(e.target.value) }}
                     required
+                    autoComplete="one-time-code"
                   />
                 </div>
               </div>
@@ -214,6 +215,7 @@ export const LoginPage = () => {
                     id="newPassword"
                     onChange={(e) => { setNewPassword(e.target.value) }}
                     required
+                    autoComplete="new-password"
                   />
                   <span
                     className="eye-icon"
@@ -233,6 +235,7 @@ export const LoginPage = () => {
                     id="newPassword2"
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
+                    autoComplete="new-password"
                   />
                   <span
                     className="eye-icon"
@@ -248,7 +251,7 @@ export const LoginPage = () => {
 
               )}
               <button disabled={isChangePassLoading} onClick={sendChangePassword}>
-                {isSendPassLoading ? 'בתהליך...' : 'הבא'}
+                {isChangePassLoading ? 'בתהליך...' : 'הבא'}
               </button>
             </form>
 
@@ -258,7 +261,7 @@ export const LoginPage = () => {
                   ניתן לשלוח שוב בעוד {countdown} שניות
                 </span>
               ) : (
-                <Link style={{color:"#4c3b75dc"}} onClick={sendForgotPassword}>לא קיבלתי, שלח שוב קוד טלפוני</Link>)}
+                <Link style={{ color: "#4c3b75dc" }} onClick={sendForgotPassword}>לא קיבלתי, שלח שוב קוד טלפוני</Link>)}
               <Link onClick={() => {
                 setLoginStep("login");
                 setPasswordError("")
@@ -293,6 +296,7 @@ export const LoginPage = () => {
                     name="password"
                     id="password"
                     required
+                    autoComplete="current-password"	
                   />
                   <span
                     className="eye-icon"
