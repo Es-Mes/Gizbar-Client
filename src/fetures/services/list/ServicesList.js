@@ -7,7 +7,7 @@ import Modal from "../../../modals/Modal";
 import { GrEdit, GrFormTrash } from 'react-icons/gr';
 import { MdOutlineAcUnit, MdSevereCold } from 'react-icons/md';
 import EditService from '../edit/EditService';
-import { useGetAgentQuery } from '../../../app/apiSlice';
+import { useGetAgentQuery } from '../../agent/apiSlice';
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן

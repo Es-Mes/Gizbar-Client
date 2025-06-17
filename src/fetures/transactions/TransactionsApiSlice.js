@@ -1,4 +1,4 @@
-import apiSlice from "../../app/apiSlice";
+import apiSlice from "../agent/apiSlice";
 
 const transactionsApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({

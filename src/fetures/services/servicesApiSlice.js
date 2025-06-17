@@ -1,4 +1,4 @@
-import apiSlice from "../../app/apiSlice";
+import apiSlice from "../agent/apiSlice";
 
 const servicesApiSlice = apiSlice.injectEndpoints({
     endpoints: (build) => ({
@@ -40,18 +40,18 @@ const servicesApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Agent"],
         }),
-        
+
         deleteService: build.mutation({
             query: ({ phone, _id }) => ({
-              url: `/api/agent/${phone}/service`, // הוספת ה-_id ל-URL
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: { _id },
+                url: `/api/agent/${phone}/service`, // הוספת ה-_id ל-URL
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: { _id },
             }),
             invalidatesTags: ["Agent"],
-          }),
+        }),
     }),
 });
 

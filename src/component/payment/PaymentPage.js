@@ -4,7 +4,7 @@ import PaymentForm from "./PaymentForm";
 import { useParams } from "react-router-dom/dist/umd/react-router-dom.development";
 import { useGetTransactionByIdQuery } from "../../fetures/transactions/TransactionsApiSlice";
 import useAuth from "../../hooks/useAuth";
-import { useGetAgentApiPaymentDetailsQuery } from "../../app/apiSlice";
+import { useGetAgentApiPaymentDetailsQuery } from "../../fetures/agent/apiSlice";
 
 const PaymentPage = () => {
   const { phone } = useAuth();

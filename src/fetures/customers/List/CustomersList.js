@@ -14,7 +14,7 @@ import useAuth from "../../../hooks/useAuth"
 import Modal from "../../../modals/Modal"
 import EditCustomer from "../edit/EditCustomer"
 import AddCustomer from "../add/AddCustomer"
-import { useGetAgentQuery } from "../../../app/apiSlice";
+import { useGetAgentQuery } from "../../agent/apiSlice";
 import AddTransaction from "../../transactions/add/AddTransaction";
 import DeleteCustomer from "../delete/DeleteCustomer";
 

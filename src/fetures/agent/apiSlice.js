@@ -1,6 +1,6 @@
 // app/apiSlice.js
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { baseQueryWithReauth } from './customBaseQuery'
+import { baseQueryWithReauth } from '../../app/customBaseQuery'
 
 const apiSlice = createApi({
   reducerPath: 'api',
@@ -12,13 +12,13 @@ const apiSlice = createApi({
 
     }),
     getAgentApiPaymentDetails: builder.query({
-            query: ({ agentId }) => ({
-                url: `/api/agent/${agentId}`,
-            }),
-            providesTags:  ['Agent'],
-        }),
+      query: ({ agentId }) => ({
+        url: `/api/agent/paymentDetails/${agentId}`,
+      }),
+      providesTags: ['Agent'],
+    }),
   }),
 })
 
 export default apiSlice
-export const { useGetAgentQuery,useGetAgentApiPaymentDetailsQuery } = apiSlice
+export const { useGetAgentQuery, useGetAgentApiPaymentDetailsQuery } = apiSlice

@@ -10,7 +10,7 @@ import AddCustomer from "../../customers/add/AddCustomer";
 import AddService from "../../services/add/AddService";
 import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
-import { useGetAgentQuery } from "../../../app/apiSlice";
+import { useGetAgentQuery } from "../../agent/apiSlice";
 import StepIndicator from "./StepIndicator";
 const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const { _id, phone } = useAuth();
@@ -45,7 +45,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     }
     useEffect(() => {
         if (isSuccess) {
-            toast.success("👍 העיסקה נוספה בהצלחה",{icon:false});
+            toast.success("👍 העיסקה נוספה בהצלחה", { icon: false });
             setMessageType("success");
             // setTimeout(() => navigate("/dash"), 2000);
             onSuccess()
@@ -181,6 +181,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
         try {
             nextStep()
+            setClicked(true);
             console.log("transactionData before sending:", transactionDetails);
             const transaction = await addTransaction({ phone, transaction: transactionDetails }).unwrap();
 
@@ -195,7 +196,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 };
                 console.log(transactionWhithCustomer);
             }
-            setClicked(true);
+
             onSuccess()
 
         } catch (err) {

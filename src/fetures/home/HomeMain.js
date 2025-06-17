@@ -12,7 +12,7 @@ import TransactionsList from "../transactions/list/TransactionsList";
 import { useMemo } from "react";
 import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
-import { useGetAgentQuery } from "../../app/apiSlice";
+import { useGetAgentQuery } from "../agent/apiSlice";
 import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
 const HomeMain = () => {
    const { _id, phone } = useAuth()

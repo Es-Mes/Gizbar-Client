@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import "./PersonalSettings.css";
 import useAuth from "../../hooks/useAuth";
-import { useGetAgentQuery } from "../../app/apiSlice";
+import { useGetAgentQuery } from "../../fetures/agent/apiSlice";
 import Modal from "../../modals/Modal";
 import { NavLink } from "react-router-dom";
 import ChangePasswordModal from "../../modals/ChangePasswordModal";
