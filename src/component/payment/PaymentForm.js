@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
+
 import jsPDF from 'jspdf';
 import "jspdf-font"; // מייבא פונטים בעברית
 import Modal from "../../modals/Modal";
@@ -31,6 +34,14 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
     const [customerName, setCustomerName] = useState("");
     const [amount, setAmount] = useState(0);
 
+
+     const handleCopy = () => {
+          const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+          const link = `${baseUrl}/payment/${initialAgentData?.phone}/${initialCustomerData._id}`;
+          navigator.clipboard.writeText(link)
+              .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
+              .catch(() => toast.error("העתקה נכשלה."));
+      };
 
     const validateForm = () => {
         const newErrors = {};
@@ -196,7 +207,7 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
         doc.save(`receipt_${shovarNumber}.pdf`);
     };
 
-    return (
+    return (<>
         <div className="payment-container">
             <form>
                 {[
@@ -361,7 +372,7 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
                     </div>
                 </Modal>
             }
-        </div>
+        </div></>
 
     );
 };

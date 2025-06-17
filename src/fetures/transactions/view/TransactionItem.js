@@ -235,17 +235,14 @@ const TransactionItem = ({ transaction }) => {
                             {isIncome && (<div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום באשראי
                             </div>)}
-                            {isIncome && (<div onClick={() => { setSendLinkModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                            {/* {isIncome && (<div onClick={() => { setSendLinkModalOpen(true); setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> שליחת לינק לתשלום
-                            </div>)}
-                            {isIncome && (<div className="action-item" onClick={() => setShowEditModal(true)}>
-                                <GrEdit size={20} /> עריכת פרטי עסקה
-                            </div>)}
-                            {/* {isIncome && (<div className="action-item" onClick={() => setShowAlertsModal(true)}>
-                                <GrEdit size={20} /> עריכת נודניק
                             </div>)} */}
                             {isIncome && (<div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
                                 <LuBellRing size={20} /> שליחת התראה
+                            </div>)}
+                            {isIncome && (<div className="action-item" onClick={() => setShowEditModal(true)}>
+                                <GrEdit size={20} /> עריכת פרטי עסקה
                             </div>)}
                             {isIncome && (<div className="action-item" onClick={() => setDeleteModalOpen(true)}>
                                 <IoTrashOutline size={20} /> מחיקת עסקה
@@ -253,8 +250,6 @@ const TransactionItem = ({ transaction }) => {
                             {!isIncome && (<div onClick={() => { setShowActions(!showActions) }} className="action-item">
                                 <BsCreditCard size={20} /> תשלום חוב באשראי(בפיתוח)
                             </div>)}
-
-
                         </div>
                     )}
                 </td>

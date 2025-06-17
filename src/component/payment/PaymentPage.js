@@ -7,7 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import { useGetAgentApiPaymentDetailsQuery } from "../../app/apiSlice";
 
 const PaymentPage = () => {
-//   const { phone } = useAuth();
+  const { phone } = useAuth();
   const { agentPhone, transactionId } = useParams();
 
   const skip = !agentPhone || !transactionId;
@@ -19,11 +19,11 @@ const PaymentPage = () => {
   } = useGetTransactionByIdQuery({ agentPhone, transactionId }, { skip });
 
   //   const { data, error, isLoading } = useGetTransactionByIdQuery(
-//     {agentPhone:phone, transactionId:'6784bd9ca0ac8a5f37f1be32' }
+  //     {agentPhone:phone, transactionId:'6784bd9ca0ac8a5f37f1be32' }
 
-//   );
-//   console.log(`useGetTransactionByIdQuery: ${console.log(JSON.stringify(data, null, 2))
-// }`);
+  //   );
+  //   console.log(`useGetTransactionByIdQuery: ${console.log(JSON.stringify(data, null, 2))
+  // }`);
 
   const agentId = transactionData?.customer?.agent;
 
@@ -34,7 +34,7 @@ const PaymentPage = () => {
   } = useGetAgentApiPaymentDetailsQuery({ agentId }, { skip: !agentId });
 
   // ✅ שלב 1 - בדיקה כללית
-//   if (skip) return <p>פרטי כתובת לא תקינים</p>;
+  //   if (skip) return <p>פרטי כתובת לא תקינים</p>;
 
   // ✅ שלב 2 - טעינה
   if (isLoadingTransaction || isLoadingAgent) return <p>טוען...</p>;
@@ -55,8 +55,10 @@ const PaymentPage = () => {
     Currency: "1",
   };
 
+
   return (
-    <div style={{margin:'20px'}}>
+    <div style={{ margin: '20px' }}>
+      <div className="credit-swipe">💳</div>
       <h2>תשלום באשראי</h2>
       <PaymentForm
         initialAgentData={agentData?.data}
