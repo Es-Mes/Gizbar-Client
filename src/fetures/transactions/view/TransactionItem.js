@@ -74,7 +74,7 @@ const TransactionItem = ({ transaction }) => {
 
             if (result?.data) {
                 console.log("תשלום במזומן עבר בהצלחה:", result.data);
-                toast.success("התשלום עודכן בהצלחה 👍 ",{icon:false})
+                toast.success("התשלום עודכן בהצלחה 👍 ", { icon: false })
                 setIsCashModalOpen(false);
             } else if (result?.error) {
                 const status = result.error.status;
@@ -107,7 +107,7 @@ const TransactionItem = ({ transaction }) => {
         const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
         const link = `${baseUrl}/payment/${phone}/${transaction._id}`;
         navigator.clipboard.writeText(link)
-            .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
+            .then(() => toast.success("הקישור הועתק 👍 ", { icon: false }))
             .catch(() => toast.error("העתקה נכשלה."));
     };
 
@@ -126,20 +126,21 @@ const TransactionItem = ({ transaction }) => {
                 const name = editedTransaction?.customer?.full_name || "הלקוח";
                 switch (alertMethod) {
                     case "human":
-                        toast.success(`תשלח תזכורת באמצעות מזכירה ל${name}`,{icon:false})
+                        toast.success(`תשלח תזכורת באמצעות מזכירה ל${name}`, { icon: false })
                         break;
                     case "call":
-                        toast.success(`תזכורת טלפונית נשלחה בהצלחה ל${name}`,{icon:false})
+                        toast.success(`תזכורת טלפונית נשלחה בהצלחה ל${name}`, { icon: false })
                         break;
                     case "email":
-                        toast.success(`נשלחה תזכורת במייל ל${name}`,{icon:false})
+                        toast.success(`נשלחה תזכורת במייל ל${name}`, { icon: false })
                         break;
                     case "emailAndCall":
-                        toast.success(`נשלחה תזכורת במייל ובטלפון ל${name}`,{icon:false})
+                        toast.success(`נשלחה תזכורת במייל ובטלפון ל${name}`, { icon: false })
                         break;
                     default:
-                        toast.success(`נשלחה התראה ל${name}`,{icon:false})
-``                }
+                        toast.success(`נשלחה התראה ל${name}`, { icon: false })
+                            ``
+                }
                 setTimeout(() => {
                     setIsAlertModalOpen(false);
                     setAlertMessage("");
@@ -206,19 +207,21 @@ const TransactionItem = ({ transaction }) => {
     return (
         <>
             <tr>
-                <td>{editedTransaction.serviceName || "שירות ללא שם"}</td>
-                <td>{`₪${editedTransaction.price}`}</td>
-                <td>{editedTransaction.status === "paid" ? "שולם" : (editedTransaction.status == "canceled" ? "בוטל" : "לא שולם")}</td>
                 {isIncome && <td>{editedTransaction.customer.full_name || ''}</td>}
                 {!isIncome && <td>{editedTransaction.agent.first_name || ''}</td>}
+                <td>{`₪${editedTransaction.price}`}</td>
                 <td>{new Date(editedTransaction.createdAt).toLocaleDateString("he-IL")}</td>
+                <td>{editedTransaction.serviceName || "שירות ללא שם"}</td>
                 <td>
                     {editedTransaction.paymentDate ?
                         new Date(editedTransaction.paymentDate).toLocaleDateString("he-IL") :
                         new Date(editedTransaction.billingDay).toLocaleDateString("he-IL")}
                 </td>
+                <td>{editedTransaction.status === "paid" ? "שולם" : (editedTransaction.status == "canceled" ? "בוטל" : "לא שולם")}</td>
                 <td>
-                    {alertsLevelMapping[editedTransaction.alertsLevel] || "לא מוגדר"}
+                    {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge") ?
+                        (alertsLevelMapping[editedTransaction.alertsLevel] || "לא מוגדר") :
+                        (<span>-</span>)}
                 </td>
                 <td style={{ position: "relative" }} ref={actionsRef}>
                     {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge") ? (

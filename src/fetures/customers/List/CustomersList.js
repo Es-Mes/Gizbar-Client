@@ -152,10 +152,8 @@ const CustomersList = () => {
         <div className="customers-list">
             <h1 style={{ color: 'var(--text)' }} className="customers-title">לקוחות</h1>
             <div className="customers-list-top">
-
                 <button onClick={addCustomerClick}>
                     הוספת לקוח <FiUserPlus />
-
                 </button>
                 <input
                     type="text"
@@ -163,8 +161,11 @@ const CustomersList = () => {
                     onChange={handleChange}
                     value={searchParams.get("q") || ""}
                 />
-                <div className="hover-grow-icon">👥</div>
-                <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר הלקוחות שלך -  {customers.length}</h3>
+                <div style={{alignSelf:"end"
+                }}>
+                    <div className="hover-grow-icon">👥</div>
+                    <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר הלקוחות שלך -  {customers.length}</h3>
+                </div>
             </div>
             <table ref={tableRef} className="customers-list-table">
                 <thead className="tHeads">

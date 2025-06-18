@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import PaymentForm from "../component/payment/PaymentForm";
 import useAuth from "../hooks/useAuth";
 import { flex } from "@mui/system";
+import { Link } from "react-router-dom";
 const PaymentModal = ({ isOpen, onClose, transaction }) => {
     const {phone} = useAuth()
     if (!isOpen) return null; // אם המודל סגור, לא מציגים כלום
@@ -20,7 +21,7 @@ const PaymentModal = ({ isOpen, onClose, transaction }) => {
         <div className="modal-overlay">
             <div className="modal-content">
                 <div style={{display: "flex",justifyContent: "end"}}><button className="close-btn" onClick={onClose}>✖</button>
-                <p onClick={handleCopy}>🔗 העתק קישור לעמוד תשלום</p></div>
+                <Link onClick={handleCopy}>🔗 העתק קישור לעמוד תשלום</Link></div>
                 <div className="credit-swipe">💳</div>
                 <h2>תשלום באשראי</h2>
                 {transaction ? (

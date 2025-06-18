@@ -19,8 +19,8 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
         Currency: 1, // שקלים
         PaymentType: "Ragil",
         Tashlumim: 1,
-        Mosad: initialAgentData? initialAgentData.mosad : process.env.REACT_APP_MOSAD,
-        ApiValid: initialAgentData? initialAgentData.apiValid : process.env.REACT_APP_API_IFRAME,
+        Mosad: initialData.mosad? initialData.mosad : process.env.REACT_APP_MOSAD,
+        ApiValid: initialData.mosad? initialAgentData.apiValid : process.env.REACT_APP_API_IFRAME,
         Comment: "",
         CallBack: process.env.REACT_APP_BASE_URL,
     });

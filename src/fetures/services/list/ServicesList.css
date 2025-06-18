@@ -1,20 +1,39 @@
-.addButton {
-    /* position: sticky;
-    left: 30px;
-    top:100px; */
-    border: 2px solid var(--text);
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    font-style: normal;
+.services-list-top{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 120px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bgGray);
+    padding: 20px;
+    padding-top: 0;
+    gap:10px;
+}
+.services-list-top input{
+    align-self: flex-start;
 }
 
-.service-list-container {
-    text-align: center;
-    margin-bottom: 20px;
+.addButton,
+.showActive {
+     background: var(--bgSoft);
+    color: white;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    align-self: flex-start;
+
 }
+.addButton:hover,
+.showActive:hover{
+    background: var(--text);
+}
+
+
 
 .service-icons-info {
     font-size: 16px;
@@ -90,4 +109,92 @@
 
 .action-button::before {
     color: #fff;
+}
+
+/* עיצוב מודרני לטבלת רשימת השירותים */
+
+.service-list-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background: var(--bgWhite);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  
+    margin-bottom: 20px;
+}
+.services-header{
+    position: relative;
+}
+
+h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    /* color: #333; */
+}
+
+.service-icons-info {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.services-list-table {
+    min-width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    /* background: white; */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tHead {
+    background: var(--bgSoft);
+    color: white;
+    text-align: right;
+}
+
+.tHead th {
+    padding: 15px;
+    font-weight: bold;
+}
+
+.services-list-table td,
+.services-list-table th {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: start;
+}
+
+.services-list-table tr:hover {
+    background: #f1f1f1;
+}
+
+.tHead tr:hover {
+    background-color: var(--bgSoft);
+    cursor: text;
+}
+
+.btn-service-list {
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center !important;
+}
+
+.btn-service-list:hover {
+    background: var(--hover);
+    /* background: white; */
 }

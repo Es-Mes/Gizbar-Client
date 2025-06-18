@@ -5,12 +5,11 @@ import { toast } from 'react-toastify';
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch } from "react-redux";
 import useAuth from "../../../hooks/useAuth";
-import './AddService.css';
 
 const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
     console.log(phone);
-    
+
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
     const [message, setMessage] = useState(null)
 
@@ -46,11 +45,11 @@ const AddService = ({ onSuccess }) => {
 
             if (data) {
                 if (!data.error) {
-                    toast.success("השירות נוסף בהצלחה 👍 ",{icon:false})
+                    toast.success("השירות נוסף בהצלחה 👍 ", { icon: false })
                     setTimeout(() => {
-                    setShowSuccessMessage(false); // הסתר את ההודעה
-                    onSuccess(data)
-                }, 2000); // עיכוב של 2 שניות (2000ms)
+                        setShowSuccessMessage(false); // הסתר את ההודעה
+                        onSuccess(data)
+                    }, 2000); // עיכוב של 2 שניות (2000ms)
                 }
             }
 
@@ -61,7 +60,10 @@ const AddService = ({ onSuccess }) => {
 
     return (
         <div className="add-service-container">
-            <h1>הוסף שירות חדש</h1>
+            <div className="modelTitle">
+                <h1>הוסף שירות חדש</h1>
+                <div className="add-client-icon" style={{ fontSize: "3rem" }}>💼</div>
+            </div>
             <form onSubmit={handleSubmit} className="add-service-form">
                 <label htmlFor="name">שם השירות: <span className="required-asterisk">*</span>
                 </label>

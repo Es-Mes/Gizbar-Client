@@ -36,12 +36,6 @@
 
 .customers-list-add-btn,
 .customers-list-top button {
-    /* padding: 10px;
-    background-color: white;
-    color: var(--bgPink);
-    border-radius: 10px;
-    border: solid 2px var(--bgPink);
-    cursor: pointer; */
     background: var(--bgSoft);
     color: white;
     padding: 10px 15px;

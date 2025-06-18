@@ -95,12 +95,12 @@ const TransactionsList = ({ transactions }) => {
             <table className="transaction-table">
                 <thead>
                     <tr>
-                        <th>שירות</th>
-                        <th>מחיר</th>
-                        <th>סטטוס</th>
                         {isIncome ? <th>לקוח</th> : <th>נותן השירות</th>}
+                        <th>סכום</th>
                         <th>תאריך העסקה</th>
+                        <th>שירות</th>
                         <th>תאריך תשלום</th>
+                        <th>סטטוס</th>
                         <th>התראות</th>
                         <th>פעולות מהירות</th>
                     </tr>
@@ -110,7 +110,7 @@ const TransactionsList = ({ transactions }) => {
                         <TransactionItem
                             key={transaction._id}
                             transaction={transaction}
-                            // אם בעתיד תצטרכי פעולה – אפשר להוסיף פה callback
+                        // אם בעתיד תצטרכי פעולה – אפשר להוסיף פה callback
                         />
                     ))}
                 </tbody>

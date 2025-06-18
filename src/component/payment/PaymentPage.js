@@ -25,22 +25,14 @@ const PaymentPage = () => {
   //   console.log(`useGetTransactionByIdQuery: ${console.log(JSON.stringify(data, null, 2))
   // }`);
 
-  const agentId = transactionData?.customer?.agent;
-
-  const {
-    data: agentData,
-    error: agentError,
-    isLoading: isLoadingAgent,
-  } = useGetAgentApiPaymentDetailsQuery({ agentId }, { skip: !agentId });
-
   // ✅ שלב 1 - בדיקה כללית
   //   if (skip) return <p>פרטי כתובת לא תקינים</p>;
 
   // ✅ שלב 2 - טעינה
-  if (isLoadingTransaction || isLoadingAgent) return <p>טוען...</p>;
+  if (isLoadingTransaction) return <p>טוען...</p>;
 
   // ✅ שלב 3 - שגיאה
-  if (transactionError && agentError) return <p>שגיאה בטעינת נתונים</p>;
+  if (transactionError) return <p>שגיאה בטעינת נתונים</p>;
 
   // ✅ שלב 4 - בדיקות סטטוס
   if (transactionData?.status === "paid") return <>העסקה כבר שולמה, תודה!</>;
@@ -53,6 +45,8 @@ const PaymentPage = () => {
     Mail: transactionData?.customer?.email,
     Amount: transactionData?.price,
     Currency: "1",
+    mosad: transactionData?.agent?.mosad,
+    apiValid: transactionData?.agent?.apiValid,
   };
 
 
@@ -61,7 +55,6 @@ const PaymentPage = () => {
       <div className="credit-swipe">💳</div>
       <h2>תשלום באשראי</h2>
       <PaymentForm
-        initialAgentData={agentData?.data}
         initialCustomerData={initialCustomerData}
       />
     </div>
