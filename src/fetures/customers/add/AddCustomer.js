@@ -8,6 +8,7 @@ const AddCustomer = ({ onSuccess }) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
     const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
         const [message, setMessage] = useState(null)
+        const [clicked,setClicked] = useState(false)
 
 
     const [customerData, setCustomerData] = useState({
@@ -23,6 +24,7 @@ const AddCustomer = ({ onSuccess }) => {
         setCustomerData((prev) => ({ ...prev, [name]: value }));
     };
     const handleSubmit = async (e) => {
+        setClicked(true)
         e.preventDefault();
         if (!phone) {
             alert("מזהה הסוכן לא נמצא. נסה להתחבר מחדש.");
@@ -105,7 +107,7 @@ const AddCustomer = ({ onSuccess }) => {
                     onChange={handleChange}
                 />
 
-                <button type="submit" disabled={isLoading}>
+                <button type="submit" disabled={clicked}>
                     {isLoading ? "מוסיף..." : "הוסף לקוח"}
                 </button>
             </form>

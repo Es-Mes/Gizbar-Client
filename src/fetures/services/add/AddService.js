@@ -12,7 +12,8 @@ const AddService = ({ onSuccess }) => {
 
     const [addService, { isLoading, isSuccess, isError, error }] = useAddServiceMutation();
     const [message, setMessage] = useState(null)
-
+    const [clicked,setClicked] = useState(false)
+    
     const [serviceData, setServiceData] = useState({
         name: "",
         description: "",
@@ -30,6 +31,7 @@ const AddService = ({ onSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setClicked(true);
         if (!phone) {
             alert("מספר הטלפון של הסוכן לא נמצא. נסה להתחבר מחדש.");
             return;
@@ -136,7 +138,7 @@ const AddService = ({ onSuccess }) => {
                     </>
                 )}
 
-                <button type="submit" disabled={isLoading}>
+                <button type="submit" disabled={clicked}>
                     {isLoading ? "מוסיף..." : "הוסף שירות"}
                 </button>
             </form>

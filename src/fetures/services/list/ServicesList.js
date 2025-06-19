@@ -10,6 +10,7 @@ import { GrEdit, GrFormTrash, GrFormNextLink } from 'react-icons/gr';
 import { MdOutlineAcUnit, MdSevereCold, MdHomeRepairService } from 'react-icons/md';
 import EditService from '../edit/EditService';
 import { useGetAgentQuery } from '../../agent/apiSlice';
+import DeleteService from '../delete/DeleteService';
 
 const ServicesList = () => {
   const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
@@ -20,6 +21,7 @@ const ServicesList = () => {
   const [showFreeze, setShowFreeze] = useState(false)
   const [isServiceModalOpen, setServiceModalOpen] = useState(false);
   const [isEditModelOpen, setEditModelOpen] = useState(false);
+  const [isDeleteModelOpen,setDeleteModelOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
 
   // הקפאת שירות
@@ -48,22 +50,14 @@ const ServicesList = () => {
     }
   };
 
-  const handleDeleteService = async (id) => {
-    if (window.confirm('האם אתה בטוח שברצונך למחוק את השירות הזה?')) {
-      try {
-        const data = await deleteService({ phone, _id: id }).unwrap();
-        console.log('Service deleted:', data);
-        alert('השירות נמחק בהצלחה.');
-      } catch (error) {
-        console.error('Error deleting service:', error?.data || error.message || error);
-        alert('מחיקת השירות נכשלה.');
-      }
-    }
-  };
 
   const openEditModel = service => {
     setSelectedService(service);
     setEditModelOpen(true);
+  }
+  const openDeleteModal = service =>{
+    setSelectedService(service);
+    setDeleteModelOpen(true);
   }
 
   const freezeClick = service => {
@@ -170,7 +164,7 @@ const ServicesList = () => {
               <td className='btn-service-list' onClick={() => freezeClick(service)}>
                 {showFreeze ? <MdSevereCold size={20} /> : <MdOutlineAcUnit size={20} />}
               </td>
-              <td className='btn-service-list' onClick={() => handleDeleteService(service._id)}>
+              <td className='btn-service-list' onClick={() => {openDeleteModal(service)}}>
                 <GrFormTrash size={20} />
               </td>
             </tr>
@@ -178,7 +172,7 @@ const ServicesList = () => {
         </tbody>
       </table>
 
-      <Modal isOpen={isServiceModalOpen} onClose={() => setServiceModalOpen(false)}>
+      <Modal isOpen={isServiceModalOpen} onClose={() => {setServiceModalOpen(false)}}>
         <AddService
           onSuccess={() => {
             // Handle successful service addition if necessary
@@ -186,13 +180,20 @@ const ServicesList = () => {
           }}
         />
       </Modal>
-      <Modal isOpen={isEditModelOpen} onClose={() => setEditModelOpen(false)}>
+      <Modal isOpen={isEditModelOpen} onClose={() => {setEditModelOpen(false)}}>
         <EditService
           service={selectedService}
           onSuccess={() => {
             setEditModelOpen(false);
           }}
         />
+      </Modal>
+      <Modal isOpen={isDeleteModelOpen} onClose={() => {setDeleteModelOpen(false)}}>
+        <DeleteService
+        service={selectedService}
+        onSuccess={() => {
+          setDeleteModelOpen(false);
+        }}/>
       </Modal>
 
 
