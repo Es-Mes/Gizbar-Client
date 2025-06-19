@@ -6,7 +6,7 @@ import "./PersonalSettings.css";
 import useAuth from "../../hooks/useAuth";
 import { useGetAgentQuery } from "../../fetures/agent/apiSlice";
 import Modal from "../../modals/Modal";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import ChangePasswordModal from "../../modals/ChangePasswordModal";
 
 const PersonalSettings = () => {
@@ -30,14 +30,15 @@ const PersonalSettings = () => {
     <div className="settings-container">
       <h2 className="settings-title">הגדרות אישיות</h2>
       <div className="settings-content">
-        <SettingField label="שם פרטי" name="first_name" value={editableUser.first_name} onChange={handleChange} />
-        <SettingField label="שם משפחה" name="last_name" value={editableUser.last_name} onChange={handleChange} />
-        <SettingField label="אימייל" name="email" value={editableUser.email} onChange={handleChange} />
-        <SettingField label="כתובת" name="address" value={editableUser.address} onChange={handleChange} />
-        <SettingField label="עיר" name="city" value={editableUser.city} onChange={handleChange} />
+        <SettingField label="שם פרטי" name="first_name" value={agent.first_name} onChange={handleChange} />
+        <SettingField label="שם משפחה" name="last_name" value={agent.last_name} onChange={handleChange} />
+        <SettingField label="אימייל" name="email" value={agent.email} onChange={handleChange} />
+        <SettingField label="כתובת" name="address" value={agent.address} onChange={handleChange} />
+        <SettingField label="עיר" name="city" value={agent.city} onChange={handleChange} />
       </div>
     
       <button className="modelBtn" onClick={() => { setChangeModalOpen(true) }}>שינוי סיסמא</button>
+      <NavLink to={"../settings/paymentDetails"}>עריכת פרטי תשלום</NavLink>
     </div>
     <Modal isOpen={isChangePassModalOpen} onClose={() => (setChangeModalOpen(false))}>
       <ChangePasswordModal onSucsses={() => { setChangeModalOpen(false) }} />

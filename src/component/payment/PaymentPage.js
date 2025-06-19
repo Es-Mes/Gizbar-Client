@@ -12,6 +12,12 @@ const PaymentPage = () => {
 
   const skip = !agentPhone || !transactionId;
 
+  //זיהוי משתמש חיצוני
+  const outsieder = false;
+  if(!skip){
+    outsieder = true;
+  }
+
   const {
     data: transactionData,
     error: transactionError,

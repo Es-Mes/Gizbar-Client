@@ -6,7 +6,7 @@ import jsPDF from 'jspdf';
 import "jspdf-font"; // מייבא פונטים בעברית
 import Modal from "../../modals/Modal";
 
-const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
+const PaymentForm = ({ initialCustomerData,outsieder}) => {
     const iframeRef = useRef(null);
     const initialData = initialCustomerData || {};
     const [customerData, setCustomerData] = useState({
@@ -20,7 +20,7 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
         PaymentType: "Ragil",
         Tashlumim: 1,
         Mosad: initialData.mosad? initialData.mosad : process.env.REACT_APP_MOSAD,
-        ApiValid: initialData.mosad? initialAgentData.apiValid : process.env.REACT_APP_API_IFRAME,
+        ApiValid: initialData.apiValid? initialData.apiValid : process.env.REACT_APP_API_IFRAME,
         Comment: "",
         CallBack: process.env.REACT_APP_BASE_URL,
     });
@@ -37,7 +37,7 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
 
      const handleCopy = () => {
           const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
-          const link = `${baseUrl}/payment/${initialAgentData?.phone}/${initialCustomerData._id}`;
+          const link = `${baseUrl}/payment/${initialCustomerData?.phone}/${initialCustomerData._id}`;
           navigator.clipboard.writeText(link)
               .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
               .catch(() => toast.error("העתקה נכשלה."));
@@ -219,7 +219,7 @@ const PaymentForm = ({ initialCustomerData,initialAgentData}) => {
                     { label: "סכום לתשלום", name: "Amount", type: "number" },
                     { label: "מספר תשלומים", name: "Tashlumim", type: "number" },
                 ].map(({ label, name, type = "text" }) => (
-                     (initialAgentData)?  <label key={name} className="form-label">
+                     (outsieder)?  <label key={name} className="form-label">
                         {label}:
                         <input
                             className="TextBox"

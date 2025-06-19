@@ -34,6 +34,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
 import SingleCustomer from "./fetures/customers/view/SingleCustomer"
 import './toast-custom.css';
+import PaymentDedails from "./component/payment/paymentDedails"
 
 
 const App = () => {
@@ -65,8 +66,10 @@ const App = () => {
                         {/* <Route path ="" */}
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
                         <Route path="CreditPay" element={<PaymentPage />} />
+                        
                         <Route index element={<HomeMain />} />
                         <Route path="settings/personal" element={<PersonalSettings />} />
+                        <Route path="settings/paymentDetails" element={<PaymentDedails/>}/>
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<AddCustomer />} />
