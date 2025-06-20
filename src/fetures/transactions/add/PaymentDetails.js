@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAddCustomerMutation } from "../customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
-import { useAddPaymentDetailsMutation } from "../AgentApiSlice";
+import { useAddPaymentDetailsMutation } from "../../agent/AgentApiSlice";
 import { useGetAgentQuery } from "../../../app/apiSlice";
 const PaymentDetails = ({ onSuccess }) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent

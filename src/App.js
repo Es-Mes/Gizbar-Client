@@ -35,6 +35,7 @@ import { setToken } from "./fetures/auth/authSlice"
 import SingleCustomer from "./fetures/customers/view/SingleCustomer"
 import './toast-custom.css';
 import PaymentDedails from "./component/payment/paymentDedails"
+import AgentsList from "./fetures/agent/list/AgentsList"
 
 
 const App = () => {
@@ -85,8 +86,12 @@ const App = () => {
                             <Route path="customerList" element={<TransactionsAsCustomer />} />
 
                         </Route>
-                        <Route path="transactions/customer" element={<Outlet />}>
-                            <Route index element={<ExpensesPage />} />
+                        <Route element={<RequireAuth allowRoles={["admin"]}/>}>
+                            <Route path="agents" element={<Outlet />}>
+                            <Route index element={<AgentsList />} />
+                            <Route path="add" element={<AddCustomer />} />
+                            <Route path=":customerId" element={<SingleCustomer />} />
+                        </Route>
                         </Route>
                     </Route>
                 </Route>

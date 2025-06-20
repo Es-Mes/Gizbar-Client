@@ -1,4 +1,5 @@
-.customers-list {
+.customers-list,
+.agents-list {
     /* color: var(--text);
     padding: 20px;
     margin-top: 20px;
@@ -21,7 +22,8 @@
     color: #333;
 }
 
-.customers-list-top {
+.customers-list-top,
+.agents-list-top {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -35,7 +37,8 @@
 
 
 .customers-list-add-btn,
-.customers-list-top button {
+.customers-list-top button,
+.agents-list-top button {
     background: var(--bgSoft);
     color: white;
     padding: 10px 15px;
@@ -53,7 +56,8 @@
     background: var(--text);
 }
 
-.customers-list-top input {
+.customers-list-top input,
+.agents-list-top input {
     align-self: flex-start;
 }
 
@@ -86,7 +90,8 @@
 }
 
 
-.customers-list-table {
+.customers-list-table,
+.agents-list-table {
     width: 100%;
     /* background-color: var(--bgWhite); */
     max-width: 85vw;
@@ -99,10 +104,12 @@
     border-radius: 12px;
     /* overflow: hidden; */
 }
-.customers-list-table thead th:first-child {
+.customers-list-table thead th:first-child,
+.agents-list-table thead th:first-child {
     border-top-right-radius: 12px;
 }
-.customers-list-table thead th:last-child {
+.customers-list-table thead th:last-child,
+.agents-list-table thead th:last-child {
     border-top-left-radius: 12px;
 }
 
@@ -122,7 +129,9 @@
 }
 
 .customers-list-table td,
-.customers-list-table th {
+.customers-list-table th,
+.agents-list-table td,
+.agents-list-table th {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -130,20 +139,18 @@
     overflow: visible;
 }
 
-.customers-list-table th {
+.customers-list-table th,
+.agents-list-table th {
     background-color: var(--bgSoft);
     color: white;
     font-size: 16px;
 }
 
-.customers-list-table tr:hover {
+.customers-list-table tr:hover
+,.agents-list-table tr:hover {
     background-color: #f4f4f4;
     transition: background-color 0.2s ease-in-out;
 }
-
-/* .customers-list-table .td-no-border {
-    border: none;
-} */
 
 .btn-customer-list {
     text-align: center;

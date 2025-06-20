@@ -12,12 +12,20 @@ import {
   FaRegComments,
 } from "react-icons/fa6";
 import "./sidebar.css";
+import useAuth from "../../../hooks/useAuth";
 
 const Sidebar = ({ closeMenu }) => {
+  const {roles} = useAuth()
   const [openIndex, setOpenIndex] = useState(null); // משתנה לניהול תפריטים פתוחים
   const [activeIndex, setActiveIndex] = useState(0); // משתנה לניהול פריט פעיל
 
   const menuItems = [
+        {
+      title: "משתמשים",
+      icon: FaAddressBook,
+      link: "/dash/agents",
+    },
+    
     {
       title: "לקוחות",
       icon: FaAddressBook,
