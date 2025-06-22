@@ -3,7 +3,6 @@
     flex-direction: column;
     height: calc(100vh - 110px);
     justify-content: flex-end;
-    /* background-image:url("/loginImg.jpg") ; */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

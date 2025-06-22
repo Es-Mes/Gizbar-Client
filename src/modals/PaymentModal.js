@@ -22,7 +22,7 @@ const PaymentModal = ({ isOpen, onClose, transaction }) => {
             <div className="modal-content">
                 <div style={{display: "flex",justifyContent: "end"}}><button className="close-btn" onClick={onClose}>✖</button>
                 <Link onClick={handleCopy}>🔗 העתק קישור לעמוד תשלום</Link></div>
-                <div className="credit-swipe">💳</div>
+                <div className="credit-swipe"><img src="/icons8-credit-card-50.png"/></div>
                 <h2>תשלום באשראי</h2>
                 {transaction ? (
                     <PaymentForm initialCustomerData={{

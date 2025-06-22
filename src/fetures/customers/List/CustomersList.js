@@ -163,7 +163,7 @@ const CustomersList = () => {
                 />
                 <div style={{alignSelf:"end"
                 }}>
-                    <div className="hover-grow-icon">👥</div>
+                    <div className="hover-grow-icon"><img src="/icons8-users-50.png"/></div>
                     <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר הלקוחות שלך -  {customers.length}</h3>
                 </div>
             </div>

@@ -143,7 +143,7 @@ const TransactionsAsProvider = () => {
                         <GrFormNextLink className='GrFormNextLink' /><p className='backText'>חזור</p>
                     </button>
                     <h2>{header}</h2><button className='newTransactionBtn'  onClick={() => { setIsTransactionModalOpen(true)}}>
-                    עסקה חדשה <div className="rotating-coin small">💰</div>
+                    עסקה חדשה <div className="rotating-coin small"><img src='/icons8-money-bag-bitcoin-50.png'/></div>
 
                 </button>
                 </div>

@@ -119,12 +119,6 @@
         margin-bottom: 0px;
 
     }
-    .navbar-input {
-        background-color: transparent;
-        border: none;
-        color: var(--text);
-        cursor: text;
-    }
 
     .navbar-icons {
         display: flex;

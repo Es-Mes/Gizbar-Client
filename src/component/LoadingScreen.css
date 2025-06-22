@@ -90,10 +90,12 @@
 }
 
 .rotating-coin {
-  font-size: 2rem;
+  font-size: 1rem;
   display: inline-block;
   animation: coinSpin 1.6s linear infinite;
   transform-origin: center;
+  padding: 0;
+  margin: 0;
 }
 
 .cash-bill {
@@ -241,7 +243,7 @@ button:disabled {
   }
 
   25% {
-    transform: rotate(-7deg);
+    transform: rotate(-10deg);
   }
 
   50% {

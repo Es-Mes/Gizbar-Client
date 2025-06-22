@@ -162,8 +162,8 @@ const AgentsList = () => {
                 />
                 <div style={{alignSelf:"end"
                 }}>
-                    <div className="hover-grow-icon">📋</div>
-                    <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר המשתמשים במערכת -  {agents?.length}</h3>
+                    <div className="hover-grow-icon"><img src="/icons8-contacts-50.png"/></div>
+                    <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר המשתמשים במערכת  {agents?.length}</h3>
                 </div>
             </div>
             <table ref={tableRef} className="agents-list-table">

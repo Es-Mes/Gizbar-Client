@@ -88,7 +88,7 @@ export const RegistPage = () => {
   return (
     <div className='modal-overlay modal-static regist-modal'
       style={{ 
-      backgroundImage: `url(${process.env.PUBLIC_URL}/loginImg.JPG)`,
+      backgroundImage: `url(${process.env.PUBLIC_URL}/loginImg.png)`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }} ref={modalRef}>

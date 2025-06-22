@@ -55,7 +55,7 @@ const AddCustomer = ({ onSuccess }) => {
         <div className="add-customer-container">
             <div className='modelTitle'>
                     <h1 className="loading-title">הוסף לקוח</h1>
-                    <div className="add-client-icon" style={{ fontSize: "3rem" }}>👤</div>
+                    <div className="add-client-icon" style={{ fontSize: "3rem" }}><img src="/icons8-add-user-male-50.png"/></div>
                 </div>
             <form onSubmit={handleSubmit} className="add-customer-form">
                 <label htmlFor="full_name">שם מלא: <span className="required-asterisk">*</span>

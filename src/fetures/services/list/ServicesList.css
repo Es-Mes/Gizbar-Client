@@ -185,7 +185,7 @@ h2 {
 
 .tHead tr:hover {
     background-color: var(--bgSoft);
-    cursor: text;
+    /* cursor: text; */
 }
 
 .btn-service-list {

@@ -37,7 +37,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
     return (
         <div className="background-screen">
             <div className="loading-box">
-                <div className=" fade-icon icon-rotate">👤</div>
+                <div className=" fade-icon icon-rotate"><img src='/icons8-person-50.png'/></div>
                 <p className="loading-subtitle">האם אתה בטוח שברצונך למחוק לקוח זה?</p>
                 <h1 className="loading-title">{customer.full_name}</h1>
                 <p>{customer.phone}</p>

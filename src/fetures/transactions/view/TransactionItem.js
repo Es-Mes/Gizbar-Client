@@ -263,7 +263,7 @@ const TransactionItem = ({ transaction }) => {
                 <Modal isOpen={isCashModalOpen} onClose={() => { setIsCashModalOpen(false) }}>
                     <div className="background-screen">
                         <div className="loading-box">
-                            <div className="cash-bill">💵</div>
+                            <div className="cash-bill"><img src="/icons8-cash-50.png"/></div>
                             <h3 className="loading-title">אישור תשלום במזומן</h3>
                             <br />
                             <p className="question">האם אתה מאשר<br /> קבלת תשלום במזומן על העסקה?</p>
@@ -317,7 +317,7 @@ const TransactionItem = ({ transaction }) => {
                 <Modal isOpen={isAlertModalOpen} onClose={() => { setIsAlertModalOpen(false) }}>
                     <div className="background-screen">
                         <div className="loading-box">
-                            <div className="bill">🔔</div>
+                            <div className="bill"><img src="/icons8-bell-50.png"/></div>
                             <h3 style={{ color: "#3a256d" }}>בחר אמצעי לשליחת התראה</h3>
                             <div className="stepBox">
                                 {/* <label>סוג:</label> */}

@@ -32,7 +32,7 @@ const DeleteService = ({ service, onSuccess }) => {
     return (
         <div className="background-screen">
             <div className="loading-box">
-                <div className=" fade-icon icon-rotate">💼</div>
+                <div className=" fade-icon icon-rotate"><img src='/icons8-briefcase-50.png'/></div>
                 <p className="loading-subtitle">האם אתה בטוח שברצונך למחוק את השירות ?</p>
                 <h1 className="loading-title">{service.name}</h1>
                 <p>{service.description}</p>

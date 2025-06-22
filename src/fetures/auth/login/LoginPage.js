@@ -180,7 +180,7 @@ export const LoginPage = () => {
               <Link onClick={() => { setLoginStep("login"); setErrorMsg("") }}>חזרה לעמוד הכניסה</Link>
             </div>
           </div>
-          <img className="loginImg" src="/loginImg.jpg" alt="" />
+          <img className="loginImg" src="/loginImg.png" alt="" />
         </div>
       )
     case "showChangePass":
@@ -268,7 +268,7 @@ export const LoginPage = () => {
               }}>חזרה לעמוד הכניסה</Link>
             </div>
           </div>
-          <img className="loginImg" src="/loginImg.jpg" alt="" />
+          <img className="loginImg" src="/loginImg.png" alt="" />
         </div>
       )
     case "login":
@@ -321,7 +321,7 @@ export const LoginPage = () => {
               <NavLink to='/regist'> עדיין לא השתמשת במערכת? לחץ כאן</NavLink>
             </div>
           </div>
-          <img className="loginImg" src="/loginImg.jpg" alt="" />
+          <img className="loginImg" src="/loginImg.png" alt="" />
         </div>
       )
   }

@@ -112,7 +112,7 @@ const TransactionsMenu = () => {
     };
 
     
-        return (< div className='TransactionsMenu' style={{ backgroundImage: 'url("/loginImg.jpg")' }}>
+        return (< div className='TransactionsMenu' style={{ backgroundImage: 'url("/loginImg.png")' }}>
             {/* {isIncome && 
             (<div className="income-chart-container">
                 <div className="chart-header">

@@ -121,7 +121,7 @@ const ServicesList = () => {
         />
         <div></div>
         <div style={{ alignSelf: "end", justifySelf: "flex-end" }}>
-          <div className="hover-grow-icon" style={{ fontSize: "2rem", marginBottom: "0" }}>💼</div>
+          <div className="hover-grow-icon" style={{ fontSize: "2rem", marginBottom: "0" }}><img src='/icons8-briefcase-50.png'/></div>
           <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר שירותים {showFreeze ? 'מוקפאים' : ''} -  {filteredServices.length}</h3>
         </div>
 

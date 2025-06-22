@@ -58,7 +58,7 @@ const PaymentPage = () => {
 
   return (
     <div style={{ margin: '20px' }}>
-      <div className="credit-swipe">💳</div>
+      <div className="credit-swipe"><img src="/icons8-credit-card-50.png"/></div>
       <h2>תשלום באשראי</h2>
       <PaymentForm
         initialCustomerData={initialCustomerData}

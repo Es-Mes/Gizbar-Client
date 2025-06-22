@@ -50,7 +50,7 @@ const EditCustomer = ({ customer, onSuccess }) => {
 
                 <div className='modelTitle'>
                     <h1 className="loading-title">ערוך לקוח</h1>
-                    <div style={{ fontSize: "3rem" }}>👤</div>
+                    <div style={{ fontSize: "3rem" }}><img src='/icons8-change-user-50.png'/></div>
                 </div>
                 <label htmlFor="full_name">שם מלא: <span className="required-asterisk">*</span>
                 </label>

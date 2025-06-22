@@ -206,7 +206,7 @@
 
 .tHeads tr:hover {
     background-color: var(--bgSoft);
-    cursor: text;
+    /* cursor: text; */
 }
 
 
