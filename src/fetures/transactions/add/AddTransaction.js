@@ -12,6 +12,7 @@ import Modal from "../../../modals/Modal";
 import "./AddTransaction.css"
 import { useGetAgentQuery } from "../../agent/apiSlice";
 import StepIndicator from "./StepIndicator";
+import PaymentDetails from "../../../component/payment/paymentDetails";
 const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const { _id, phone } = useAuth();
     const { data: agent, isLoading } = useGetAgentQuery({ phone })
@@ -236,13 +237,13 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    //עסקה פעם ראשונה או שאין פרטי בנק
+    // עסקה פעם ראשונה או שאין פרטי בנק
     // if (!agent?.bankAccount) {
-    //     return <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
-
-    //     </Modal>
+    //     return(
+    //         <PaymentDetails onSuccess={() =>{
+    //             setBankAccountModalOpen(false)
+    //         }}/>)
     // }
-
 
     return (
         <div className="add-transaction-card">

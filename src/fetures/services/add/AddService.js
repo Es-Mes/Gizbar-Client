@@ -64,7 +64,7 @@ const AddService = ({ onSuccess }) => {
         <div className="add-service-container">
             <div className="modelTitle">
                 <h1>הוסף שירות חדש</h1>
-                <div className="add-client-icon" style={{ fontSize: "3rem" }}>💼</div>
+                <div className="add-client-icon" style={{ fontSize: "3rem" }}><img src="/icons8-briefcase-50.png"/></div>
             </div>
             <form onSubmit={handleSubmit} className="add-service-form">
                 <label htmlFor="name">שם השירות: <span className="required-asterisk">*</span>

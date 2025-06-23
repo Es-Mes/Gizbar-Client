@@ -34,7 +34,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
 import SingleCustomer from "./fetures/customers/view/SingleCustomer"
 import './toast-custom.css';
-import PaymentDedails from "./component/payment/paymentDedails"
+import PaymentDetails from "./component/payment/paymentDetails"
 import AgentsList from "./fetures/agent/list/AgentsList"
 
 
@@ -70,7 +70,7 @@ const App = () => {
                         
                         <Route index element={<HomeMain />} />
                         <Route path="settings/personal" element={<PersonalSettings />} />
-                        <Route path="settings/paymentDetails" element={<PaymentDedails/>}/>
+                        <Route path="settings/paymentDetails" element={<PaymentDetails/>}/>
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<AddCustomer />} />

@@ -13,8 +13,8 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
     Tokef: "",
     Currency: 1,
     PaymentType: "CreateToken", // שמירת טוקן בלבד
-    Mosad:  process.env.REACT_APP_MOSAD,
-    ApiValid:  process.env.REACT_APP_API_IFRAME,
+    Mosad: process.env.REACT_APP_MOSAD,
+    ApiValid: process.env.REACT_APP_API_IFRAME,
     CallBack: process.env.REACT_APP_BASE_URL,
   });
 
@@ -37,7 +37,7 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
       if (data.Name === "Height") {
         setIframeHeight(`${Math.max(data.Value, 165)}px`);
         console.log("setIframeHeight");
-        
+
       }
 
       if (data.Name === "TransactionResponse") {
@@ -65,13 +65,13 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
   }, []);
 
   useEffect(() => {
-  if (iframeRef.current) {
-    iframeRef.current.onload = () => {
-      console.log("📢 iframe onload – שולח בקשת גובה");
-      PostNedarim({ Name: "GetHeight" });
-    };
-  }
-}, []);
+    if (iframeRef.current) {
+      iframeRef.current.onload = () => {
+        console.log("📢 iframe onload – שולח בקשת גובה");
+        PostNedarim({ Name: "GetHeight" });
+      };
+    }
+  }, []);
 
 
   const handleChange = (e) => {
@@ -115,8 +115,9 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
   };
 
   return (
-    <div className="save-card-container">
-      <h2>שמירת כרטיס אשראי</h2>
+    <div className="card-details-form">
+      <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
+      <h2 style={{ textAlign: "start" }}> 2. איך תרצה שהמערכת תגבה ממך? </h2>
       <form>
         <label>
           שם פרטי:
@@ -127,19 +128,19 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
           <input type="text" name="Phone" value={customerData.Phone} onChange={handleChange} required />
         </label>
         <label>
-  תעודת זהות:
-  <input type="text" name="Zeout" value={customerData.Zeout} onChange={handleChange} required />
-</label>
-<label>
-  תוקף כרטיס (MMYY):
-  <input type="text" name="Tokef" value={customerData.Tokef || ""} onChange={handleChange} required />
-</label>
+          תעודת זהות:
+          <input type="text" name="Zeout" value={customerData.Zeout} onChange={handleChange} required />
+        </label>
+        <label>
+          תוקף כרטיס (MMYY):
+          <input type="text" name="Tokef" value={customerData.Tokef || ""} onChange={handleChange} required />
+        </label>
 
 
         <iframe
           id="NedarimSaveCard"
           ref={iframeRef}
-            onLoad={() => console.log("✅ iframe loaded")}
+          onLoad={() => console.log("✅ iframe loaded")}
           src="https://www.matara.pro/nedarimplus/iframe/?Tokef=Hide&CVV=Hide"
           style={{
             width: "100%",
@@ -151,7 +152,7 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
 
         {errorsMessage && <p className="error-message">{errorsMessage}</p>}
 
-        <button type="button" onClick={handleSaveCard}>
+        <button className="saveBtn" type="button" onClick={handleSaveCard}>
           שמור כרטיס
         </button>
       </form>
@@ -165,14 +166,33 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
           border-radius: 8px;
           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        label {
+          .borderBtn{
+    background-color: var(--bgWhite);
+    color: var(--text);
+    border: solid 1.5px var(--text);
+    padding: 10px 15px;
+    font-size: large;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    width: 100%;
+}
+        .borderBtn:hover{
+         background-color: var(--text);
+         color: var(--bgWhite);
+        }
+        .card-details-form{
+        margin-top:10px;
+        }
+        .card-details-form label {
           display: block;
-          margin-bottom: 10px;
+          margin-bottom: 30px;
           text-align: right;
         }
-        input {
+        .card-details-form input {
           width: 100%;
           padding: 8px;
+          margin-bottom:5px;
           font-size: 16px;
           box-sizing: border-box;
         }
@@ -189,6 +209,11 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
         }
                     button:hover{
                      background-color: var(--text);
+                     }
+                     .modal-close{
+                     margin-top:0;
+                     width:10%;
+                     padding:0;
                      }
         .error-message {
           color: red;

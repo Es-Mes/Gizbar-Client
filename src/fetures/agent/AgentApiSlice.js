@@ -10,18 +10,27 @@ const agentApiSlice = apiSlice.injectEndpoints({
             providesTags: ["Agent"],
         }),
         addPaymentDetails: build.mutation({
-            query: ({ phone,agent }) => ({
+            query: ({ phone, agent }) => ({
                 url: `/api/agent/${phone}/paymentDetails/add`,
-                method:"POST",
-                body:agent,
+                method: "POST",
+                body: agent,
             }),
             providesTags: ["Agent"],
         }),
+        updateAgent: build.mutation({
+            query: (data) => ({
+                url: `/api/agent/update`, // נתיב מתאים לפי השרת שלך
+                method: 'PUT',
+                body: data,
+            }),
+            providesTags: ["Agent"],
+        }),
+
     }),
 });
 
 export const {
     useGetAllAgentsQuery,
     useAddPaymentDetailsMutation,
-  
+    useUpdateAgentMutation
 } = agentApiSlice;

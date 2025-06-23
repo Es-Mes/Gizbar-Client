@@ -43,8 +43,8 @@
     cursor: pointer;
 }
 .modal-close:hover{
-        color: red;
-
+    color: red;
+background: none;
 }
 
 .modal-overlay.modal-static {

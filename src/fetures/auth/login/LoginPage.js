@@ -175,7 +175,7 @@ export const LoginPage = () => {
         <div className='login-page'>
           <div className="login-form">
             <form id="loginForm" className='login-page-form'>
-              <div className="rotating-coin">🪙</div>
+              <div className="rotating-coin"><img src="/icons8-coin-50.png"/></div>
               <h2>הכנס טלפון לזיהוי</h2>
               <div className="field">
                 <label htmlFor="phone">טלפון</label>
@@ -205,7 +205,7 @@ export const LoginPage = () => {
         <div className='login-page'>
           <div className="login-form">
             <form id="loginForm" className='login-page-form'>
-              <div className="rotating-coin">🪙</div>
+              <div className="rotating-coin"><img src="/icons8-coin-50.png"/></div>
               <h2>שינוי סיסמא</h2>
               <p>קוד טלפוני נשלח למספר שהזנת</p>
               <div className="field">
@@ -293,7 +293,7 @@ export const LoginPage = () => {
         <div className='login-page'>
           <div className="login-form">
             <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
-              <div className="rotating-coin">🪙</div>
+              <div className="rotating-coin"><img src="/icons8-coin-50.png"/></div>
               <h2>מזדהים ומתחברים</h2>
               <div className="field">
                 <label htmlFor="phone">טלפון</label>
