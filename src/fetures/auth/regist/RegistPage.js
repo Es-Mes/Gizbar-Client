@@ -16,12 +16,14 @@ export const RegistPage = () => {
   const [address, setAddress] = useState("")
   const [password, setPassword] = useState("")
   const [city, setCity] = useState("")
-  const [passwordError, setPasswordError] = useState('');
+  const [passwordError, setPasswordError] = useState(null);
+const [registerError, setRegisterError] = useState(null);
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState("")
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const modalRef = useRef(null);  // רפרנס למודאל
+  const errRef = useRef(null)
 
   useEffect(() => {
     // כשנטען המודאל - גלול אליו
@@ -29,6 +31,13 @@ export const RegistPage = () => {
       modalRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, []);
+
+  useEffect(() => {
+  if (registerError || passwordError) {
+    errRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}, [registerError, passwordError]);
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -50,17 +59,41 @@ export const RegistPage = () => {
   }, [confirmPassword, password, phone])
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    // בדיקה אם הסיסמאות תואמות
-    if (password !== confirmPassword) {
-      setPasswordError('הסיסמאות אינן תואמות');
-      return;
-    }
-    const data = new FormData(e.target)
-    const userObj = Object.fromEntries(data.entries())
-    delete userObj.confirmPassword;
-    regist(userObj)
+  e.preventDefault();
+
+  // בדיקה אם הסיסמאות תואמות
+  if (password !== confirmPassword) {
+    setPasswordError('הסיסמאות אינן תואמות');
+    return;
   }
+
+  const data = new FormData(e.target);
+  const userObj = Object.fromEntries(data.entries());
+  delete userObj.confirmPassword;
+
+  setPasswordError(null);
+  setRegisterError(null); // שגיאה כללית מהשרת
+
+  try {
+    const result = await regist(userObj).unwrap(); // שולף תשובה או זורק שגיאה
+    console.log("ההרשמה הצליחה:", result);
+    // כאן אפשר לעשות redirect או הודעת הצלחה
+  } catch (err) {
+    console.log("שגיאה מהשרת בהרשמה:", err);
+    const message = err?.data?.message;
+
+    if (message?.includes("phone")) {
+      setRegisterError("מספר טלפון לא תקין או כבר בשימוש");
+    } else if (message?.includes("email")) {
+      setRegisterError("אימייל לא תקין או כבר קיים");
+    } else if (message?.includes("password")) {
+      setRegisterError("סיסמה לא תקינה (לפחות 6 תווים)");
+    } else {
+      setRegisterError("שגיאה כללית בהרשמה, נסה שוב");
+    }
+  }
+};
+
 
   const checkFull = () => {
     // if (first_name && password && phone) {
@@ -108,6 +141,7 @@ export const RegistPage = () => {
               name="first_name"
               id="first_name"
               onChange={(e) => setFirst_name(e.target.value)}
+              value={first_name}
               placeholder="שם פרטי"
             required
             />
@@ -122,6 +156,7 @@ export const RegistPage = () => {
               name="last_name"
               id="last_name"
               onChange={(e) => setLast_name(e.target.value)}
+              value={last_name}
               placeholder="שם משפחה"
             required
             />
@@ -136,6 +171,7 @@ export const RegistPage = () => {
               name="phone"
               id="phone"
               onChange={(e) => setPhone(e.target.value)}
+              value={phone}
               placeholder="טלפון"
               required
             />
@@ -150,38 +186,39 @@ export const RegistPage = () => {
               name="email"
               id="email"
               onChange={(e) => setEmail(e.target.value)}
+              value={email}
               placeholder="אימייל"
             // required
             />
           </div>
 
-          {/* <div className="field">
+          <div className="field">
             <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
+              {/* <span className="required-asterisk">*</span> */}
             </div>
             <input
               type="text"
               name="city"
               id="city"
               onChange={(e) => setCity(e.target.value)}
+              value={city}
               placeholder="עיר"
-            required
             />
           </div>
 
           <div className="field">
             <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
+              {/* <span className="required-asterisk">*</span> */}
             </div>
             <input
               type="text"
               name="address"
               id="address"
               onChange={(e) => setAddress(e.target.value)}
+              value={address}
               placeholder="כתובת"
-            required
             />
-          </div> */}
+          </div>
 
           <div className="field">
             <div className="required-wrapper">
@@ -192,6 +229,7 @@ export const RegistPage = () => {
               name="password"
               id="password"
               onChange={(e) => setPassword(e.target.value)}
+              value={password}
               placeholder="סיסמה"
               required
             />
@@ -206,6 +244,7 @@ export const RegistPage = () => {
               name="confirmPassword"
               onChange={(e) => setConfirmPassword(e.target.value)}
               id="confirmPassword"
+              value={confirmPassword}
               placeholder="אימות סיסמה"
             />
           </div>
@@ -213,10 +252,11 @@ export const RegistPage = () => {
           {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
 
           <Link className="linkToLogin" to={"/login"}>רשום כבר במערכת? הכנס כאן!</Link>
-          {isError &&
-            <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
-              {error && error.data?.message}
-            </Alert>}
+          <div  ref={errRef}>
+            {passwordError && <p style={{textAlign:"center",fontWeight:"bold"}} className="error">{passwordError}</p>}
+            {registerError && <p style={{textAlign:"center",fontWeight:"bold"}} className="error">{registerError}</p>}
+          </div>
+
           <button type="submit" disabled={isLoading || !fullData} style={{ backgroundColor: fullData ? 'var(--text)' : "var(--bgSoftLight)", color: fullData && "white" }}>
             {isLoading ? 'בתהליך...' : 'והתחברת!'}
           </button>
