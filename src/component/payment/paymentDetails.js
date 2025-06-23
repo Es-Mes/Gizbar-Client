@@ -15,6 +15,12 @@ const PaymentDedails = () => {
   const [apiValid, setApiValid] = useState("");
   const [confirmGizbar, setConfirmGizbar] = useState(false);
   const [chosenOption, setChosenOption] = useState("");
+  const [bankDetails, setBankDetails] = useState({
+    accountName: "",
+    accountNumber: "",
+    bankName: "",
+    branchNumber: "",
+  });
 
   if (isLoading) return <p>טוען...</p>;
   if (isError) return <p>שגיאה בטעינת נתונים</p>;
@@ -63,6 +69,12 @@ const PaymentDedails = () => {
     setApiValid("");
     setConfirmGizbar(false);
     setChosenOption("");
+     setBankDetails({
+      accountName: "",
+      accountNumber: "",
+      bankName: "",
+      branchNumber: "",
+    });
   };
 
   return (
@@ -81,7 +93,7 @@ const PaymentDedails = () => {
       {step === "nedarim" && (
         <>
           <h4>נא הכנס קוד מוסד ו־ApiValid מנדרים פלוס:</h4>
-          <input
+          <input style={{marginBottom:"5px"}}
             placeholder="קוד מוסד"
             value={mosadCode}
             onChange={(e) => setMosadCode(e.target.value)}
@@ -111,9 +123,43 @@ const PaymentDedails = () => {
               />
               אני מאשר
             </label>
+            
           </div>
-          <button onClick={handleSubmit} disabled={!confirmGizbar}>שמור</button>
-          <button onClick={handleBack}>חזור</button>
+          <h4>פרטי חשבון בנק להעברה:</h4>
+              <input style={{marginBottom:"5px"}}
+                placeholder="שם בעל החשבון"
+                value={bankDetails.accountName}
+                onChange={(e) => setBankDetails({ ...bankDetails, accountName: e.target.value })}
+              /><br />
+              <input style={{marginBottom:"5px"}}
+                placeholder="מספר חשבון"
+                value={bankDetails.accountNumber}
+                onChange={(e) => setBankDetails({ ...bankDetails, accountNumber: e.target.value })}
+              /><br />
+              <input style={{marginBottom:"5px"}}
+                placeholder="מספר סניף"
+                value={bankDetails.branchNumber}
+                onChange={(e) => setBankDetails({ ...bankDetails, branchNumber: e.target.value })}
+              /><br />
+              <input
+                placeholder="שם הבנק"
+                value={bankDetails.bankName}
+                onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })}
+              /><br />
+
+              <button
+                onClick={handleSubmit}
+                disabled={
+                  !confirmGizbar ||
+                  !bankDetails.accountName ||
+                  !bankDetails.accountNumber ||
+                  !bankDetails.bankName ||
+                  !bankDetails.branchNumber
+                }
+              >
+                שמור
+              </button>
+                      <button onClick={handleBack}>חזור</button>
         </>
       )}
 
