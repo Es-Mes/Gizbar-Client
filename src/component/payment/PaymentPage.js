@@ -13,7 +13,8 @@ const PaymentPage = () => {
   const skip = !agentPhone || !transactionId;
 
   //זיהוי משתמש חיצוני
-  const outsieder = false;
+  let outsieder = false;
+
   if(!skip){
     outsieder = true;
   }
@@ -61,7 +62,7 @@ const PaymentPage = () => {
       <div className="credit-swipe"><img src="/icons8-credit-card-50.png"/></div>
       <h2>תשלום באשראי</h2>
       <PaymentForm
-        initialCustomerData={initialCustomerData}
+        initialCustomerData={initialCustomerData} outsieder={outsieder}
       />
     </div>
   );

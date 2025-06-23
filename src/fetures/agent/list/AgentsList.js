@@ -186,7 +186,7 @@ const AgentsList = () => {
                     {filteredData.map(agent => (
                         <tr key={agent._id}>
                             <td>
-                                {agent.full_name}
+                                {agent.first_name}
                             </td>
                             <td>
                                 {agent.last_name}

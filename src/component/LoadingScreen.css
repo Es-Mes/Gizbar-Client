@@ -90,7 +90,7 @@
 }
 
 .rotating-coin {
-  font-size: 1rem;
+  font-size: 2rem;
   display: inline-block;
   animation: coinSpin 1.6s linear infinite;
   transform-origin: center;
