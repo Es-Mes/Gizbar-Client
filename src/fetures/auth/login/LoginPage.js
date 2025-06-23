@@ -30,6 +30,7 @@ export const LoginPage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [errMsg, setErrorMsg] = useState("")
   const [successMsg, setSuccessMsg] = useState("")
+  const [loginErr,setLoginErr] = useState()
 
   //ספירה לאחור לשליחת קוד חדש
   const [canResend, setCanResend] = useState(false);
@@ -70,13 +71,29 @@ export const LoginPage = () => {
   }, [isSuccess])
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const data = new FormData(e.target)
-    userObj = Object.fromEntries(data.entries())
-    console.log(userObj.phone)
-    login(userObj)
-    // document.getElementById("loginForm").requestSubmit(); // ניסוי לשליחה ידנית
+  e.preventDefault();
+  const data = new FormData(e.target);
+  const userObj = Object.fromEntries(data.entries());
+  setLoginErr(null); // נקה שגיאה קודמת
+
+  try {
+    const result = await login(userObj).unwrap(); // כאן ייזרק שגיאה במקרה הצורך
+    // אם הצליח - את יכולה לעשות הפניות/ניקוי שדות וכו'
+    console.log("Login success:", result);
+  } catch (err) {
+    const message = err?.data?.message;
+
+    if (message === "Unauthorized - Agent not found") {
+      setLoginErr("משתמש לא קיים");
+    } else if (message === "Unauthorized, wrong password") {
+      setLoginErr("סיסמה שגויה");
+    } else if (message?.includes("phone")) {
+      setLoginErr("מספר טלפון לא תקין, יש לכתוב ספרות בלבד");
+    } else {
+      setLoginErr("שגיאה בלתי צפויה, נסה שוב");
+    }
   }
+};
 
   const sendForgotPassword = async (e) => {
     e.preventDefault();
@@ -308,7 +325,7 @@ export const LoginPage = () => {
               </div>
               {isError && (
                 <Alert className="error" variant="outlined" severity="error" style={{ color: 'red', minWidth: '350px' }}>
-                  {error && error.data?.message}
+                  {loginErr}
                 </Alert>
               )}
               <button type="submit" disabled={isLoading}>

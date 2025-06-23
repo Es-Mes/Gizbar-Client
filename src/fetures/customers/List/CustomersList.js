@@ -79,7 +79,9 @@ const CustomersList = () => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [openMenuCustomerId]);
+
+   
     useEffect(() => {
         const table = tableRef.current;
         if (!table) return;
@@ -212,47 +214,44 @@ const CustomersList = () => {
                                     <PiEyeThin size={20} />
                                 </Link>
                             </td>
-                            <td style={{ position: "relative" }} ref={(el) => (actionsRefs.current[customer._id] = el)}
+                            <td style={{ position: "relative" }} 
                             >
-                                <span
-                                    onClick={(event) => { toggleActions(event, customer._id) }} style={{ cursor: "pointer" }}>
-                                    {openMenuCustomerId === customer._id ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
-                                </span>
-                                {openMenuCustomerId === customer._id && (
-                                    <div className={`actions-dropdown floating-menu ${openUpwardsId === customer._id ? "open-up" : ""}`}>
-
-                                        <div
-                                            className="action-item"
-                                            onClick={() => {
-                                                openEditModel(customer);
-                                                closeMenu();
-                                            }}
-                                        >
-                                            <GrEdit size={20} /> עריכה
+                                <div ref={(el) => (actionsRefs.current[customer._id] = el)}>
+                                    
+                                    <span
+                                        onClick={(event) => { toggleActions(event, customer._id) }} style={{ cursor: "pointer" }}>
+                                        {openMenuCustomerId === customer._id ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
+                                    </span>
+                                    {openMenuCustomerId === customer._id && (
+                                        <div className={`actions-dropdown floating-menu ${openUpwardsId === customer._id ? "open-up" : ""}`}>
+                                            <div
+                                                className="action-item"
+                                                onClick={() => {
+                                                    openEditModel(customer);
+                                                    closeMenu();
+                                                }}
+                                            >
+                                                <GrEdit size={20} /> עריכה
+                                            </div>
+                                            <div
+                                                className="action-item"
+                                                onClick={closeMenu} // אם אין פעולה, רק סוגר
+                                            >
+                                                <LuBellRing size={20} /> שלח הודעה
+                                            </div>
+                                            <div
+                                                onClick={() => {
+                                                    console.log("clicked");
+                                                    openDeleteModel(customer);
+                                                    closeMenu();
+                                                }}
+                                                className="action-item"
+                                            >
+                                                <GrFormTrash size={20} /> מחיקה
+                                            </div>
                                         </div>
-
-                                        <div
-                                            className="action-item"
-                                            onClick={closeMenu} // אם אין פעולה, רק סוגר
-                                        >
-                                            <LuBellRing size={20} /> שלח הודעה
-                                        </div>
-
-                                        <div
-                                            onClick={() => {
-                                                console.log("clicked");
-                                                openDeleteModel(customer);
-                                                closeMenu();
-                                            }}
-                                            className="action-item"
-                                        >
-                                            <GrFormTrash size={20} /> מחיקה
-                                        </div>
-
-
-
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </td>
                             {/* <td className="td-no-border">
                                 <div className="customers-list-btns">
