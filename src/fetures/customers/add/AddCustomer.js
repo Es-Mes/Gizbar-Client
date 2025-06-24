@@ -4,11 +4,12 @@ import { toast } from 'react-toastify';
 import { useAddCustomerMutation } from "../customersApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import './AddCustomer.css'
+import { TextField } from "@mui/material";
 const AddCustomer = ({ onSuccess }) => {
     const { phone } = useAuth(); // קבלת מזהה ה-agent
     const [addCustomer, { isLoading, isSuccess, isError, error }] = useAddCustomerMutation();
-        const [message, setMessage] = useState(null)
-        const [clicked,setClicked] = useState(false)
+    const [message, setMessage] = useState(null)
+    const [clicked, setClicked] = useState(false)
 
 
     const [customerData, setCustomerData] = useState({
@@ -36,7 +37,7 @@ const AddCustomer = ({ onSuccess }) => {
             console.log(data);
             if (data) {
                 if (!data.error) {
-                    toast.success("הלקוח נוסף בהצלחה 👍 ",{icon:false})
+                    toast.success("הלקוח נוסף בהצלחה 👍 ", { icon: false })
                 }
 
                 setTimeout(() => {
@@ -54,59 +55,55 @@ const AddCustomer = ({ onSuccess }) => {
     return (
         <div className="add-customer-container">
             <div className='modelTitle'>
-                    <h1 className="loading-title">הוסף לקוח</h1>
-                    <div className="add-client-icon" style={{ fontSize: "3rem" }}><img src="/icons8-add-user-male-50.png"/></div>
-                </div>
+                <h1 className="loading-title">הוסף לקוח</h1>
+                <div className="add-client-icon" style={{ fontSize: "3rem" }}><img src="/icons8-add-user-male-50.png" /></div>
+            </div>
             <form onSubmit={handleSubmit} className="add-customer-form">
-                <label htmlFor="full_name">שם מלא: <span className="required-asterisk">*</span>
-                </label>
-                <input
+                <TextField variant="outlined"
                     type="text"
                     id="full_name"
                     name="full_name"
+                    label="שם מלא"
                     value={customerData.full_name}
                     onChange={handleChange}
                     required
                 />
 
-                <label htmlFor="phone">מספר פלאפון: <span className="required-asterisk">*</span>
-                </label>
-                <input
+                <TextField variant="outlined"
                     type="tel"
                     id="phone"
                     name="phone"
                     value={customerData.phone}
                     onChange={handleChange}
                     required
+                    label='מספר פלאפון'
                 />
 
-                <label htmlFor="email">כתובת מייל:</label>
-                <input
+                <TextField variant="outlined"
                     type="email"
                     id="email"
                     name="email"
                     value={customerData.email}
                     onChange={handleChange}
+                    label='כתובת מייל'
                 />
 
-                <label htmlFor="address">כתובת:</label>
-                <input
+                <TextField variant="outlined"
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={customerData.city}
+                    label='עיר'
+                />
+
+                <TextField variant="outlined"
                     type="text"
                     id="address"
                     name="address"
                     value={customerData.address}
                     onChange={handleChange}
+                    label='כתובת'
                 />
-
-                <label htmlFor="city">עיר:</label>
-                <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={customerData.city}
-                    onChange={handleChange}
-                />
-
                 <button type="submit" disabled={clicked}>
                     {isLoading ? "מוסיף..." : "הוסף לקוח"}
                 </button>

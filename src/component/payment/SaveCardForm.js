@@ -1,3 +1,4 @@
+import { TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -118,23 +119,17 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
     <div className="card-details-form">
       <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
       <h2 style={{ textAlign: "start" }}> 2. איך תרצה שהמערכת תגבה ממך? </h2>
-      <form>
-        <label>
-          שם פרטי:
-          <input type="text" name="FirstName" value={customerData.FirstName} onChange={handleChange} required />
-        </label>
-        <label>
-          טלפון:
-          <input type="text" name="Phone" value={customerData.Phone} onChange={handleChange} required />
-        </label>
-        <label>
-          תעודת זהות:
-          <input type="text" name="Zeout" value={customerData.Zeout} onChange={handleChange} required />
-        </label>
-        <label>
-          תוקף כרטיס (MMYY):
-          <input type="text" name="Tokef" value={customerData.Tokef || ""} onChange={handleChange} required />
-        </label>
+      <form style={{display:"flex",flexDirection:"column", gap:"15px"}}>
+        
+     
+          <TextField variant="outlined" label="שם פרטי" type="text" name="FirstName" value={customerData.FirstName} onChange={handleChange} required />
+        
+          <TextField variant="outlined" label="טלפון" type="text" name="Phone" value={customerData.Phone} onChange={handleChange} required />
+        
+          <TextField variant="outlined" label="תעודת זהות" type="text" name="Zeout" value={customerData.Zeout} onChange={handleChange} required />
+        
+          <TextField variant="outlined" label="תוקף כרטיס (MMYY)" type="text" name="Tokef" value={customerData.Tokef || ""} onChange={handleChange} required />
+        
 
 
         <iframe
@@ -167,9 +162,9 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
           .borderBtn{
-    background-color: var(--bgWhite);
-    color: var(--text);
-    border: solid 1.5px var(--text);
+    background-color: var(--bgWhite) !important;
+    color: var(--text) !important;
+    border: solid 1.5px var(--text) !important;
     padding: 10px 15px;
     font-size: large;
     cursor: pointer;
@@ -178,8 +173,8 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
     width: 100%;
 }
         .borderBtn:hover{
-         background-color: var(--text);
-         color: var(--bgWhite);
+         background-color: var(--text) !important;
+         color: var(--bgWhite) !important;
         }
         .card-details-form{
         margin-top:10px;
@@ -189,14 +184,15 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
           margin-bottom: 30px;
           text-align: right;
         }
-        .card-details-form input {
+        .card-details-form TextField variant="outlined" {
           width: 100%;
           padding: 8px;
           margin-bottom:5px;
           font-size: 16px;
           box-sizing: border-box;
         }
-        button {
+        .card-details-form button,
+         .save-card-container button{
            background-color: var(--bgSoft);
                     color: white;
                     border: none;

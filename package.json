@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@hebcal/core": "^5.9.8",
-    "@mui/material": "^5.15.18",
+    "@mui/material": "^5.17.1",
+    "@mui/styles": "^6.4.8",
     "@mui/system": "^7.1.0",
     "@mui/x-data-grid": "^7.7.0",
     "@reduxjs/toolkit": "^2.0.1",
@@ -23,6 +25,7 @@
     "emailjs-com": "^3.2.0",
     "jspdf": "^3.0.1",
     "jspdf-font": "^1.0.7",
+    "jss-rtl": "^0.3.0",
     "jwt-decode": "^4.0.0",
     "nodemailer": "^6.9.13",
     "react": "^18.2.0",
@@ -45,6 +48,8 @@
     "scroll-carousel": "^1.2.7",
     "scroll-carousel-react": "^1.0.0",
     "slick-carousel": "^1.8.1",
+    "stylis": "^4.3.6",
+    "stylis-plugin-rtl": "^2.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

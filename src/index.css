@@ -117,3 +117,9 @@ button:disabled {
 .inDevelopment {
   cursor: not-allowed !important;
 }
+
+input {
+  direction: rtl !important;
+  text-align: right !important;
+}
+

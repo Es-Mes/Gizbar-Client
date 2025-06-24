@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Alert from '@mui/material/Alert';
 import LoadingScreen from "../../../component/LoadingScreen";
+import { TextField } from "@mui/material";
 
 export const RegistPage = () => {
 
@@ -132,122 +133,91 @@ const [registerError, setRegisterError] = useState(null);
           {/* <button onClick={handleGoHome} className="exit registExit"><Link to='/' />x</button> */}
           {/* <img src="/slika/SlikaLogo.ICO" style={{ minHeight: "150px" }} /> */}
 
-          <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="text"
               name="first_name"
               id="first_name"
               onChange={(e) => setFirst_name(e.target.value)}
               value={first_name}
-              placeholder="שם פרטי"
+              label="שם פרטי"
             required
             />
-          </div>
 
-          <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="text"
               name="last_name"
               id="last_name"
               onChange={(e) => setLast_name(e.target.value)}
               value={last_name}
-              placeholder="שם משפחה"
+              label="שם משפחה"
             required
             />
-          </div>
 
-          <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="text"
               name="phone"
               id="phone"
               onChange={(e) => setPhone(e.target.value)}
               value={phone}
-              placeholder="טלפון"
+              label="טלפון"
               required
             />
-          </div>
 
-          <div className="field">
-            <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
-            </div>
-            <input
+         
+            <TextField variant="outlined"
               type="email"
               name="email"
               id="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              placeholder="אימייל"
-            // required
+              label="אימייל"
+            required
             />
-          </div>
 
-          <div className="field">
-            <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="text"
               name="city"
               id="city"
               onChange={(e) => setCity(e.target.value)}
               value={city}
-              placeholder="עיר"
+              label="עיר"
             />
-          </div>
 
-          <div className="field">
-            <div className="required-wrapper">
-              {/* <span className="required-asterisk">*</span> */}
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="text"
               name="address"
               id="address"
               onChange={(e) => setAddress(e.target.value)}
               value={address}
-              placeholder="כתובת"
+              label="כתובת"
             />
-          </div>
 
-          <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="password"
               name="password"
               id="password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              placeholder="סיסמה"
+              label="סיסמה"
               required
             />
-          </div>
-          <div className="field">
-            <div className="required-wrapper">
-              <span className="required-asterisk">*</span>
-            </div>
-            <input
+          
+            <TextField variant="outlined"
               type="password"
               required
               name="confirmPassword"
               onChange={(e) => setConfirmPassword(e.target.value)}
               id="confirmPassword"
               value={confirmPassword}
-              placeholder="אימות סיסמה"
+              label="אימות סיסמה"
+              color="secondary"
             />
-          </div>
 
           {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
 

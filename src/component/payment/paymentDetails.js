@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useGetAgentQuery} from "../../fetures/agent/apiSlice";
-import {useUpdateAgentMutation } from "../../fetures/agent/AgentApiSlice";
+import { useGetAgentQuery } from "../../fetures/agent/apiSlice";
+import { useUpdateAgentMutation } from "../../fetures/agent/AgentApiSlice";
 import SaveCardForm from "./SaveCardForm";
 import useAuth from "../../hooks/useAuth";
+import { TextField } from "@mui/material";
 
 const PaymentDedails = () => {
   const { phone } = useAuth();
@@ -17,9 +18,9 @@ const PaymentDedails = () => {
   const [chosenOption, setChosenOption] = useState("");
   const [bankDetails, setBankDetails] = useState({
     accountName: "",
-    accountNumber: "",
-    bankName: "",
-    branchNumber: "",
+    accountNumber: null,
+    bankNumber: null,
+    branchNumber: null,
   });
 
   if (isLoading) return <p>טוען...</p>;
@@ -41,6 +42,7 @@ const PaymentDedails = () => {
     if (step === "nedarim" && mosadCode && apiValid) {
       await updateAgent({
         phone,
+        _id: agent?._id,
         paymentType: "nedarim",
         mosadCode,
         apiValid,
@@ -49,14 +51,15 @@ const PaymentDedails = () => {
     } else if (step === "gizbar" && confirmGizbar) {
       await updateAgent({
         phone,
+        _id: agent?._id,
         paymentType: "gizbar",
-        mosadCode: process.env.REACT_APP_MOSAD,
-        apiValid: process.env.REACT_APP_API_VALID,
+        bankDetails: bankDetails,
       });
       setStep("done");
     } else if (step === "none") {
       await updateAgent({
         phone,
+        _id: agent?._id,
         paymentType: "none",
       });
       setStep("done");
@@ -69,10 +72,10 @@ const PaymentDedails = () => {
     setApiValid("");
     setConfirmGizbar(false);
     setChosenOption("");
-     setBankDetails({
+    setBankDetails({
       accountName: "",
       accountNumber: "",
-      bankName: "",
+      bankNumber: "",
       branchNumber: "",
     });
   };
@@ -81,9 +84,9 @@ const PaymentDedails = () => {
     <div className="save-card-container" >
       {step === "choose" && (
         <>
-        <h3>פעם ראשונה שאתה מבצע עסקה במערכת?<br/>רק שתי שאלות ומסיימים!</h3>
-              <div className="credit-swipe" style={{ marginTop: "30px" }}><img src="/icons8-credit-card-50.png"/></div>
-          <h2 style={{textAlign:"start"}}>1. באיזו דרך תרצה לגבות מהלקוח?</h2>
+          <h3>פעם ראשונה שאתה מבצע עסקה במערכת?<br />רק שתי שאלות ומסיימים!</h3>
+          <div className="credit-swipe" style={{ marginTop: "30px" }}><img src="/icons8-credit-card-50.png" /></div>
+          <h2 style={{ textAlign: "start" }}>1. באיזו דרך תרצה לגבות מהלקוח?</h2>
           <button className="borderBtn" onClick={() => handleChoose("nedarim")}> יש לי חשבון סליקה בנדרים פלוס</button><br />
           <button className="borderBtn" onClick={() => handleChoose("gizbar")}> אני רוצה להשתמש בסליקה דרך המערכת</button><br />
           <button className="borderBtn" onClick={() => handleChoose("none")}> אני לא מעוניין לגבות באשראי בינתיים</button>
@@ -92,14 +95,15 @@ const PaymentDedails = () => {
 
       {step === "nedarim" && (
         <>
-          <h4>נא הכנס קוד מוסד ו־ApiValid מנדרים פלוס:</h4>
-          <input style={{marginBottom:"5px"}}
-            placeholder="קוד מוסד"
+          <h4 style={{ marginBottom: "15px" }}>נא הכנס קוד מוסד ו־ApiValid מנדרים פלוס:</h4>
+          <TextField variant="outlined"
+            style={{ marginBottom: "5px" }}
+            label="קוד מוסד"
             value={mosadCode}
             onChange={(e) => setMosadCode(e.target.value)}
           /><br />
-          <input
-            placeholder="ApiValid"
+          <TextField variant="outlined"
+            label="ApiValid"
             value={apiValid}
             onChange={(e) => setApiValid(e.target.value)}
           /><br />
@@ -116,50 +120,50 @@ const PaymentDedails = () => {
               פירוט העסקאות וקבלות יופיע באזור האישי.
             </p>
             <label>
-              <input 
+              <TextField variant="outlined"
                 type="checkbox"
                 checked={confirmGizbar}
                 onChange={() => setConfirmGizbar(!confirmGizbar)}
               />
               אני מאשר
             </label>
-            
+
           </div>
           <h4>פרטי חשבון בנק להעברה:</h4>
-              <input style={{marginBottom:"5px"}}
-                placeholder="שם בעל החשבון"
-                value={bankDetails.accountName}
-                onChange={(e) => setBankDetails({ ...bankDetails, accountName: e.target.value })}
-              /><br />
-              <input style={{marginBottom:"5px"}}
-                placeholder="מספר חשבון"
-                value={bankDetails.accountNumber}
-                onChange={(e) => setBankDetails({ ...bankDetails, accountNumber: e.target.value })}
-              /><br />
-              <input style={{marginBottom:"5px"}}
-                placeholder="מספר סניף"
-                value={bankDetails.branchNumber}
-                onChange={(e) => setBankDetails({ ...bankDetails, branchNumber: e.target.value })}
-              /><br />
-              <input
-                placeholder="שם הבנק"
-                value={bankDetails.bankName}
-                onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })}
-              /><br />
+          <TextField variant="outlined" style={{ marginBottom: "5px" }}
+            label="שם בעל החשבון"
+            value={bankDetails.accountName}
+            onChange={(e) => setBankDetails({ ...bankDetails, accountName: e.target.value })}
+          /><br />
+          <TextField variant="outlined" style={{ marginBottom: "5px" }}
+            label="מספר חשבון"
+            value={bankDetails.accountNumber}
+            onChange={(e) => setBankDetails({ ...bankDetails, accountNumber: e.target.value })}
+          /><br />
+          <TextField variant="outlined" style={{ marginBottom: "5px" }}
+            label="מספר סניף"
+            value={bankDetails.branchNumber}
+            onChange={(e) => setBankDetails({ ...bankDetails, branchNumber: e.target.value })}
+          /><br />
+          <TextField variant="outlined"
+            label="שם הבנק"
+            value={bankDetails.bankNumber}
+            onChange={(e) => setBankDetails({ ...bankDetails, bankNumber: e.target.value })}
+          /><br />
 
-              <button
-                onClick={handleSubmit}
-                disabled={
-                  !confirmGizbar ||
-                  !bankDetails.accountName ||
-                  !bankDetails.accountNumber ||
-                  !bankDetails.bankName ||
-                  !bankDetails.branchNumber
-                }
-              >
-                שמור
-              </button>
-                      <button onClick={handleBack}>חזור</button>
+          <button
+            onClick={handleSubmit}
+            disabled={
+              !confirmGizbar ||
+              !bankDetails.accountName ||
+              !bankDetails.accountNumber ||
+              !bankDetails.bankNumber ||
+              !bankDetails.branchNumber
+            }
+          >
+            שמור
+          </button>
+          <button onClick={handleBack}>חזור</button>
         </>
       )}
 
