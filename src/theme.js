@@ -12,21 +12,21 @@ const theme = createTheme({
     },
   },
   components: {
-     MuiTextField: {
-    defaultProps: {
-      color: 'secondary', // כל TextField כברירת מחדל יהיה בצבע secondary
+    MuiTextField: {
+      defaultProps: {
+        color: 'secondary', // כל TextField כברירת מחדל יהיה בצבע secondary
+      },
     },
-  },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          height: '37px',
+          height: '37px ',
           fontSize: '0.875rem',
           backgroundColor: 'rgba(255, 255, 255, 0.8) !important',
           '& input:-webkit-autofill': {
-        boxShadow: '0 0 0 1000px rgba(255, 255, 255, 0.8) inset !important',
-        WebkitTextFillColor: '#000', // או כל צבע טקסט שתרצי
-      },
+            boxShadow: '0 0 0 1000px rgba(255, 255, 255, 0.8) inset !important',
+            WebkitTextFillColor: '#000', // או כל צבע טקסט שתרצי
+          },
           '& fieldset': {
             borderColor: '#d3a6ec', // גבול רגיל
           },
@@ -42,6 +42,11 @@ const theme = createTheme({
             WebkitBoxShadow: '0 0 0 1px #8b7bda',
             MozBoxShadow: '0 0 0 1px #8b7bda',
           },
+          '& .MuiOutlinedInput-input': {
+            height: '4px ',
+            fontSize: '0.875rem',
+            backgroundColor: 'rgba(0, 0, 0, 0) !important',
+          }
         },
       },
     },
@@ -49,10 +54,10 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: 'rgba(0, 0, 0, 0.6)!important' ,
+          color: 'rgba(0, 0, 0, 0.6)!important',
           '&.MuiInputLabel-shrink': {
-        color: '#3a256d !important', // תווית כשהיא למעלה (בשדה מלא)
-      },
+            color: '#3a256d !important', // תווית כשהיא למעלה (בשדה מלא)
+          },
         },
       },
     },
