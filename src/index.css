@@ -1,4 +1,5 @@
-:root {
+:root { 
+  --text: #3a256d;
   --bg: #ffffff86;
   /* --bgSoft: rgb(133, 158, 212); */
   --bgSoft: #8b7bda;
@@ -10,7 +11,7 @@
   --bgClear: #765cf8;
   --bgPink: #668dc7d6;
   --hover: #c189c94b;
-  --text: #3a256d;
+ 
   --gold: "#f9a825";
   --textSoft: #d6dbe7;
   --bgWhite: rgba(249, 248, 250, 0.9);
@@ -59,15 +60,11 @@ body {
 }
 
 a {
-  color: inherit;
+  /* color: inherit; */
   text-decoration: none;
   font-family: var(--fontFamily);
 }
 
-/* .logoP{
-  min-width: 5vw;
-  min-height: 75vh;
-} */
 .errorPage {
   min-width: 97vw;
   max-width: 97vw;
@@ -113,13 +110,7 @@ button:disabled {
   opacity: 0.6;
 }
 
-:disabled,
+.disabled,
 .inDevelopment {
   cursor: not-allowed !important;
 }
-
-input {
-  direction: rtl !important;
-  text-align: right !important;
-}
-

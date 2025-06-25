@@ -35,12 +35,22 @@ toast.success("העסקה נמחקה בהצלחה 👍 ",{icon:false})          
     return (
         <div className="background-screen">
             <div className="loading-box">
-                <div className=" fade-icon icon-rotate">🪙</div>
+                <div className=" fade-icon icon-rotate"><img src='/icons8-coin-50.png'/></div>
                 <p className="loading-subtitle">האם אתה בטוח שברצונך לבטל את העסקה?</p>
                 <h1 className="loading-title">{` ${transaction.serviceName || "שירות ללא שם"} -  ₪${transaction.price}`}</h1>
-                <p>{`לקוח: ${transaction.customer.full_name}`}</p>
-                <p>{`תאור: ${transaction.description || ''}`}</p>
-                <p>{`תאריך חיוב:  ${new Date(transaction.billingDay).toLocaleDateString("he-IL")}`}</p>
+                <div>
+                                <div className="row">
+                                    <h4>לקוח:</h4><p>{transaction.customer.full_name}</p>
+                                </div>
+        
+                                <div className="row">
+                                    <h4>תאור:</h4><p>{transaction.description}</p>
+                                </div>
+                                <div className="row">
+                                    <h4>תאריך חיוב:</h4><p>{new Date(transaction.billingDay).toLocaleDateString("he-IL")}</p>
+                                </div>
+                            </div>
+               
                 {message && <p style={{ color: "#f9a825" }}>{message}</p>}
                 <div className='navigation-buttons'>
                     <button className='modelBtn' onClick={onSuccess}>ביטול</button>

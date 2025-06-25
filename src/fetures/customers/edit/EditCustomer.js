@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import useAuth from '../../../hooks/useAuth'
 import { useUpdateCustomerMutation } from '../customersApiSlice';
 import './editCustomer.css'
+import { TextField } from '@mui/material';
 
 const EditCustomer = ({ customer, onSuccess }) => {
     const { phone } = useAuth();
@@ -50,46 +51,44 @@ const EditCustomer = ({ customer, onSuccess }) => {
 
                 <div className='modelTitle'>
                     <h1 className="loading-title">ערוך לקוח</h1>
-                    <div style={{ fontSize: "3rem" }}><img src='/icons8-change-user-50.png'/></div>
+                    <div style={{ fontSize: "3rem" }}><img src='/icons8-change-user-50.png' /></div>
                 </div>
-                <label htmlFor="full_name">שם מלא: <span className="required-asterisk">*</span>
-                </label>
-                <input
+
+                <TextField variant="outlined"
                     type="text"
                     id="full_name"
                     name="full_name"
                     value={customerData.full_name}
                     onChange={handleChange}
                     required
+                    label="שם מלא"
                 />
 
-                <label htmlFor="email">כתובת מייל:</label>
-                <input
+                <TextField variant="outlined"
                     type="email"
                     id="email"
                     name="email"
                     value={customerData.email}
-                    onChange={handleChange}
+                    label="כתובת מייל"
                 />
 
-                <label htmlFor="address">כתובת:</label>
-                <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    value={customerData.address}
-                    onChange={handleChange}
-                />
-
-                <label htmlFor="city">עיר:</label>
-                <input
+                <TextField variant="outlined"
                     type="text"
                     id="city"
                     name="city"
                     value={customerData.city}
                     onChange={handleChange}
+                    label="עיר"
                 />
-
+                
+                <TextField variant="outlined"
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={customerData.address}
+                    onChange={handleChange}
+                    label="כתובת"
+                />
                 <button className='editCustom' type="submit" disabled={isLoading}>
                     {isLoading ? "מעדכן..." : "עדכן"}
                 </button>

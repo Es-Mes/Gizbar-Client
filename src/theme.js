@@ -2,8 +2,15 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   direction: 'rtl',
+  root: {
+    color: 'var(--text)',
+  },
+  body: {
+    color: 'var(--text)',
+  },
   typography: {
-    fontFamily: `"Varela Round", "Arial", sans-serif`,
+    color: '#3a256d',
+    fontFamily: `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`,
   },
   palette: {
     secondary: {
@@ -55,6 +62,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: 'rgba(0, 0, 0, 0.6)!important',
+          // textAlign:'center',
           '&.MuiInputLabel-shrink': {
             color: '#3a256d !important', // תווית כשהיא למעלה (בשדה מלא)
           },

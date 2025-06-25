@@ -126,6 +126,7 @@
   font-size: 3rem;
   display: inline-block;
   animation: swipeCard 2s ease-in-out infinite;
+  height: 3.1rem;
 }
 
 

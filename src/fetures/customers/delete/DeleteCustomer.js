@@ -23,7 +23,7 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
             }
             else {
                 setClicked(true)
-                toast.success("הלקוח נמחק בהצלחה 👍 ",{icon:false})
+                toast.success("הלקוח נמחק בהצלחה 👍 ", { icon: false })
                 setTimeout(() => {
                     onSuccess()
                 }, 2000)
@@ -37,13 +37,25 @@ const DeleteCustomer = ({ customer, onSuccess }) => {
     return (
         <div className="background-screen">
             <div className="loading-box">
-                <div className=" fade-icon icon-rotate"><img src='/icons8-person-50.png'/></div>
+                <div className=" fade-icon icon-rotate"><img src='/icons8-person-50.png' /></div>
                 <p className="loading-subtitle">האם אתה בטוח שברצונך למחוק לקוח זה?</p>
                 <h1 className="loading-title">{customer.full_name}</h1>
-                <p>{customer.phone}</p>
-                <p>{customer.email}</p>
-                <p>{customer.address}</p>
-                <p>{customer.city}</p>
+                <div>
+                    
+                    <div className="row">
+                        <h4>טלפון:</h4><p>{customer.phone}</p>
+                    </div>
+                    <div className="row">
+                        <h4>אימייל:</h4><p>{customer.email}</p>
+                    </div>
+                    <div className="row">
+                        <h4>עיר:</h4><p>{customer.city}</p>
+                    </div>
+                    <div className="row">
+                        <h4>כתובת:</h4><p>{customer.address}</p>
+                    </div>
+                </div>
+
                 {message && <p style={{ color: "#f9a825" }}>{message}</p>}
                 <div className='navigation-buttons'>
                     <button className='modelBtn' onClick={onSuccess}>ביטול</button>

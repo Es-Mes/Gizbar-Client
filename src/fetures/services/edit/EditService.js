@@ -3,6 +3,7 @@ import { useUpdateServiceMutation } from '../servicesApiSlice';
 import { useDispatch } from 'react-redux';
 import useAuth from '../../../hooks/useAuth';
 import './editService.css'
+import { TextField } from '@mui/material';
 
 const EditService = ({ service, onSuccess }) => {
 
@@ -46,23 +47,26 @@ const EditService = ({ service, onSuccess }) => {
 
     return (
         <div className='edit-service-container'>
-            <h1>עריכת שירות</h1>
+             <div className="modelTitle">
+                <h1>עריכת שירות</h1>
+                <div className="add-client-icon" style={{ fontSize: "3rem" }}><img src="/icons8-briefcase-50.png"/></div>
+            </div>
             <form onSubmit={handleSubmit} className='edit-service-form'>
-                <label htmlFor="name">שם השירות: <span className="required-asterisk">*</span>
-                </label>
-                <input
+               
+                <TextField variant="outlined"
                     type="text"
                     id="name"
                     name="name"
+                    label='שם השירות'
                     value={editedservice.name}
                     onChange={handleChange}
                     required
                 />
 
-                <label htmlFor="description">תיאור השירות:</label>
-                <textarea
+                <TextField variant="outlined"
                     id="description"
                     name="description"
+                    label='תאור השירות'
                     value={editedservice.description}
                     onChange={handleChange}
                 />
@@ -83,7 +87,7 @@ const EditService = ({ service, onSuccess }) => {
 
 
                 <label htmlFor="price">מחיר:</label>
-                <input
+                <TextField variant="outlined"
                     type="number"
                     id="price"
                     name="price"

@@ -2,6 +2,7 @@ import './TransactionList.css';
 import React, { useMemo, useState } from "react";
 import TransactionItem from '../view/TransactionItem';
 import { MdOutlineRefresh } from "react-icons/md";
+import { TextField } from '@mui/material';
 
 const TransactionsList = ({ transactions }) => {
     const [customerNameFilter, setCustomerNameFilter] = useState('');
@@ -50,7 +51,7 @@ const TransactionsList = ({ transactions }) => {
                     <p style={{ fontSize: "1em", marginBottom: "4px", color: "#555" }}>
                         {isIncome ? "סנן לפי שם לקוח:" : "סנן לפי נותן השירות:"}
                     </p>
-                    <input
+                    <TextField variant="outlined"
                         type="text"
                         placeholder={isIncome ? "הכנס שם לקוח" : "הכנס שם נותן שירות"}
                         value={customerNameFilter}
@@ -63,13 +64,13 @@ const TransactionsList = ({ transactions }) => {
                         עסקאות מתאריך ועד תאריך:
                     </p>
                     <div className='date-box'>
-                        <input
+                        <TextField variant="outlined"
                             type="date"
                             value={fromDate}
                             onChange={(e) => setFromDate(e.target.value)}
                             style={{ marginLeft: "20px" }}
                         />
-                        <input
+                        <TextField variant="outlined"
                             type="date"
                             value={toDate}
                             onChange={(e) => setToDate(e.target.value)}

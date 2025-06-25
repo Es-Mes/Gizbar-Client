@@ -96,7 +96,7 @@ const NavBar = ({ toggleMenu }) => {
               <NavLink className="nav-link  icon-tooltip">
                 <FaEnvelopeOpenText className="fa-icon" size={20}  />
                 {/* <p className="tooltip-text">ההודעות שלי</p> */}
-                <p className="tooltip-text">לא פעיל, בפיתוח...</p>
+                <p className="tooltip-text disabled">לא פעיל, בפיתוח...</p>
                 <p className="display-in-wide">ההודעות שלי</p>
               </NavLink>
               <div className="btn  icon-tooltip" onClick={logOutClick}>

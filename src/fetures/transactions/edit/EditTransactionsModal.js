@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 import { useUpdateTransactionMutation } from "../TransactionsApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { TextField } from "@mui/material";
 
 const EditTransactionModal = ({ transaction, onSuccess }) => {
     const { phone } = useAuth();
@@ -67,7 +68,7 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
             }).unwrap();
 
             setClicked(true);
-            toast.success("הנתונים עודכנו בהצלחה 👍 ",{icon:false})
+            toast.success("הנתונים עודכנו בהצלחה 👍 ", { icon: false })
             setTimeout(() => {
                 onSuccess();
             }, 2000);
@@ -79,29 +80,34 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
 
     return (
         <div className="background-screen">
-            <div className="loading-box" style={{margin:"30px"}}>
-                <div className="rotating-coin">🪙</div>
+            <div className="loading-box" style={{ margin: "30px" }}>
+                <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
                 <h2>עריכת עסקה</h2>
                 <div className="modalForm">
                     <div>
-                        <label>מחיר: </label>
-                        <input
+                        <TextField variant="outlined"
                             type="number"
-                            value={price}
+                            value={price} מחיר
+                            label='מחיר'
                             onChange={(e) => setPrice(Number(e.target.value))}
                         />
                     </div>
                     <div>
-                        <label>תאריך חיוב: </label>
-                        <input
+                        <TextField variant="outlined"
                             type="date"
                             value={billingDay}
+                            label='תאריך חיוב'
                             onChange={(e) => setBillingDay(e.target.value)}
                         />
                     </div>
 
-                    <div className="field-group full-width">
-                        <label htmlFor="alerts">הפעל התראות
+                    <div className="field-group full-width" >
+                        <label style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems:'center',
+                        gap:'15px'
+                    }}htmlFor="alerts">הפעל התראות
                             <input
                                 className="noFocus"
                                 type="checkbox"
@@ -159,7 +165,7 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
                     <button className='modelBtn' onClick={handleSave} disabled={clicked}>שמור</button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -44,6 +44,8 @@ const TransactionItem = ({ transaction }) => {
 
 
     const isIncome = transaction.agent.first_name ? false : true
+    console.log(transaction);
+    
 
     const actionsRef = useRef(null);
 
@@ -157,6 +159,13 @@ const TransactionItem = ({ transaction }) => {
         }
     };
 
+    const toCreditPay = () =>{
+         const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+         const agentPhone = transaction.agent.phone;
+         const link = `${baseUrl}/payment/${agentPhone}/${transaction._id}`;
+         window.open(link, "_blank", "noopener,noreferrer");
+    }
+
 
     const handleSave = async () => {
         try {
@@ -250,8 +259,8 @@ const TransactionItem = ({ transaction }) => {
                             {isIncome && (<div className="action-item" onClick={() => setDeleteModalOpen(true)}>
                                 <IoTrashOutline size={20} /> מחיקת עסקה
                             </div>)}
-                            {!isIncome && (<div onClick={() => { setShowActions(!showActions) }} className="action-item">
-                                <BsCreditCard size={20} /> תשלום חוב באשראי(בפיתוח)
+                            {(!isIncome && transaction.agent?.paymentType !== "none") && (<div onClick={() => { setShowActions(!showActions); toCreditPay() }} className="action-item">
+                                <BsCreditCard size={20} /> תשלום חוב באשראי
                             </div>)}
                         </div>
                     )}

@@ -209,8 +209,8 @@ const CustomersList = () => {
                                 <CiCoinInsert size={20} />
 
                             </td>
-                            <td className="btn-customer-list">
-                                <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view">
+                            <td className="disabled btn-customer-list">
+                                <Link to={`/dash/customers/${customer._id}`} onClick={(e) => e.preventDefault()} style={{ pointerEvents: "none", color: "gray" }} className="customers-list-btn customers-list-view">
                                     <PiEyeThin size={20} />
                                 </Link>
                             </td>
@@ -234,7 +234,7 @@ const CustomersList = () => {
                                                 <GrEdit size={20} /> עריכה
                                             </div>
                                             <div
-                                                className="action-item"
+                                                className="action-item disabled"
                                                 onClick={closeMenu} // אם אין פעולה, רק סוגר
                                             >
                                                 <LuBellRing size={20} /> שלח הודעה

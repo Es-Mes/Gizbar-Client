@@ -21,19 +21,6 @@
     color: #333;
 }
 
-.edit-service-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: 0.3s;
-}
-
-.edit-service-form input:focus {
-    border-color: var(--bgSoft);
-    outline: none;
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-}
 
 .editButton {
     background: var(--bgSoft);

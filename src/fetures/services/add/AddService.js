@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useAddServiceMutation } from "../servicesApiSlice";
 import { useDispatch } from "react-redux";
 import useAuth from "../../../hooks/useAuth";
+import { TextField } from "@mui/material";
 
 const AddService = ({ onSuccess }) => {
     const { phone } = useAuth(); // מקבל את מספר הטלפון של הסוכן
@@ -67,75 +68,69 @@ const AddService = ({ onSuccess }) => {
                 <div className="add-client-icon" style={{ fontSize: "3rem" }}><img src="/icons8-briefcase-50.png"/></div>
             </div>
             <form onSubmit={handleSubmit} className="add-service-form">
-                <label htmlFor="name">שם השירות: <span className="required-asterisk">*</span>
-                </label>
-                <input
+                
+                <TextField
+                 variant="outlined"
                     type="text"
                     id="name"
                     name="name"
+                    label='שם השירות'
                     value={serviceData.name}
                     onChange={handleChange}
                     required
                 />
 
-                <label htmlFor="description">תיאור השירות:</label>
-                <textarea
+                <TextField
+                variant="outlined"
                     id="description"
                     name="description"
+                    label="תאור השירות"
                     value={serviceData.description}
                     onChange={handleChange}
-                ></textarea>
+                />
 
-                <label htmlFor="type">סוג השירות: <span className="required-asterisk">*</span></label>
-                {[{ type: 'global', name: 'גלובלי' }, { type: 'hourly', name: 'לפי שעה' }].map((type) => (
-                    <div key={type.type}>
-                        <input
-                            type="radio"
-                            name="type"
-                            value={type.type}
-                            checked={serviceData.type === type.type}
-                            onChange={handleChange}
-                        />
-                        {type.name}
-                    </div>
-                ))}
-                {/* <select
-                    id="type"
-                    name="type"
-                    value={serviceData.type}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="global">גלובלי</option>
-                    <option value="hourly">שעתי</option>
-                </select> */}
+                <div style={{display:'flex',minWidth:'100%',justifyContent:'start',gap:'20px'}}>
+                    <label htmlFor="type">סוג השירות: <span className="required-asterisk">*</span></label>
+                    {[{ type: 'global', name: 'גלובלי' }, { type: 'hourly', name: 'לפי שעה' }].map((type) => (
+                        <div key={type.type}>
+                            <input
+                                type="radio"
+                                name="type"
+                                value={type.type}
+                                checked={serviceData.type === type.type}
+                                onChange={handleChange}
+                            />
+                            <p>{type.name}</p>
+                        </div>
+                    ))}
+                </div>
 
                 {serviceData.type === "hourly" && (
-                    <>
-                        <label htmlFor="hourlyPrice">מחיר לשעה: <span className="required-asterisk">*</span></label>
-                        <input
+                    
+                        <TextField variant="outlined"
                             type="number"
                             id="hourlyPrice"
                             name="hourlyPrice"
                             value={serviceData.hourlyPrice}
                             onChange={handleChange}
+                            label='מחיר לשעה'
                             required
                         />
-                    </>
+                  
                 )}
 
                 {serviceData.type === "global" && (
-                    <>
-                        <label htmlFor="globalPrice">מחיר גלובלי: <span className="required-asterisk">*</span></label>
-                        <input
+                    
+                        <TextField variant="outlined"
                             type="number"
                             id="globalPrice"
                             name="globalPrice"
+                            label='מחיר גלובלי'
                             value={serviceData.globalPrice}
                             onChange={handleChange}
                             required
                         />
-                    </>
+                    
                 )}
 
                 <button type="submit" disabled={clicked}>

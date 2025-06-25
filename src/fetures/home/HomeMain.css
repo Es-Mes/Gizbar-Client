@@ -10,7 +10,7 @@ body {
 }
 
 .head h1 {
-    color: (var(--text));
+    color: var(--text);
 }
 
 /* ----- כפתורי מעבר / Toggle ----- */
@@ -79,6 +79,8 @@ body {
 /* ----- כפתורי פעולות מהירות ----- */
 .actionsHedder {
     margin: 20px;
+    color: var(--text);
+
 }
 
 .QuickActions {
@@ -232,6 +234,7 @@ body {
 
 .dashboard-card-large h4 {
     font-size: 18px;
+    color: var(--text);
 }
 
 .dashboard-card-large .chart-container {

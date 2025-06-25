@@ -133,6 +133,11 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    white-space: nowrap;
+    width: fit-content;
+    display: flex;    
+    align-items: center; 
+    gap: 0.5rem;
 }
 
 .action-item:hover {
