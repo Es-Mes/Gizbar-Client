@@ -13,6 +13,7 @@ import "./AddTransaction.css"
 import { useGetAgentQuery } from "../../agent/apiSlice";
 import StepIndicator from "./StepIndicator";
 import PaymentDetails from "../../../component/payment/paymentDetails";
+import { TextField } from "@mui/material";
 const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const { _id, phone } = useAuth();
     const { data: agent, isLoading } = useGetAgentQuery({ phone })
@@ -316,11 +317,11 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                             /> */}
                             {(selectedService.type === 'global') &&
                                 (<div>
-                                    <label htmlFor="price">מחיר:<span className="required-asterisk">*</span></label>
-                                    <input
+                                    <TextField variant="outlined"
                                         type="Number"
                                         id="price"
                                         name="price"
+                                        label='מחיר'
                                         value={transactionDetails.price || selectedService.price}
                                         onChange={handleInputChange}
                                         required
@@ -330,7 +331,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                                 (<div className="perHourBox">
                                     <div>
                                         <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
-                                        <input
+                                        <TextField variant="outlined"
                                             type="Number"
                                             id="pricePerHour"
                                             name="pricePerHour"
@@ -340,7 +341,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                                         /></div>
                                     <div>
                                         <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
-                                        <input
+                                        <TextField variant="outlined"
                                             type="Number"
                                             id="hours"
                                             name="hours"
@@ -369,7 +370,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                             <label htmlFor="billingDay">
                                 תאריך חיוב: <span className="required-asterisk">*</span>
                             </label>
-                            <input
+                            <TextField variant="outlined"
                                 type="date"
                                 id="billingDay"
                                 name="billingDay"
@@ -381,10 +382,10 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                     </div>
 
                     <div className="field-group full-width">
-                        <label htmlFor="description">תיאור:</label>
-                        <textarea
+                        <TextField variant="outlined"
                             id="description"
                             name="description"
+                            label='תיאור'
                             value={transactionDetails.description}
                             onChange={handleInputChange}
                         />
@@ -392,6 +393,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
                     <div className="field-group full-width"> <label htmlFor="alerts">הפעל התראות
                         <input className="noFocus"
+                            style={{ marginRight: '10px' }}
                             type="checkbox"
                             id="alerts"
                             name="alerts"

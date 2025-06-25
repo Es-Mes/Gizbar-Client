@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { useGetAgentQuery } from "../../fetures/agent/apiSlice";
-import { useUpdateAgentMutation } from "../../fetures/agent/AgentApiSlice";
+import { useUpdateAgentMutation, useUpdatePaymentDetailsMutation } from "../../fetures/agent/AgentApiSlice";
 import SaveCardForm from "./SaveCardForm";
 import useAuth from "../../hooks/useAuth";
 import { TextField } from "@mui/material";
+import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+
 
 const PaymentDedails = () => {
   const { phone } = useAuth();
   const { data: agent, isLoading, isError } = useGetAgentQuery({ phone });
-  const [updateAgent] = useUpdateAgentMutation();
+  const [updatePaymentDetails] = useUpdatePaymentDetailsMutation()
 
   const [step, setStep] = useState("choose"); // choose | nedarim | gizbar | none | done
-
+  const [error,setError] = useState("")
   const [mosadCode, setMosadCode] = useState("");
   const [apiValid, setApiValid] = useState("");
   const [confirmGizbar, setConfirmGizbar] = useState(false);
@@ -22,6 +24,22 @@ const PaymentDedails = () => {
     bankNumber: null,
     branchNumber: null,
   });
+
+  const banks = [
+  { name: 'בנק הפועלים', number: '12' },
+  { name: 'בנק לאומי', number: '10' },
+  { name: 'בנק דיסקונט', number: '11' },
+  { name: 'הבנק הבינלאומי', number: '31' },
+  { name: 'בנק מזרחי טפחות', number: '20' },
+  { name: 'פאג"י (בנק פועלי אגודת ישראל)', number: '52' },
+  { name: 'בנק ירושלים', number: '54' },
+  { name: 'בנק אגוד', number: '13' },
+  { name: 'בנק מסד', number: '46' },
+  { name: 'בנק יהב', number: '52' },
+  { name: 'דואר ישראל', number: '09' },
+  // אפשר להוסיף עוד לפי הצורך
+];
+
 
   if (isLoading) return <p>טוען...</p>;
   if (isError) return <p>שגיאה בטעינת נתונים</p>;
@@ -39,32 +57,43 @@ const PaymentDedails = () => {
   };
 
   const handleSubmit = async () => {
+  try {
+    let payload;
     if (step === "nedarim" && mosadCode && apiValid) {
-      await updateAgent({
-        phone,
+      payload = {
         _id: agent?._id,
         paymentType: "nedarim",
         mosadCode,
         apiValid,
-      });
-      setStep("done");
+      };
     } else if (step === "gizbar" && confirmGizbar) {
-      await updateAgent({
-        phone,
+      payload = {
         _id: agent?._id,
         paymentType: "gizbar",
-        bankDetails: bankDetails,
-      });
-      setStep("done");
+        bankDetails,
+      };
     } else if (step === "none") {
-      await updateAgent({
-        phone,
+      payload = {
         _id: agent?._id,
         paymentType: "none",
-      });
+      };
+    } else {
+      setError("אנא מלאי את כל השדות הדרושים");
+      return;
+    }
+
+    const response = await updatePaymentDetails(payload);
+    if (response.error) {
+      setError(response.message || "שגיאה בעדכון פרטי תשלום");
+    } else {
       setStep("done");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError("שגיאה כללית בשרת. נסי שוב מאוחר יותר.");
+  }
+};
+
 
   const handleBack = () => {
     setStep("choose");
@@ -119,14 +148,17 @@ const PaymentDedails = () => {
               אני מאשר שכל גביה באשראי תעבור דרך המערכת ואני אקבל את כל ההכנסות עד ל־10 בחודש הבא.<br />
               פירוט העסקאות וקבלות יופיע באזור האישי.
             </p>
+            <div className="field-group full-width">
             <label>
-              <TextField variant="outlined"
+              <input className="noFocus"
+              style={{margin:'10px'}}
                 type="checkbox"
                 checked={confirmGizbar}
                 onChange={() => setConfirmGizbar(!confirmGizbar)}
               />
               אני מאשר
             </label>
+            </div>
 
           </div>
           <h4>פרטי חשבון בנק להעברה:</h4>
@@ -145,11 +177,29 @@ const PaymentDedails = () => {
             value={bankDetails.branchNumber}
             onChange={(e) => setBankDetails({ ...bankDetails, branchNumber: e.target.value })}
           /><br />
-          <TextField variant="outlined"
-            label="שם הבנק"
-            value={bankDetails.bankNumber}
-            onChange={(e) => setBankDetails({ ...bankDetails, bankNumber: e.target.value })}
-          /><br />
+
+
+          <FormControl fullWidth variant="outlined" style={{ marginBottom: '16px' }}>
+            <InputLabel id="bank-select-label">בנק</InputLabel>
+            <Select
+              labelId="bank-select-label"
+              value={bankDetails.bankNumber}
+              label="בנק"
+              onChange={(e) =>
+                setBankDetails({
+                  ...bankDetails,
+                  bankNumber: e.target.value,
+                })
+              }
+            >
+              {banks.map((bank) => (
+                <MenuItem key={bank.number} value={bank.number}>
+                  {bank.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
 
           <button
             onClick={handleSubmit}
@@ -164,6 +214,8 @@ const PaymentDedails = () => {
             שמור
           </button>
           <button onClick={handleBack}>חזור</button>
+          {error && <div className="text-red-600">{error}</div>}
+
         </>
       )}
 

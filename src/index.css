@@ -1,7 +1,6 @@
 :root { 
   --text: #3a256d;
   --bg: #ffffff86;
-  /* --bgSoft: rgb(133, 158, 212); */
   --bgSoft: #8b7bda;
   --hoverBtnModel: #d3a6ec;
   --bgSoftLight: #8b7bdac8;
@@ -11,7 +10,6 @@
   --bgClear: #765cf8;
   --bgPink: #668dc7d6;
   --hover: #c189c94b;
- 
   --gold: "#f9a825";
   --textSoft: #d6dbe7;
   --bgWhite: rgba(249, 248, 250, 0.9);
@@ -60,7 +58,7 @@ body {
 }
 
 a {
-  /* color: inherit; */
+  color: inherit;
   text-decoration: none;
   font-family: var(--fontFamily);
 }

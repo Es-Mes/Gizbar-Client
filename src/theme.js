@@ -21,6 +21,7 @@ const theme = createTheme({
   components: {
     MuiTextField: {
       defaultProps: {
+          fullWidth: true,
         color: 'secondary', // כל TextField כברירת מחדל יהיה בצבע secondary
       },
     },
@@ -43,11 +44,12 @@ const theme = createTheme({
           '&.Mui-focused fieldset': {
             borderColor: '#8b7bda', // בפוקוס
           },
+           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--bgSoft)',
+            boxShadow: '0px 0px 5px rgba(0, 123, 255, 0.5)',
+          },
           '&.Mui-focused': {
             outline: 'none',
-            boxShadow: '0 0 0 1px #8b7bda',
-            WebkitBoxShadow: '0 0 0 1px #8b7bda',
-            MozBoxShadow: '0 0 0 1px #8b7bda',
           },
           '& .MuiOutlinedInput-input': {
             height: '4px ',
