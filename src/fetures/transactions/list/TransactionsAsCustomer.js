@@ -48,7 +48,7 @@ const TransactionsAsCustomer = () => {
     if (error) return <p>שגיאה: {error.data?.message || "אירעה שגיאה"}</p>;
     return (
         <div className='transactions_first_page'>
-            <div className='transactions-display'></div>
+            <div className='transactions-display'>
             <div className="header-with-button">
                 <button className="backButton" onClick={() => navigate(-1)}>
                     <GrFormNextLink className='GrFormNextLink' /><p className='backText'>חזור</p>
@@ -56,6 +56,7 @@ const TransactionsAsCustomer = () => {
                 <h2>{header}</h2>
             </div>
             <TransactionsList transactions={filteredTransactions} />
+        </div>
         </div>
     )
 }

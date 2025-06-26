@@ -2,12 +2,6 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   direction: 'rtl',
-  root: {
-    color: 'var(--text)',
-  },
-  body: {
-    color: 'var(--text)',
-  },
   typography: {
     color: '#3a256d',
     fontFamily: `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`,
@@ -21,7 +15,7 @@ const theme = createTheme({
   components: {
     MuiTextField: {
       defaultProps: {
-          fullWidth: true,
+        fullWidth: true,
         color: 'secondary', // כל TextField כברירת מחדל יהיה בצבע secondary
       },
     },
@@ -44,7 +38,7 @@ const theme = createTheme({
           '&.Mui-focused fieldset': {
             borderColor: '#8b7bda', // בפוקוס
           },
-           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'var(--bgSoft)',
             boxShadow: '0px 0px 5px rgba(0, 123, 255, 0.5)',
           },
@@ -63,12 +57,12 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: 'rgba(0, 0, 0, 0.6)!important',
-          // textAlign:'center',
+
           '&.MuiInputLabel-shrink': {
             color: '#3a256d !important', // תווית כשהיא למעלה (בשדה מלא)
           },
         },
+
       },
     },
 

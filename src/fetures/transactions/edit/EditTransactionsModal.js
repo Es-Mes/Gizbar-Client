@@ -84,14 +84,14 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
                 <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
                 <h2>עריכת עסקה</h2>
                 <div className="modalForm">
-                    <div>
+                    {<div>
                         <TextField variant="outlined"
                             type="number"
                             value={price} מחיר
                             label='מחיר'
                             onChange={(e) => setPrice(Number(e.target.value))}
                         />
-                    </div>
+                    </div>}
                     <div>
                         <TextField variant="outlined"
                             type="date"

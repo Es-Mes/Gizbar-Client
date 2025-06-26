@@ -4,9 +4,9 @@ body {
 }
 
 .head {
-    border-top: 2px solid var(--bgSoft);
-    padding-top: 10px;
-    margin-top: 10px;
+    padding-top: 40px;
+    display: flex;
+    justify-content: space-between !important;
 }
 
 .head h1 {
@@ -14,8 +14,7 @@ body {
 }
 
 /* ----- כפתורי מעבר / Toggle ----- */
-/* .toggle-button {
-    border: 2px solidvar(--bgSoft);
+.toggle-button {
     background-color: transparent;
     color: var(--bgSoft);
     padding: 10px 20px;
@@ -23,7 +22,8 @@ body {
     transition: background-color 0.3s, color 0.3s;
     margin: 0 10px;
     font-size: 16px;
-    border-radius: 5px;
+    height: 50px !important;
+    width: 20vw !important;
 }
 
 .toggle-button.active {
@@ -36,7 +36,7 @@ body {
 } */
 
 /* ----- תצוגת הכנסות ----- */
-/* .income-display {
+ .income-display {
     position: fixed;
     top: 115px;
     left: 20px;
@@ -62,13 +62,13 @@ body {
     margin: 5px 0;
 }
 
- */
+
 
 /* ----- תצוגת עסקאות ----- */
-/* .transactions-display {
+.transactions-display {
     max-width: 100%;
     margin: 20px;
-} */
+}
 
 .income-outcome-summary {
     display: flex;

@@ -45,16 +45,17 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
         const { Status, Message, Token, Tokef, Card4Digits, CreditCardType } = data.Value;
 
         if (Status === "OK") {
-          saveCardDetailsToDB({
-            token: Token,
-            tokef: customerData.Tokef,
-            zeout: customerData.Zeout,
-            last4: Card4Digits,
-            cardType: CreditCardType,
-            clientId: initialCustomerData._id,
-          });
+          // saveCardDetailsToDB({
+          //   token: Token,
+          //   tokef: customerData.Tokef,
+          //   zeout: customerData.Zeout,
+          //   last4: Card4Digits,
+          //   cardType: CreditCardType,
+          //   clientId: initialCustomerData._id,
+          // });
 
           toast.success("✅ הכרטיס נשמר בהצלחה!");
+          
         } else {
           setErrorsMessage(Message || "שמירת הכרטיס נכשלה");
         }
@@ -91,11 +92,11 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
 
   const handleSaveCard = () => {
     if (!validateForm()) return;
-
+    const {Tokef, ...customerDataWithoutTokef} = customerData;
     PostNedarim({
       Name: "FinishTransaction2",
       Value: {
-        ...customerData,
+        ...customerDataWithoutTokef,
         CallBackMailError: "esterleah085@gmail.com",
       },
     });

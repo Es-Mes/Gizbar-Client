@@ -68,7 +68,6 @@
     flex-direction: column;
     padding-left: 0;
     gap: 30px;
-    margin: 30px;
 }
 
 .toggle-view:hover {

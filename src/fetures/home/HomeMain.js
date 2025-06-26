@@ -597,42 +597,33 @@ const HomeMain = () => {
 
          </div>
 
-         {/* <div className="transactions-display">
+         <div className="transactions-display">
 
-            <div className="transaction-header head">
+            <div className="transaction-header head QuickActions">
                <button
-                  className={`toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
-                  onClick={() => setSelectedOption('customer')}
-               >
-                  הוצאות
-               </button>
-               <h1>עסקאות חודש {currentMonth}</h1>
-               <button
-                  className={`toggle-button ${selectedOption === 'agent' ? 'active' : ''}`}
+                  className={` toggle-button ${selectedOption === 'agent' ? 'active' : ''}`}
                   onClick={() => setSelectedOption('agent')}
                >
                   הכנסות
                </button>
+               <h2>עסקאות חודש {currentMonth}</h2>
+               <button 
+                  className={` toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
+                  onClick={() => setSelectedOption('customer')}
+               >
+                  הוצאות
+               </button>
             </div>
+
             <div>
-               <h2>מה עשינו לאחרונה</h2>
-               {
-                  selectedOption === 'agent' ?
-                     <TransactionsList transactions={recentTransactions} />
-                     :
-                     <ExpensesList transactions={recentTransactions} />
-               }
+               <TransactionsList transactions={recentTransactions} />
             </div>
+
             <div>
-               <h2>מה עומד לקרות</h2>
-               {
-                  selectedOption === 'agent' ?
-                     <TransactionsList transactions={pendingTransactions} />
-                     :
-                     <ExpensesList transactions={pendingTransactions} />
-               }
+               <h2 style={{color:'var(--text)',marginTop:'40px'}}>תשלומים שעדיין מחכים</h2>
+               <TransactionsList transactions={pendingTransactions} />
             </div>
-         </div> */}
+         </div>
 
          <Modal isOpen={isTransactionModalOpen}
             onClose={() => setIsTransactionModalOpen(false)}
