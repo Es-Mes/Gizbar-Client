@@ -7,74 +7,84 @@ import { TextField } from "@mui/material";
 
 const EditTransactionModal = ({ transaction, onSuccess }) => {
     const { phone } = useAuth();
-    const [price, setPrice] = useState(0);
-    const [billingDay, setBillingDay] = useState("");
     const [updateTransaction] = useUpdateTransactionMutation();
     const [clicked, setClicked] = useState(false);
     const [message, setMessage] = useState(null);
 
-    const [transactionDetails, setTransactionDetails] = useState(transaction || {});
+    const [transactionDetails, setTransactionDetails] = useState({
+        _id: "",
+        price: 0,
+        billingDay: "",
+        alerts: false,
+        typeAlerts: "",
+        alertsLevel: ""
+    });
 
-    // עדכון ערכים התחלתיים מתוך העסקה
     useEffect(() => {
         if (transaction) {
-            setPrice(transaction.price || 0);
-            setBillingDay(transaction.billingDay?.slice(0, 10) || "");
             setTransactionDetails({
+                _id: transaction._id || "",
+                price: transaction.price || 0,
+                billingDay: transaction.billingDay?.slice(0, 10) || "",
                 alerts: transaction.alerts || false,
                 typeAlerts: transaction.typeAlerts || "",
-                alertsLevel: transaction.alertsLevel || "once",
+                alertsLevel: transaction.alertsLevel || "",
             });
             setMessage(null);
             setClicked(false);
         }
     }, [transaction]);
 
+    useEffect(() => {
+        console.log(transactionDetails);
+    }, [transactionDetails]);
+
     const handleInputChange = (event) => {
         const { name, value, type, checked } = event.target;
         const fieldValue = type === "checkbox" ? checked : value;
 
         setTransactionDetails((prev) => {
-            let updatedDetails = {
+            let updated = {
                 ...prev,
                 [name]: fieldValue,
             };
 
             if (name === "alerts") {
-                updatedDetails = {
-                    ...updatedDetails,
+                updated = {
+                    ...updated,
                     alerts: fieldValue,
                     typeAlerts: fieldValue ? "email and phone" : "",
                     alertsLevel: fieldValue ? "once" : "",
                 };
             }
-            return updatedDetails;
+
+            return updated;
         });
     };
 
     const handleSave = async () => {
-        const { customer, ...transactionWithoutCustomer } = transaction;
+        setClicked(true);
         try {
             await updateTransaction({
                 phone: phone,
                 transaction: {
-                    ...transactionWithoutCustomer,
-                    price,
-                    billingDay: new Date(billingDay),
+                    _id: transactionDetails._id,
+                    price: transactionDetails.price,
+                    billingDay: transactionDetails.billingDay ? new Date(transactionDetails.billingDay) : null,
                     alertsLevel: transactionDetails.alertsLevel,
                     typeAlerts: transactionDetails.typeAlerts,
                     alerts: transactionDetails.alerts
                 },
             }).unwrap();
 
-            setClicked(true);
-            toast.success("הנתונים עודכנו בהצלחה 👍 ", { icon: false })
+            toast.success("הנתונים עודכנו בהצלחה 👍", { icon: false });
             setTimeout(() => {
                 onSuccess();
             }, 2000);
         } catch (err) {
             console.log(err);
             setMessage(`שגיאה בעדכון העסקה ${err.error}`);
+            setClicked(false);
         }
     };
 
@@ -84,30 +94,35 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
                 <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
                 <h2>עריכת עסקה</h2>
                 <div className="modalForm">
-                    {<div>
-                        <TextField variant="outlined"
-                            type="number"
-                            value={price} מחיר
-                            label='מחיר'
-                            onChange={(e) => setPrice(Number(e.target.value))}
-                        />
-                    </div>}
                     <div>
-                        <TextField variant="outlined"
+                        <TextField
+                            variant="outlined"
+                            type="number"
+                            name="price"
+                            value={transactionDetails.price}
+                            label="מחיר"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            variant="outlined"
                             type="date"
-                            value={billingDay}
-                            label='תאריך חיוב'
-                            onChange={(e) => setBillingDay(e.target.value)}
+                            name="billingDay"
+                            value={transactionDetails.billingDay}
+                            label="תאריך חיוב"
+                            onChange={handleInputChange}
+                            InputLabelProps={{ shrink: true }}
                         />
                     </div>
 
-                    <div className="field-group full-width" >
+                    <div className="field-group full-width">
                         <label style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems:'center',
-                        gap:'15px'
-                    }}htmlFor="alerts">הפעל התראות
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '15px'
+                        }} htmlFor="alerts">הפעל התראות
                             <input
                                 className="noFocus"
                                 type="checkbox"
@@ -160,12 +175,12 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
 
                 {message && <p style={{ color: "#f9a825" }}>{message}</p>}
 
-                <div className='navigation-buttons'>
-                    <button className='modelBtn' onClick={onSuccess}>ביטול</button>
-                    <button className='modelBtn' onClick={handleSave} disabled={clicked}>שמור</button>
+                <div className="navigation-buttons">
+                    <button className="modelBtn" onClick={onSuccess}>ביטול</button>
+                    <button className="modelBtn" onClick={handleSave} disabled={clicked}>שמור</button>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 
