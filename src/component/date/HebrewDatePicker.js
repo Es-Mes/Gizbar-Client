@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HDate, months } from "@hebcal/core";
+import { FaRegSquareCaretUp } from "react-icons/fa6";
+import { FaArrowUp } from "react-icons/fa6";
 
 const now = new Date();
 const hdate = new HDate(now);
@@ -9,10 +11,11 @@ console.log("Hebrew date:", hdate.toString());
 
 
 const hebrewNumber = (num) => {
-  const hebrewDigits = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"];
+  const hebrewDigits = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט","י"];
   const tens = ["", "י", "כ", "ל"];
-
   if (num <= 10) return hebrewDigits[num];
+  if (num == 15) return "טו"
+  if (num == 16) return "טז"
   if (num < 20) return "י" + hebrewDigits[num - 10];
   if (num <= 30) {
     const ten = Math.floor(num / 10);
@@ -95,31 +98,31 @@ const HebrewDatePickerPopup = ({ selectedHDate, onSelect, onClose }) => {
     let month = hdate.getMonth();
     let year = hdate.getFullYear();
     console.log(`month: ${month}`);
-    
+
     for (let i = 0; i < Math.abs(offset); i++) {
       if (offset > 0) {
         month++;
         if (month === 7) {
           year++;
         }
-        else if(month > 12 && ! hdate.isLeapYear()){
+        else if (month > 12 && !hdate.isLeapYear()) {
           month = 1;
         }
-        else if(month > 13){
+        else if (month > 13) {
           month = 1;
         }
       } else {
         month--;
-        if(month < 1){
+        if (month < 1) {
 
-          if(hdate.isLeapYear()){
+          if (hdate.isLeapYear()) {
             month = 13;
           }
-          else{
+          else {
             month = 12;
           }
         }
-        if (month === 6 ) {
+        if (month === 6) {
           year--;
         }
       }
@@ -160,62 +163,77 @@ const HebrewDatePickerPopup = ({ selectedHDate, onSelect, onClose }) => {
       <div
         ref={popupRef}
         style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          position: "absolute",
+          top: "100%",
+          right: 0,
+          marginTop: 6,
           backgroundColor: "white",
           borderRadius: 12,
           boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
-          padding: 20,
-          width: 320,
+          padding: 12,
+          width: 280,
+          height: 290,
           fontFamily: "Arial, sans-serif",
           zIndex: 1000,
           userSelect: "none",
         }}
       >
+
         <div
           className="head"
           style={{
             display: "flex",
             justifyContent: "space-between",
-            paddingBottom: 12,
             alignItems: "center",
             borderBottom: "1px solid #eee",
-            marginBottom: 12,
+            marginBottom: 10,
+            gap: 8,
+            paddingTop: 4,
+paddingBottom: 6,
           }}
         >
-          <button
-            className="toggle-button"
-            onClick={prevMonth}
+          <h3
             style={{
-              backgroundColor: "transparent",
-              border: "none",
-              fontSize: 18,
-              cursor: "pointer",
               color: "var(--bgSoft)",
+              margin: 0,
+              fontSize: 16,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
-            type="button"
           >
-            &lt;
-          </button>
-          <h3 style={{ color: "var(--bgSoft)", margin: 0 }}>
-            {hebrewMonths[currentHDate.getMonth() - 1]} {yearToHebrew(currentHDate.getFullYear())}
+            {hebrewMonths[currentHDate.getMonth() - 1]}{" "}
+            {yearToHebrew(currentHDate.getFullYear())}
           </h3>
-          <button
-            className="toggle-button"
-            onClick={nextMonth}
-            style={{
-              backgroundColor: "transparent",
-              border: "none",
-              fontSize: 18,
-              cursor: "pointer",
-              color: "var(--bgSoft)",
-            }}
-            type="button"
-          >
-            &gt;
-          </button>
+
+          <div style={{ display: "flex", gap: 6 }}>
+            <button
+              onClick={nextMonth}
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+                fontSize: 18,
+                cursor: "pointer",
+                color: "var(--bgSoft)",
+              }}
+              type="button"
+            >
+              &gt;
+            </button>
+            <button
+              onClick={prevMonth}
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+                fontSize: 18,
+                cursor: "pointer",
+                color: "var(--bgSoft)",
+              }}
+              type="button"
+            >
+              &lt;
+            </button>
+          </div>
         </div>
 
         <div
