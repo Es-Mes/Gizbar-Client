@@ -25,7 +25,7 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
             setTransactionDetails({
                 _id: transaction._id || "",
                 price: transaction.price || 0,
-                billingDay: transaction.billingDay?.slice(0, 10) || "",
+                billingDay: transaction.billingDay || "",
                 alerts: transaction.alerts || false,
                 typeAlerts: transaction.typeAlerts || "",
                 alertsLevel: transaction.alertsLevel || "",

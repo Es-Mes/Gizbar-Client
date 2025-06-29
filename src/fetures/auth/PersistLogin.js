@@ -14,7 +14,7 @@ const PersistsLogin = () => {
 
   const [refresh, { isLoading, isSuccess, isError, isUninitialized }] = useRefreshMutation();
 
-  // רענון קבוע כל 5 דקות
+  // רענון קבוע כל 25 דקות
   useEffect(() => {
     if (!token) return;
 

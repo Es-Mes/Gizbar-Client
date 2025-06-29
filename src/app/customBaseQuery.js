@@ -24,17 +24,16 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       // מנסה מחדש את הבקשה המקורית
       result = await baseQuery(args, api, extraOptions)
     } else {
-      api.dispatch(logout())
+       api.dispatch(setNeedsReauth());
     }
   }
   if(result?.error?.status === 403){
-      api.dispatch(setNeedsReauth());
+     api.dispatch(setNeedsReauth());
   }
   
 //   נחלץ את .data אם יש
-  if (result?.data && result.data.hasOwnProperty('data')) {
-    result.data = result.data.data
-  }
+  result.data = result?.data?.data ?? result.data;
+
   console.log(result);
   
   return result
