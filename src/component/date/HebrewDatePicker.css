@@ -1,0 +1,24 @@
+:root {
+  /* --bgSoft: #4da6ff; */
+}
+
+.date-picker-day {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #444;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.date-picker-day:hover {
+    border: 1.5px solid var(--bgSoft);
+
+}
+
+.date-picker-day.selected {
+  background-color: var(--bgSoft);
+  color: white;
+}

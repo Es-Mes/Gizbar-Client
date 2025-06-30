@@ -1,6 +1,9 @@
 // HebrewDatePicker.jsx
 import React, { useState, useEffect, useRef } from "react";
+import { IoArrowUp, IoArrowDown, IoCalendarSharp } from "react-icons/io5";
+
 import { HDate } from "@hebcal/core";
+import './HebrewDatePicker.css';
 
 const hebrewMonths = [
   "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול",
@@ -22,28 +25,6 @@ const hebrewNumber = (num) => {
     return tens[ten] + hebrewDigits[unit];
   }
   return num;
-};
-
-const yearToHebrew = (year) => {
-  const hebrewNums = [
-    ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"],
-    ["", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ"],
-    ["", "ק", "ר", "ש", "ת"]
-  ];
-  const shortYear = year % 1000;
-  const hundreds = Math.floor(shortYear / 100);
-  const tens = Math.floor((shortYear % 100) / 10);
-  const ones = shortYear % 10;
-  let hebrewYear = "";
-  if (hundreds > 0) hebrewYear += hebrewNums[2][hundreds] || "";
-  if (tens > 0) hebrewYear += hebrewNums[1][tens] || "";
-  if (ones > 0) hebrewYear += hebrewNums[0][ones] || "";
-  if (hebrewYear.length >= 2) {
-    hebrewYear = hebrewYear.slice(0, -1) + "״" + hebrewYear.slice(-1);
-  } else {
-    hebrewYear += "׳";
-  }
-  return hebrewYear;
 };
 
 const addHebrewMonths = (hdate, offset) => {
@@ -90,7 +71,9 @@ const HebrewDatePicker = ({ name, value, onChange, required, label = "בחר ת�
 
   const handleSelect = (day) => {
     if (!day) return;
-    const hdate = new HDate(day, currentHDate.getMonth(), currentHDate.getFullYear());
+    console.log(day);
+
+    const hdate = new HDate(day + 1, currentHDate.getMonth(), currentHDate.getFullYear());
     const gregDate = hdate.greg();
     const iso = gregDate.toISOString().slice(0, 10);
     onChange?.({ target: { name, value: iso } });
@@ -100,15 +83,23 @@ const HebrewDatePicker = ({ name, value, onChange, required, label = "בחר ת�
   const formatHebrewDate = (hdate) => {
     const day = hdate.getDate();
     let monthIndex = hdate.getMonth() - 1;
+
+    // אדר רגיל במקרה של שנה לא מעוברת
     if (monthIndex === 11 && !hdate.isLeapYear()) {
-      monthIndex = 11; // אדר רגיל
+      monthIndex = 11;
     } else if (monthIndex === 12 && !hdate.isLeapYear()) {
-      monthIndex = 11; // אדר רגיל
+      monthIndex = 11;
     }
+
     const month = hebrewMonths[monthIndex] || "";
-    const year = yearToHebrew(hdate.getFullYear());
+
+    // השתמשי בשנה בעברית מתוך Hebcal
+    const fullDateStr = hdate.renderGematriya(); // מחזיר לדוגמה: "כ״ח סיוון תשפ״ד"
+    const year = fullDateStr.split(" ").pop(); // ניקח את השנה בלבד
+
     return `${hebrewNumber(day)} ${month} ${year}`;
   };
+
 
   return (
     <div style={{ position: "relative", maxWidth: 360, margin: "auto", fontFamily: "Arial, sans-serif" }}>
@@ -128,23 +119,23 @@ const HebrewDatePicker = ({ name, value, onChange, required, label = "בחר ת�
           onClick={() => setShowCalendar((v) => !v)}
           type="button"
           style={{ cursor: "pointer", padding: 8, backgroundColor: "var(--bgSoft)", border: "none", borderRadius: 6, color: "white", fontSize: 18 }}
-        >📅</button>
+        ><IoCalendarSharp /></button>
       </div>
 
       {showCalendar && (
         <>
-          <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", zIndex: 999 }} />
+          <div style={{ position: "fixed", inset: 0, zIndex: 999 }} />
           <div
             ref={popupRef}
             style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, backgroundColor: "white", borderRadius: 12, boxShadow: "0 4px 15px rgba(0,0,0,0.3)", padding: 16, width: 320, fontFamily: "Arial, sans-serif", zIndex: 1000 }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, borderBottom: "1px solid #eee" }}>
               <h3 style={{ margin: 0, fontSize: 16, color: "var(--bgSoft)" }}>
-                {hebrewMonths[currentHDate.getMonth() - 1]} {yearToHebrew(currentHDate.getFullYear())}
+                {hebrewMonths[currentHDate.getMonth() - 1]} {new HDate(1, currentHDate.getMonth(), currentHDate.getFullYear()).renderGematriya().split(" ").pop()}
               </h3>
               <div style={{ display: "flex", gap: 6 }}>
-                <button onClick={() => setCurrentHDate(addHebrewMonths(currentHDate, -1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}>&lt;</button>
-                <button onClick={() => setCurrentHDate(addHebrewMonths(currentHDate, 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}>&gt;</button>
+                <button onClick={() => setCurrentHDate(addHebrewMonths(currentHDate, 1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}><IoArrowDown /></button>
+                <button onClick={() => setCurrentHDate(addHebrewMonths(currentHDate, -1))} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}><IoArrowUp /></button>
               </div>
             </div>
 
@@ -152,13 +143,25 @@ const HebrewDatePicker = ({ name, value, onChange, required, label = "בחר ת�
               {daysOfWeek.map((d) => (
                 <div key={d} style={{ fontWeight: "bold", color: "var(--bgSoft)" }}>{d}</div>
               ))}
-              {daysArray.map((day, i) => day ? (
-                <button
-                  key={i}
-                  onClick={() => handleSelect(day)}
-                  style={{ padding: 8, borderRadius: 8, border: "1px solid #ccc", backgroundColor: "white", color: "#444", cursor: "pointer", fontSize: 14 }}
-                >{hebrewNumber(day)}</button>
-              ) : <div key={i} />)}
+              {daysArray.map((day, i) => {
+                if (!day) return <div key={i} />;
+
+                const isSelected =
+                  selectedHDate.getDate() === day &&
+                  selectedHDate.getMonth() === currentHDate.getMonth() &&
+                  selectedHDate.getFullYear() === currentHDate.getFullYear();
+
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleSelect(day)}
+                    className={`date-picker-day ${isSelected ? "selected" : ""}`}
+                  >
+                    {hebrewNumber(day)}
+                  </button>
+                );
+              })}
+
             </div>
           </div>
         </>
