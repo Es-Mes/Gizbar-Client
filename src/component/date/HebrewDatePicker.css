@@ -63,5 +63,20 @@
   animation: slideRight 0.4s ease-in-out;
 }
 
+.arrowBtn .next {
+  top:15%;
+    right: 80% !important;
+}
+.arrowBtn .last {
+  top:15%;
+    right: 90% !important;
+}
+
+.arrowBtn:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    
+}
+
 
 

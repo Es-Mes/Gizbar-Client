@@ -3,6 +3,7 @@ import React from "react";
 import { IoArrowUp, IoArrowDown } from "react-icons/io5";
 import { FaCaretDown } from "react-icons/fa";
 import { HDate } from "@hebcal/core";
+import './HebrewDatePicker.css';
 
 const hebrewMonths = [
   "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול",
@@ -102,14 +103,14 @@ const CalendarPopup = ({
             <FaCaretDown />
           </h3>
           <div style={{ display: "flex", gap: 6 }}>
-            <button onClick={() => {
+            <button className="arrowBtn" onClick={() => {
               setTransitionDirection("forward");
               setCurrentHDate(addHebrewMonths(currentHDate, 1));
-            }} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}><IoArrowDown /></button>
-            <button onClick={() => {
+            }} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}><IoArrowDown /><p className="tooltip-text next">חודש הבא</p></button>
+            <button className="arrowBtn" onClick={() => {
               setTransitionDirection("backward");
               setCurrentHDate(addHebrewMonths(currentHDate, -1));
-            }} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}><IoArrowUp /></button>
+            }} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "var(--bgSoft)" }}><IoArrowUp /><p className="tooltip-text last">חודש קודם</p></button>
           </div>
         </div>
 

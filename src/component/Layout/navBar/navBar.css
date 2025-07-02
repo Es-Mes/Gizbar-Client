@@ -157,9 +157,11 @@
     z-index: 10;
 }
 
+
 .icon-tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
+    right: 80% !important;
 }
 
 
