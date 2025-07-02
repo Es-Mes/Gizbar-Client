@@ -8,8 +8,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2002;
-    overflow: hidden; /* מונע גלילה של הרקע */
+    z-index: 1000;
+    /* overflow: hidden; */
+    /* max-height: 92vh; */
+   overflow-y: auto; 
 }
 
 .modal-content {
