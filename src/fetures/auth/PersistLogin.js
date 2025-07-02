@@ -40,11 +40,11 @@ const PersistsLogin = () => {
     if (!token) return;
 
    // מרווח זמן קצר לפני שהטוקן פג כדי לרענן אותו
-    const fiveMinutes = 5 * 60 * 1000;
+    const fiveMinutes = 55 * 60 * 1000;
     const interval = setInterval(() => {
         // רענן רק אם הטוקן עומד לפוג אבל עדיין לא פג
         refresh().catch((err) => console.error("Auto-refresh failed:", err));
-    }, fiveMinutes); // לדוגמה, כל 5 דקות
+    }, fiveMinutes); // לדוגמה, כל 55 דקות
 
     return () => clearInterval(interval);
   }, [token, refresh]);
