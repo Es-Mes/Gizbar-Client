@@ -405,11 +405,9 @@ const HomeMain = () => {
       const today = new Date();
       return [...transactions]
          .filter(transaction =>
-            transaction.status !== "canceld"  // רק עסקאות שלא בוטלו
-            // new Date(transaction.billingDay) <= today // תאריך גבייה מאוחר מהיום
+            transaction.status !== "canceld" && new Date().getMonth() === new Date(transaction.billingDate).getMonth()
          )
-         // .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
-         .slice(0, 5) // חמש הראשונות
+         // .slice(0, 5)
    };
    const recentTransactions = filterRecentTransactions(transactionsToDisplay);
 

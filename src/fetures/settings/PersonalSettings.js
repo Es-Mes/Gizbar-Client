@@ -39,6 +39,8 @@ const PersonalSettings = () => {
     
       <button className="modelBtn" onClick={() => { setChangeModalOpen(true) }}>שינוי סיסמא</button>
       <NavLink to={"../settings/paymentDetails"}>עריכת פרטי תשלום</NavLink>
+            {/* <NavLink to={"../messages/addMessage"}>שליחת תזכורות והודעות</NavLink> */}
+
     </div>
     <Modal isOpen={isChangePassModalOpen} onClose={() => (setChangeModalOpen(false))}>
       <ChangePasswordModal onSucsses={() => { setChangeModalOpen(false) }} />

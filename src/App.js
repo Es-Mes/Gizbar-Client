@@ -36,6 +36,7 @@ import SingleCustomer from "./fetures/customers/view/SingleCustomer"
 import './toast-custom.css';
 import PaymentDetails from "./component/payment/paymentDetails"
 import AgentsList from "./fetures/agent/list/AgentsList"
+import MessageForm from "./fetures/messages/MessageForm"
 
 
 const App = () => {
@@ -85,6 +86,10 @@ const App = () => {
                             <Route path="providerList" element={<TransactionsAsProvider />} />
                             <Route path="customerList" element={<TransactionsAsCustomer />} />
 
+                        </Route>
+                        <Route path="messages" element={<Outlet />}>
+                            {/* <Route index element={<TransactionsMenu />} /> */}
+                            <Route path="addMessage" element={<MessageForm />} />
                         </Route>
                         <Route element={<RequireAuth allowRoles={["admin"]}/>}>
                             <Route path="agents" element={<Outlet />}>

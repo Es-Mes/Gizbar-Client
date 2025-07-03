@@ -11,12 +11,12 @@ import { GrView, GrEdit, GrFormTrash, GrMoreVertical, GrFormUp } from "react-ico
 import { useDispatch } from "react-redux"
 import useAuth from "../../../hooks/useAuth"
 import Modal from "../../../modals/Modal"
-import { useGetAgentQuery } from "../apiSlice";
+import { useGetAllAgentsQuery } from "../AgentApiSlice";
 import AddTransaction from "../../transactions/add/AddTransaction";
 
 const AgentsList = () => {
     const {phone} = useAuth()
-    const {data: agents,isLoading,error} = useGetAgentQuery({phone})
+    const {data: agents,isLoading,error} = useGetAllAgentsQuery({phone})
     console.log(agents);
     const agentsList = Array.isArray(agents) ? agents : agents ? [agents] : [];
     console.log(agentsList);

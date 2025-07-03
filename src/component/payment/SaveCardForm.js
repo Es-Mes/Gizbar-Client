@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-
+import { useSaveCardDetailsMutation } from "../../fetures/agent/AgentApiSlice";
 const SaveCardForm = ({ initialCustomerData = {} }) => {
   const iframeRef = useRef(null);
 
@@ -21,6 +21,7 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
 
   const [iframeHeight, setIframeHeight] = useState("400px");
   const [errorsMessage, setErrorsMessage] = useState("");
+  const [saveCardDetails] = useSaveCardDetailsMutation();
 
   const PostNedarim = (Data) => {
     const iframeWin = iframeRef.current?.contentWindow;
@@ -28,7 +29,7 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
   };
 
   useEffect(() => {
-    const handleMessage = (event) => {
+    const handleMessage = async (event) => {
       console.log(`Event origin: ${event.origin}`);
       if (event.origin !== "https://www.matara.pro") return;
 
@@ -45,18 +46,23 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
         const { Status, Message, Token, Tokef, Card4Digits, CreditCardType } = data.Value;
 
         if (Status === "OK") {
-          // saveCardDetailsToDB({
-          //   token: Token,
-          //   tokef: customerData.Tokef,
-          //   zeout: customerData.Zeout,
-          //   last4: Card4Digits,
-          //   cardType: CreditCardType,
-          //   clientId: initialCustomerData._id,
-          // });
+          try {
+            await saveCardDetails({
+              token: Token,
+              tokef: customerData.Tokef,
+              zeout: customerData.Zeout,
+              last4: Card4Digits,
+              cardType: CreditCardType,
+              clientId: initialCustomerData._id,
+            }).unwrap();
 
-          toast.success("✅ הכרטיס נשמר בהצלחה!");
-          
-        } else {
+            toast.success("✅ הכרטיס נשמר בהצלחה!");
+          } catch (error) {
+            console.error("❌ שגיאה בשמירת הכרטיס לשרת:", error);
+            setErrorsMessage("שמירת הכרטיס לשרת נכשלה");
+          }
+        }
+        else {
           setErrorsMessage(Message || "שמירת הכרטיס נכשלה");
         }
       }
@@ -92,7 +98,7 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
 
   const handleSaveCard = () => {
     if (!validateForm()) return;
-    const {Tokef, ...customerDataWithoutTokef} = customerData;
+    const { Tokef, ...customerDataWithoutTokef } = customerData;
     PostNedarim({
       Name: "FinishTransaction2",
       Value: {
@@ -102,35 +108,23 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
     });
   };
 
-  const saveCardDetailsToDB = async (cardData) => {
-    try {
-      const res = await fetch("/api/cards", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cardData),
-      });
-      if (!res.ok) throw new Error("שגיאה בשרת");
-    } catch (err) {
-      console.error(err);
-      toast.error("❌ שגיאה בשמירת הכרטיס");
-    }
-  };
+
 
   return (
     <div className="card-details-form">
       <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
       <h2 style={{ textAlign: "start" }}> 2. איך תרצה שהמערכת תגבה ממך? </h2>
-      <form style={{display:"flex",flexDirection:"column", gap:"15px"}}>
-        
-     
-          <TextField variant="outlined" label="שם פרטי" type="text" name="FirstName" value={customerData.FirstName} onChange={handleChange} required />
-        
-          <TextField variant="outlined" label="טלפון" type="text" name="Phone" value={customerData.Phone} onChange={handleChange} required />
-        
-          <TextField variant="outlined" label="תעודת זהות" type="text" name="Zeout" value={customerData.Zeout} onChange={handleChange} required />
-        
-          <TextField variant="outlined" label="תוקף כרטיס (MMYY)" type="text" name="Tokef" value={customerData.Tokef || ""} onChange={handleChange} required />
-        
+      <form style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+
+
+        <TextField variant="outlined" label="שם פרטי" type="text" name="FirstName" value={customerData.FirstName} onChange={handleChange} required />
+
+        <TextField variant="outlined" label="טלפון" type="text" name="Phone" value={customerData.Phone} onChange={handleChange} required />
+
+        <TextField variant="outlined" label="תעודת זהות" type="text" name="Zeout" value={customerData.Zeout} onChange={handleChange} required />
+
+        <TextField variant="outlined" label="תוקף כרטיס (MMYY)" type="text" name="Tokef" value={customerData.Tokef || ""} onChange={handleChange} required />
+
 
 
         <iframe

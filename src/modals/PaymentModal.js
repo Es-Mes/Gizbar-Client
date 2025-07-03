@@ -26,6 +26,7 @@ const PaymentModal = ({ isOpen, onClose, transaction }) => {
                 <h2>תשלום באשראי</h2>
                 {transaction ? (
                     <PaymentForm initialCustomerData={{
+                        transactionID:transaction._id,
                         FirstName: transaction.customer.full_name,
                         Phone: transaction.customer.phone,
                         Mail: transaction.customer.email,

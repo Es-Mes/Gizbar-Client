@@ -47,6 +47,7 @@ const PaymentPage = () => {
 
   // ✅ שלב 5 - הצגת טופס
   const initialCustomerData = {
+    transactionID:transactionData._id,
     FirstName: transactionData?.customer?.full_name,
     Phone: transactionData?.customer?.phone,
     Mail: transactionData?.customer?.email,

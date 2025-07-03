@@ -25,6 +25,14 @@ const agentApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["Agent"],
         }),
+        saveCardDetails: build.mutation({
+            query: (data) => ({
+                url: `/api/agent/saveCardDetails`, // נתיב מתאים לפי השרת שלך
+                method: 'PUT',
+                body: data,
+            }),
+            providesTags: ["Agent"],
+        }),
 
     }),
 });
@@ -32,5 +40,6 @@ const agentApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetAllAgentsQuery,
     useUpdatePaymentDetailsMutation,
-    useUpdateAgentMutation
+    useUpdateAgentMutation,
+    useSaveCardDetailsMutation
 } = agentApiSlice;
