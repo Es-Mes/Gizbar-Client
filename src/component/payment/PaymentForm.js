@@ -23,7 +23,7 @@ const PaymentForm = ({ initialCustomerData,outsieder}) => {
         Mosad: initialData.mosad? initialData.mosad : process.env.REACT_APP_MOSAD,
         ApiValid: initialData.apiValid? initialData.apiValid : process.env.REACT_APP_API_IFRAME,
         Comment: "",
-        CallBack: process.env.REACT_APP_BASE_URL,
+        CallBack: process.env.REACT_APP_CALLBACK_URL,
     });
 
     const [paymentStatus, setPaymentStatus] = useState(null);
@@ -36,13 +36,17 @@ const PaymentForm = ({ initialCustomerData,outsieder}) => {
     const [amount, setAmount] = useState(0);
 
 
-     const handleCopy = () => {
-          const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
-          const link = `${baseUrl}/payment/${initialCustomerData?.phone}/${initialCustomerData._id}`;
-          navigator.clipboard.writeText(link)
-              .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
-              .catch(() => toast.error("העתקה נכשלה."));
-      };
+    //  const handleCopy = () => {
+    //         if (!initialCustomerData || !initialCustomerData.Phone || !initialCustomerData.transactionID) {
+    //             toast.error("נתונים לא זמינים להעתקה.");
+    //             return;
+    //         }
+    //       const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+    //       const link = `${baseUrl}/payment/${initialCustomerData?.Phone}/${initialCustomerData?.transactionID}`;
+    //       navigator.clipboard.writeText(link)
+    //           .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
+    //           .catch(() => toast.error("העתקה נכשלה."));
+    //   };
 
     const validateForm = () => {
         const newErrors = {};

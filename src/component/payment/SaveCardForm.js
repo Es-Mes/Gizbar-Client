@@ -43,9 +43,10 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
       }
 
       if (data.Name === "TransactionResponse") {
-        const { Status, Message, Token, Tokef, Card4Digits, CreditCardType } = data.Value;
+        const { Status, Message, Token, Card4Digits, CreditCardType } = data.Value;
 
         if (Status === "OK") {
+          console.log("✅ Transaction successful:", data.Value)
           try {
             await saveCardDetails({
               token: Token,
@@ -85,6 +86,7 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomerData((prev) => ({ ...prev, [name]: value }));
+    console.log(customerData);
   };
 
   const validateForm = () => {

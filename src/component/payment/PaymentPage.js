@@ -47,14 +47,14 @@ const PaymentPage = () => {
 
   // ✅ שלב 5 - הצגת טופס
   const initialCustomerData = {
-    transactionID:transactionData._id,
-    FirstName: transactionData?.customer?.full_name,
-    Phone: transactionData?.customer?.phone,
-    Mail: transactionData?.customer?.email,
-    Amount: transactionData?.price,
+    transactionID:transactionData?._id || "",
+    FirstName: transactionData?.customer?.full_name || "",
+    Phone: transactionData?.customer?.phone || "",
+    Mail: transactionData?.customer?.email || "",
+    Amount: transactionData?.price || "",
     Currency: "1",
-    mosad: transactionData?.agent?.mosad,
-    apiValid: transactionData?.agent?.apiValid,
+    mosad: transactionData?.agent?.mosad || "",
+    apiValid: transactionData?.agent?.apiValid || "",
   };
 
 

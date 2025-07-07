@@ -11,7 +11,7 @@ const PaymentModal = ({ isOpen, onClose, transaction }) => {
 
     const handleCopy = () => {
         const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
-        const link = `${baseUrl}/payment/${phone}/${transaction._id}`;
+        const link = `${baseUrl}/payment/${phone}/${transaction?._id}`;
         navigator.clipboard.writeText(link)
             .then(() => toast.success("הקישור הועתק 👍 ",{icon:false}))
             .catch(() => toast.error("העתקה נכשלה."));
