@@ -577,15 +577,17 @@ const HomeMain = () => {
             <button type="button" onClick={() => { setIsTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
                הוסף עסקה חדשה לגביה
             </button>
-            <Link to="../dash/UnderConstruction" className="nav-button">
+            <Link to="../dash/UnderConstruction" className="nav-button inDevelopment"onClick={(e) => e.preventDefault()}>
                חובות תשלום
             </Link>
 
-            <Link to="../dash/UnderConstruction" className="nav-button">
+            <Link to="../dash/UnderConstruction" className="nav-button inDevelopment"
+            onClick={(e) => e.preventDefault()}>
                שליחת תזכורות והודעות
             </Link>
 
-            <Link to="../dash/CreditPay" className="nav-button">
+            <Link to="../dash/CreditPay" className="nav-button "
+            >
                סליקת אשראי לגביה מיידית
             </Link>
 

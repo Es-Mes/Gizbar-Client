@@ -94,6 +94,11 @@ const Sidebar = ({ closeMenu }) => {
           {React.createElement(menu.icon, { size: 25, className: "icon" })} {menu.title}
         </NavLink>
       ))}
+      {/* לבינתיים עד שיביאו פרטיםלהתקשר עם סוכני החברה */}
+      <NavLink className="nav-link inDevelopment" activeClassName="active" to={"/dash/agents"}
+        onClick={(e) => e.preventDefault()}>
+        {React.createElement(FaAddressBook, { size: 25, className: "icon" })} צור קשר
+      </NavLink>
     </div>
   );
 };
