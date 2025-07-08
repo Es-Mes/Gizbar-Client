@@ -32,7 +32,7 @@ import TransactionsMenu from "./fetures/transactions/view/TransactionsMenu"
 import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCustomer"
 import { useDispatch, useSelector } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
-import SingleCustomer from "./fetures/customers/view/SingleCustomer"
+import CustomerDetails from "./fetures/customers/view/CustomerDetails"
 import './toast-custom.css';
 import PaymentDetails from "./component/payment/paymentDetails"
 import AgentsList from "./fetures/agent/list/AgentsList"
@@ -75,7 +75,7 @@ const App = () => {
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<AddCustomer />} />
-                            <Route path=":customerId" element={<SingleCustomer />} />
+                            <Route path=":customerId" element={<CustomerDetails />} />
                         </Route>
                         <Route path="services" element={<Outlet />}>
                             <Route index element={<ServicesList />} />
@@ -95,7 +95,7 @@ const App = () => {
                             <Route path="agents" element={<Outlet />}>
                             <Route index element={<AgentsList />} />
                             <Route path="add" element={<AddCustomer />} />
-                            <Route path=":customerId" element={<SingleCustomer />} />
+                            <Route path=":customerId" element={<CustomerDetails />} />
                         </Route>
                         </Route>
                     </Route>

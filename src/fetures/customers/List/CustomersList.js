@@ -17,6 +17,7 @@ import AddCustomer from "../add/AddCustomer"
 import { useGetAgentQuery } from "../../agent/apiSlice";
 import AddTransaction from "../../transactions/add/AddTransaction";
 import DeleteCustomer from "../delete/DeleteCustomer";
+import CustomerDetails from "../view/CustomerDetails";
 
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
@@ -27,6 +28,15 @@ const CustomersList = () => {
     const tableRef = useRef(null);
     const [isNarrow, setIsNarrow] = useState(false);
     const location = useLocation();
+
+const [openDetailsId, setOpenDetailsId] = useState(null);
+
+    const toggleCustomerDetails = (customerId) => {
+        console.log(`customerId: ${customerId}`);
+        
+        setOpenDetailsId(prev => (prev === customerId ? null : customerId));
+    };
+
 
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [specificCustomer, setSpecificCustomer] = useState(null)
@@ -81,7 +91,7 @@ const CustomersList = () => {
         };
     }, [openMenuCustomerId]);
 
-   
+
     useEffect(() => {
         const table = tableRef.current;
         if (!table) return;
@@ -127,7 +137,7 @@ const CustomersList = () => {
     const openTransactionModal = () => {
         setIsTransactionModalOpen(true);
     }
-    
+
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -163,9 +173,10 @@ const CustomersList = () => {
                     onChange={handleChange}
                     value={searchParams.get("q") || ""}
                 />
-                <div style={{alignSelf:"end"
+                <div style={{
+                    alignSelf: "end"
                 }}>
-                    <div className="hover-grow-icon"><img src="/icons8-users-50.png"/></div>
+                    <div className="hover-grow-icon"><img src="/icons8-users-50.png" /></div>
                     <h3 className="customNum" style={{ color: 'var(--bgSoftLight3)' }}>מספר הלקוחות שלך -  {customers.length}</h3>
                 </div>
             </div>
@@ -186,7 +197,8 @@ const CustomersList = () => {
                 </thead>
                 <tbody>
                     {filteredData.map(customer => (
-                        <tr key={customer._id}>
+                        <React.Fragment key={customer._id}>
+                        <tr >
                             <td>
                                 <div className="customers-list-customer">
                                     {customer.full_name}
@@ -209,15 +221,15 @@ const CustomersList = () => {
                                 <CiCoinInsert size={20} />
 
                             </td>
-                            <td className="disabled btn-customer-list">
-                                <Link to={`/dash/customers/${customer._id}`} onClick={(e) => e.preventDefault()} style={{ pointerEvents: "none", color: "gray" }} className="customers-list-btn customers-list-view">
+                            <td className="btn-customer-list">
+                                <span onClick={() => toggleCustomerDetails(customer._id)} style={{ cursor: "pointer" , color: "gray" }} className="customers-list-btn customers-list-view">
                                     <PiEyeThin size={20} />
-                                </Link>
+                                </span>
                             </td>
-                            <td style={{ position: "relative" }} 
+                            <td style={{ position: "relative" }}
                             >
                                 <div ref={(el) => (actionsRefs.current[customer._id] = el)}>
-                                    
+
                                     <span
                                         onClick={(event) => { toggleActions(event, customer._id) }} style={{ cursor: "pointer" }}>
                                         {openMenuCustomerId === customer._id ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
@@ -253,19 +265,27 @@ const CustomersList = () => {
                                     )}
                                 </div>
                             </td>
-                            {/* <td className="td-no-border">
-                                <div className="customers-list-btns">
-                                <Link to={`/dash/customers/${customer._id}`} className="customers-list-btn customers-list-view">תצוגה</Link>
-                                <button onClick={()=>{deleteClick(customer)}} className="customers-list-btn customers-list-delete">מחיקה</button></div>
-                            </td> */}
                         </tr>
+                        
+{ openDetailsId === customer._id && (
+                            <tr className="expanded-customer-row">
+                                <td colSpan={isNarrow ? 5 : 8} style={{ background: "#f8f8ff" }}>
+                                    <CustomerDetails
+                                        customer={customer}
+                                        onClose={() => setOpenDetailsId(null)}
+                                    />
+                                </td>
+                            </tr>
+                        )}
+                         </React.Fragment>
                     ))}
+
                 </tbody>
             </table>
             <Modal isOpen={isEditModelOpen} onClose={() => setEditModelOpen(false)}>
                 <EditCustomer
                     customer={selectedCustomer}
-                    onSuccess={() => {setEditModelOpen(false);toast.success("העריכה נשמרה 👍 ",{icon:false})}} />
+                    onSuccess={() => { setEditModelOpen(false); toast.success("העריכה נשמרה 👍 ", { icon: false }) }} />
             </Modal>
             <Modal isOpen={isAddModelOpen} onClose={() => setAddModelOpen(false)}>
                 <AddCustomer

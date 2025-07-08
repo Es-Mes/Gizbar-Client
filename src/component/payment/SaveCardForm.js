@@ -2,10 +2,11 @@ import { TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useSaveCardDetailsMutation } from "../../fetures/agent/AgentApiSlice";
-const SaveCardForm = ({ initialCustomerData = {} }) => {
+const SaveCardForm = ( {initialCustomerData = {}} ) => {
   const iframeRef = useRef(null);
 
   const [customerData, setCustomerData] = useState({
+    _id: initialCustomerData._id || "",
     FirstName: initialCustomerData.FirstName || "",
     LastName: initialCustomerData.LastName || "",
     Zeout: initialCustomerData.Zeout || "",
@@ -43,28 +44,31 @@ const SaveCardForm = ({ initialCustomerData = {} }) => {
       }
 
       if (data.Name === "TransactionResponse") {
-        const { Status, Message, Token, Card4Digits, CreditCardType } = data.Value;
+        const { Status, Token, LastNum } = data.Value;
 
         if (Status === "OK") {
           console.log("✅ Transaction successful:", data.Value)
+          console.log(`saving card details for customer: ${customerData.Zeout} ${customerData.Tokef}`);
+
           try {
             await saveCardDetails({
               token: Token,
               tokef: customerData.Tokef,
               zeout: customerData.Zeout,
-              last4: Card4Digits,
-              cardType: CreditCardType,
+              last4: LastNum,
               clientId: initialCustomerData._id,
             }).unwrap();
 
-            toast.success("✅ הכרטיס נשמר בהצלחה!");
+            toast.success("✅ הכרטיס נשמר בהצלחה!", {icon:false});
+            setErrorsMessage("");
+    
           } catch (error) {
             console.error("❌ שגיאה בשמירת הכרטיס לשרת:", error);
             setErrorsMessage("שמירת הכרטיס לשרת נכשלה");
           }
         }
         else {
-          setErrorsMessage(Message || "שמירת הכרטיס נכשלה");
+          setErrorsMessage("שמירת הכרטיס נכשלה");
         }
       }
     };

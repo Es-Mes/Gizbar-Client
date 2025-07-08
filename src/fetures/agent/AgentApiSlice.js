@@ -15,7 +15,7 @@ const agentApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: data,
             }),
-            providesTags: ["Agent"],
+            invalidatesTags: ["Agent"],
         }),
         updatePaymentDetails: build.mutation({
             query: (data) => ({
@@ -23,15 +23,15 @@ const agentApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: data,
             }),
-            providesTags: ["Agent"],
+            invalidatesTags: ["Agent"],
         }),
         saveCardDetails: build.mutation({
             query: (data) => ({
-                url: `/api/agent/saveCardDetails`, // נתיב מתאים לפי השרת שלך
-                method: 'PUT',
+                url: `/api/agent/cardDetails`, // נתיב מתאים לפי השרת שלך
+                method: 'POST',
                 body: data,
             }),
-            providesTags: ["Agent"],
+            invalidatesTags: ["Agent"],
         }),
 
     }),

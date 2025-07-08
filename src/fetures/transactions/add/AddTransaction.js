@@ -250,16 +250,19 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    // עסקה פעם ראשונה או שאין פרטי בנק
-    // if (!agent?.bankAccount) {
+   // עסקה פעם ראשונה או שאין פרטי בנק
+    // if (!agent?.cardDetails || agent?.cardDetails.length === 0) {
     //     return(
-    //         <PaymentDetails onSuccess={() =>{
-    //             setBankAccountModalOpen(false)
-    //         }}/>)
+    //         <PaymentDetails onSuccess={onSuccess}/>)
     // }
 
+
+
     return (
-        <div className="add-transaction-card">
+        (!agent?.cardDetails || agent?.cardDetails.length === 0) ? 
+            <PaymentDetails  />
+        :
+        (<div className="add-transaction-card">
             <div className="transaction-header">
                 {/* <div className="rotating-coin">🪙</div> */}
                 <h2>הוספת עסקה חדשה</h2>
@@ -527,7 +530,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 bankAccount
             </Modal> */}
 
-        </div>
+        </div>)
     );
 };
 

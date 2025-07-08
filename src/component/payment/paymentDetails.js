@@ -45,6 +45,8 @@ const PaymentDedails = () => {
   if (isError) return <p>שגיאה בטעינת נתונים</p>;
 
   const initialCustomerData = {
+    _id: agent?._id,
+    Zeout: agent?.zeout,
     FirstName: agent?.first_name,
     LastName: agent?.last_name,
     Phone: agent?.phone,
@@ -111,6 +113,7 @@ const PaymentDedails = () => {
 
   return (
     <div className="save-card-container" >
+  
       {step === "choose" && (
         <>
           <h3>פעם ראשונה שאתה מבצע עסקה במערכת?<br />רק שתי שאלות ומסיימים!</h3>
