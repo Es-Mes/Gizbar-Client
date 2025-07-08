@@ -2,7 +2,7 @@ import { TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useSaveCardDetailsMutation } from "../../fetures/agent/AgentApiSlice";
-const SaveCardForm = ( {initialCustomerData = {}} ) => {
+const SaveCardForm = ({ initialCustomerData = {} }) => {
   const iframeRef = useRef(null);
 
   const [customerData, setCustomerData] = useState({
@@ -19,6 +19,12 @@ const SaveCardForm = ( {initialCustomerData = {}} ) => {
     ApiValid: process.env.REACT_APP_API_IFRAME,
     CallBack: process.env.REACT_APP_BASE_URL,
   });
+
+  const customerDataRef = useRef(customerData);
+
+  useEffect(() => {
+    customerDataRef.current = customerData;
+  }, [customerData]);
 
   const [iframeHeight, setIframeHeight] = useState("400px");
   const [errorsMessage, setErrorsMessage] = useState("");
@@ -53,15 +59,15 @@ const SaveCardForm = ( {initialCustomerData = {}} ) => {
           try {
             await saveCardDetails({
               token: Token,
-              tokef: customerData.Tokef,
-              zeout: customerData.Zeout,
+              tokef: customerDataRef.current.Tokef,
+              zeout: customerDataRef.current.Zeout,
               last4: LastNum,
               clientId: initialCustomerData._id,
             }).unwrap();
 
-            toast.success("✅ הכרטיס נשמר בהצלחה!", {icon:false});
+            toast.success("✅ הכרטיס נשמר בהצלחה!", { icon: false });
             setErrorsMessage("");
-    
+
           } catch (error) {
             console.error("❌ שגיאה בשמירת הכרטיס לשרת:", error);
             setErrorsMessage("שמירת הכרטיס לשרת נכשלה");
