@@ -398,16 +398,32 @@ const HomeMain = () => {
 
    //עסקאות
    const filterRecentTransactions = (transactions) => {
-      // console.log(`transactions${transactions}`)
-      if (transactions == null) {
-         return [];
-      }
+      if (!transactions) return [];
       const today = new Date();
-      return [...transactions]
-         .filter(transaction =>
-            transaction.status !== "canceld" && new Date().getMonth() === new Date(transaction.billingDate).getMonth()
-         )
-         // .slice(0, 5)
+
+      return [...transactions].filter(transaction => {
+         // אל תציג עסקאות שבוטלו
+         if (transaction.status === "canceld") return false;
+
+         // הכנסות (ספק) - הצג עסקאות עתידיות, שטרם נגבו, או בפיגור
+         if (selectedOption === "agent") {
+            return (
+               (transaction.status === "pendingCharge" && new Date(transaction.billingDay) > today) ||
+               (transaction.status === "notPaid" && new Date(transaction.billingDay) < today) ||
+               (transaction.status === "paid" && new Date(transaction.paymentDate).getMonth() === today.getMonth())
+            );
+         }
+         // הוצאות (כלקוח) - הצג עסקאות עתידיות, שטרם נגבו, או בפיגור
+         if (selectedOption === "customer") {
+            return (
+               (transaction.status === "pendingCharge" && new Date(transaction.billingDay) > today) ||
+               (transaction.status === "notPaid" && new Date(transaction.billingDay) < today) ||
+               (transaction.status === "paid" && new Date(transaction.paymentDate).getMonth() === today.getMonth())
+            );
+         }
+
+         return false;
+      });
    };
    const recentTransactions = filterRecentTransactions(transactionsToDisplay);
 
@@ -577,12 +593,12 @@ const HomeMain = () => {
             <button type="button" onClick={() => { setIsTransactionModalOpen(true); console.log({ isTransactionModalOpen }) }}>
                הוסף עסקה חדשה לגביה
             </button>
-            <Link to="../dash/UnderConstruction" className="nav-button inDevelopment"onClick={(e) => e.preventDefault()}>
+            <Link to="../dash/UnderConstruction" className="nav-button inDevelopment" onClick={(e) => e.preventDefault()}>
                חובות תשלום
             </Link>
 
             <Link to="../dash/UnderConstruction" className="nav-button inDevelopment"
-            onClick={(e) => e.preventDefault()}>
+               onClick={(e) => e.preventDefault()}>
                שליחת תזכורות והודעות
             </Link>
 
@@ -606,8 +622,8 @@ const HomeMain = () => {
                >
                   הכנסות
                </button>
-               <h2>עסקאות חודש {currentMonth}</h2>
-               <button 
+               <h2>עסקאות פעילות</h2>
+               <button
                   className={` toggle-button ${selectedOption === 'customer' ? 'active' : ''}`}
                   onClick={() => setSelectedOption('customer')}
                >
@@ -618,11 +634,11 @@ const HomeMain = () => {
             <div>
                <TransactionsList transactions={recentTransactions} />
             </div>
-
+            {/* 
             <div>
                <h2 style={{color:'var(--text)',marginTop:'40px'}}>תשלומים שעדיין מחכים</h2>
                <TransactionsList transactions={pendingTransactions} />
-            </div>
+            </div> */}
          </div>
 
          <Modal isOpen={isTransactionModalOpen}

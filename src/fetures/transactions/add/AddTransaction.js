@@ -32,7 +32,9 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [transactionDetails, setTransactionDetails] = useState({
         billingDay: "",
-        alerts: false,
+        alerts: true,
+        typeAlerts: "email and phone",
+        alertsLevel: "once",
     });
 
     const [isBankAccountModalOpen, setBankAccountModalOpen] = useState(false)

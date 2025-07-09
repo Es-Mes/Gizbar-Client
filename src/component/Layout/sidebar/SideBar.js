@@ -16,7 +16,9 @@ import "./sidebar.css";
 import useAuth from "../../../hooks/useAuth";
 
 const Sidebar = ({ closeMenu }) => {
-  const { roles } = useAuth()
+  const { roles,paymentType } = useAuth()
+  console.log("paymentType", paymentType);
+  
   const [openIndex, setOpenIndex] = useState(null); // משתנה לניהול תפריטים פתוחים
   const [activeIndex, setActiveIndex] = useState(0); // משתנה לניהול פריט פעיל
 
@@ -63,11 +65,11 @@ const Sidebar = ({ closeMenu }) => {
       icon: FaPlay,
       link: "/dash/services",
     },
-    {
-      title: "צור קשר",
-      icon: FaRegComments,
-      link: "/dash/UnderConstruction"
-    },
+    // {
+    //   title: "צור קשר",
+    //   icon: FaRegComments,
+    //   link: "/dash/UnderConstruction"
+    // },
 
   ];
 
@@ -86,18 +88,50 @@ const Sidebar = ({ closeMenu }) => {
         }}>
         {React.createElement(FaAddressBook, { size: 25, className: "icon" })} משתמשים
       </NavLink>}
-      {menuItems.map((menu, index) => (
+      {menuItems.map((menu, index) => {
+  // בדיקה אם זה כפתור סליקת אשראי
+  const isCredit = menu.link === "/dash/CreditPay";
+  if (isCredit && paymentType === "none") {
+    return (
+      <NavLink
+        key={menu.link}
+        className="nav-link inDevelopment"
+        activeClassName="active"
+        to={menu.link}
+        onClick={e => e.preventDefault()}
+        tabIndex={-1}
+        aria-disabled="true"
+      >
+        {React.createElement(menu.icon, { size: 25, className: "icon" })} {menu.title}
+      </NavLink>
+    );
+  }
+   return (
+    <NavLink
+      key={menu.link}
+      className="nav-link"
+      activeClassName="active"
+      to={menu.link}
+      onClick={() => {
+        if (closeMenu) closeMenu();
+      }}
+    >
+      {React.createElement(menu.icon, { size: 25, className: "icon" })} {menu.title}
+    </NavLink>
+  );
+})}
+      {/* {menuItems.map((menu, index) => (
         <NavLink className="nav-link" activeClassName="active" to={menu.link}
           onClick={() => {
             if (closeMenu) closeMenu(); // סוגר תפריט במסך קטן
           }}>
           {React.createElement(menu.icon, { size: 25, className: "icon" })} {menu.title}
         </NavLink>
-      ))}
+      ))} */}
       {/* לבינתיים עד שיביאו פרטיםלהתקשר עם סוכני החברה */}
       <NavLink className="nav-link inDevelopment" activeClassName="active" to={"/dash/agents"}
         onClick={(e) => e.preventDefault()}>
-        {React.createElement(FaAddressBook, { size: 25, className: "icon" })} צור קשר
+        {React.createElement(FaRegComments, { size: 25, className: "icon" })} צור קשר
       </NavLink>
     </div>
   );

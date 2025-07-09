@@ -14,9 +14,10 @@ const useAuth = () => {
             last_name: decoded.last_name || "",
             isAdmin: decoded.roles === "admin",
             isUser: decoded.roles === "user",
+            paymentType: decoded.paymentType || "none",
         };
     }
-    return { _id: "", roles: "", phone: "", isAdmin: false, isUser: false };
+    return { _id: "", roles: "", phone: "", isAdmin: false, isUser: false,paymentType:"none" };
 };
 
 export default useAuth;
