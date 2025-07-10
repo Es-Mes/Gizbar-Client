@@ -45,7 +45,7 @@ const TransactionItem = ({ transaction }) => {
 
     const isIncome = transaction.agent.first_name ? false : true
     console.log(transaction);
-    
+
 
     const actionsRef = useRef(null);
 
@@ -159,11 +159,11 @@ const TransactionItem = ({ transaction }) => {
         }
     };
 
-    const toCreditPay = () =>{
-         const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
-         const agentPhone = transaction.agent.phone;
-         const link = `${baseUrl}/payment/${agentPhone}/${transaction._id}`;
-         window.open(link, "_blank", "noopener,noreferrer");
+    const toCreditPay = () => {
+        const baseUrl = process.env.REACT_APP_CLIENT_URL || "";
+        const agentPhone = transaction.agent.phone;
+        const link = `${baseUrl}/payment/${agentPhone}/${transaction._id}`;
+        window.open(link, "_blank", "noopener,noreferrer");
     }
 
 
@@ -233,35 +233,49 @@ const TransactionItem = ({ transaction }) => {
                         (<span>-</span>)}
                 </td>
                 <td style={{ position: "relative" }} ref={actionsRef}>
-                    {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge") ? (
-                        <span
-                            onClick={(event) => { toggleActions(event); toggleMenu() }} style={{ cursor: "pointer" }}>
-                            {showActions ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
-                        </span>
-                    ) : (<span>-</span>)}
+                    {/* הצג תמיד את כפתור התפריט */}
+                    <span
+                        onClick={(event) => { toggleActions(event); toggleMenu() }} style={{ cursor: "pointer" }}>
+                        {showActions ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
+                    </span>
                     {showActions && (
                         <div className={`actions-dropdown floating-menu ${openUpwards ? "open-up" : ""}`}>
-                            {isIncome && (<div onClick={() => { setIsCashModalOpen(true); setShowActions(!showActions) }} className="action-item">
-                                <BsCashCoin size={20} /> תשלום במזומן
-                            </div>)}
-                            {isIncome && (<div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
-                                <BsCreditCard size={20} /> תשלום באשראי
-                            </div>)}
-                            {/* {isIncome && (<div onClick={() => { setSendLinkModalOpen(true); setShowActions(!showActions) }} className="action-item">
-                                <BsCreditCard size={20} /> שליחת לינק לתשלום
-                            </div>)} */}
-                            {isIncome && (<div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
-                                <LuBellRing size={20} /> שליחת התראה
-                            </div>)}
-                            {isIncome && (<div className="action-item" onClick={() => setShowEditModal(true)}>
-                                <GrEdit size={20} /> עריכת פרטי עסקה
-                            </div>)}
-                            {isIncome && (<div className="action-item" onClick={() => setDeleteModalOpen(true)}>
-                                <IoTrashOutline size={20} /> מחיקת עסקה
-                            </div>)}
-                            {(!isIncome && transaction.agent?.paymentType !== "none") && (<div onClick={() => { setShowActions(!showActions); toCreditPay() }} className="action-item">
-                                <BsCreditCard size={20} /> תשלום חוב באשראי
-                            </div>)}
+                            {/* אם העסקה שולם - הצג רק מחיקה */}
+                            {editedTransaction.status === "paid" && isIncome && (
+                                <div className="action-item" onClick={() => setDeleteModalOpen(true)}>
+                                    <IoTrashOutline size={20} /> מחיקת עסקה
+                                </div>
+                            )}
+                            {/* אם לא שולם - הצג את כל שאר האופציות */}
+                            {editedTransaction.status !== "paid" && isIncome && (
+                                <>
+                                    <div onClick={() => { setIsCashModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                                        <BsCashCoin size={20} /> תשלום במזומן
+                                    </div>
+                                    <div onClick={() => { setPaymentModalOpen(true); setShowActions(!showActions) }} className="action-item">
+                                        <BsCreditCard size={20} /> תשלום באשראי
+                                    </div>
+                                    <div className="action-item" onClick={() => setIsAlertModalOpen(true)}>
+                                        <LuBellRing size={20} /> שליחת התראה
+                                    </div>
+                                    <div className="action-item" onClick={() => setShowEditModal(true)}>
+                                        <GrEdit size={20} /> עריכת פרטי עסקה
+                                    </div>
+                                    <div className="action-item" onClick={() => setDeleteModalOpen(true)}>
+                                        <IoTrashOutline size={20} /> מחיקת עסקה
+                                    </div>
+                                </>
+                            )}
+                            {(!isIncome && transaction.agent?.paymentType !== "none") && (
+                                <div onClick={() => { setShowActions(!showActions); toCreditPay() }} className="action-item">
+                                    <BsCreditCard size={20} /> תשלום חוב באשראי
+                                </div>
+                            )}
+                            {(!isIncome) && (
+                                <div onClick={(e) => { e.preventDefault()}} className="action-item inDevelopment">
+                                    <BsCreditCard size={20} /> תשלום חוב במזומן
+                                </div>
+                            )}
                         </div>
                     )}
                 </td>
@@ -272,7 +286,7 @@ const TransactionItem = ({ transaction }) => {
                 <Modal isOpen={isCashModalOpen} onClose={() => { setIsCashModalOpen(false) }}>
                     <div className="background-screen">
                         <div className="loading-box">
-                            <div className="cash-bill"><img src="/icons8-cash-50.png"/></div>
+                            <div className="cash-bill"><img src="/icons8-cash-50.png" /></div>
                             <h3 className="loading-title">אישור תשלום במזומן</h3>
                             <br />
                             <p className="question">האם אתה מאשר<br /> קבלת תשלום במזומן על העסקה?</p>
@@ -326,7 +340,7 @@ const TransactionItem = ({ transaction }) => {
                 <Modal isOpen={isAlertModalOpen} onClose={() => { setIsAlertModalOpen(false) }}>
                     <div className="background-screen">
                         <div className="loading-box">
-                            <div className="bill"><img src="/icons8-bell-50.png"/></div>
+                            <div className="bill"><img src="/icons8-bell-50.png" /></div>
                             <h3 style={{ color: "#3a256d" }}>בחר אמצעי לשליחת התראה</h3>
                             <div className="stepBox">
                                 {/* <label>סוג:</label> */}
