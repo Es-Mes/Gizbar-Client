@@ -272,7 +272,7 @@ const TransactionItem = ({ transaction }) => {
                                 </div>
                             )}
                             {(!isIncome) && (
-                                <div onClick={(e) => { e.preventDefault()}} className="action-item inDevelopment">
+                                <div onClick={(e) => { e.preventDefault() }} className="action-item inDevelopment">
                                     <BsCreditCard size={20} /> תשלום חוב במזומן
                                 </div>
                             )}
@@ -343,11 +343,16 @@ const TransactionItem = ({ transaction }) => {
                             <div className="bill"><img src="/icons8-bell-50.png" /></div>
                             <h3 style={{ color: "#3a256d" }}>בחר אמצעי לשליחת התראה</h3>
                             <div className="stepBox">
-                                {/* <label>סוג:</label> */}
-                                {[{ value: 'emailAndCall', name: 'מייל וטלפון' },
-                                { value: 'email', name: 'מייל בלבד' },
-                                { value: 'call', name: 'טלפון בלבד' },
-                                { value: 'human', name: 'אנושי' },
+                                {/* הצג אופציות מייל רק אם יש ללקוח מייל */}
+                                {[
+                                    ...(transaction.customer.email
+                                        ? [
+                                            { value: 'emailAndCall', name: 'מייל וטלפון' },
+                                            { value: 'email', name: 'מייל בלבד' }
+                                        ]
+                                        : []),
+                                    { value: 'call', name: 'טלפון בלבד' },
+                                    { value: 'human', name: 'אנושי' },
                                 ].map((type) => (
                                     <div className="alertRow" key={type.value}>
                                         <input
@@ -372,8 +377,8 @@ const TransactionItem = ({ transaction }) => {
                         </div>
                     </div>
                 </Modal>
-
             )}
+
             {/* delete transaction modal */}
             {isDeleteModalOpen && <Modal isOpen={isDeleteModalOpen} onClose={() => { setDeleteModalOpen(false) }}>
                 <DeleteTransaction

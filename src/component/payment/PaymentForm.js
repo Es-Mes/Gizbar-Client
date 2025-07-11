@@ -17,8 +17,9 @@ const PaymentForm = ({ initialCustomerData,outsieder}) => {
         Mail: initialData.Mail || "",
         Amount: initialData.Amount || "",
         Currency: 1, // שקלים
-        PaymentType: "Ragil",
-        Tashlumim: 1,
+        PaymentType: initialCustomerData.PaymentType || "Ragil",
+        Tashlumim: initialData.Tashlumim || 1, // מספר תשלומים, ברירת מחדל 1
+        Day : initialData.Day || 1, // יום התשלום, ברירת מחדל 1
         Param1:initialData.transactionID,
         Mosad: initialData.mosad? initialData.mosad : process.env.REACT_APP_MOSAD,
         ApiValid: initialData.apiValid? initialData.apiValid : process.env.REACT_APP_API_IFRAME,

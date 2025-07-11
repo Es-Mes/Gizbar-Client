@@ -13,7 +13,7 @@ import "./AddTransaction.css"
 import { useGetAgentQuery } from "../../agent/apiSlice";
 import StepIndicator from "./StepIndicator";
 import PaymentDetails from "../../../component/payment/paymentDetails";
-import { TextField } from "@mui/material";
+import { TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import HebrewDatePicker from "../../../component/date/HebrewDatePicker";
 const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const { _id, phone } = useAuth();
@@ -36,6 +36,9 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         typeAlerts: "email and phone",
         alertsLevel: "once",
     });
+    const [serviceType, setServiceType] = useState('רגיל');
+    const [months, setMonths] = useState('');
+    const [chargeDay, setChargeDay] = useState('');
 
     const [isBankAccountModalOpen, setBankAccountModalOpen] = useState(false)
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
@@ -139,6 +142,8 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
     };
 
+
+
     const handleInputChange = (event) => {
         const { name, value, type, checked } = event.target;
         const fieldValue = type === "checkbox" ? checked : value;
@@ -149,10 +154,12 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 [name]: fieldValue,
             };
 
+            // עדכון מחיר לעסקה לפי שעה
             if (selectedService?.type === "hourly" && (name === "hours" || name === "pricePerHour")) {
                 updatedDetails.price = Number(updatedDetails.pricePerHour) * Number(updatedDetails.hours) || 0;
             }
 
+            // עדכון שדות התראות
             if (name === "alerts") {
                 updatedDetails = {
                     ...updatedDetails,
@@ -160,21 +167,17 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                     typeAlerts: fieldValue ? "email and phone" : "",
                     alertsLevel: fieldValue ? "once" : "",
                 };
-            };
+            }
+
             return updatedDetails;
         });
     };
 
-//     const handleDateChange = (e) => {
-//     const selectedDate = e.target.value; // YYYY-MM-DD (Gregorian)
-//     setBillingDay(selectedDate);
-//     console.log("תאריך שנבחר:", selectedDate);
-//   };
-
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         setMessage(" ");
+
+        // בדיקות תקינות בסיסיות
         if (!transactionDetails.billingDay) {
             setMessage("יש לבחור תאריך חיוב");
             return;
@@ -191,13 +194,54 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
             return;
         }
 
-        try {
-            nextStep()
-            setClicked(true);
-            console.log("transactionData before sending:", transactionDetails);
-            const transaction = await addTransaction({ phone, transaction: transactionDetails }).unwrap();
+        // בדיקות עבור הוראת קבע (חודשי)
+        if (serviceType === "חודשי") {
+            if (months && (isNaN(Number(months)) || Number(months) < 1)) {
+                setMessage("יש להזין מספר חודשים תקין (1 ומעלה) או להשאיר ריק ללא הגבלה");
+                return;
+            }
+            if (!chargeDay || isNaN(Number(chargeDay)) || Number(chargeDay) < 1 || Number(chargeDay) > 31) {
+                setMessage("יש להזין יום גבייה תקין (1-31)");
+                return;
+            }
+        }
 
-            console.log(transaction);
+        // חישוב סכומים ומספר תשלומים
+        let amount, tashlumim, day;
+        if (serviceType === "חודשי") {
+            // הוראת קבע: סכום חודשי, מספר חודשים, יום גבייה
+            amount = selectedService?.type === "hourly"
+                ? Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)
+                : Number(transactionDetails.price);
+
+            tashlumim = months || ""; // ריק = ללא הגבלה
+            day = chargeDay || undefined;
+        } else {
+            // רגיל: סכום כולל, מספר תשלומים
+            amount = selectedService?.type === "hourly"
+                ? Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)
+                : Number(transactionDetails.price);
+
+            tashlumim = 1; // אפשר להרחיב לשדה תשלומים בעתיד
+            day = undefined;
+        }
+
+        const paymentType = serviceType === "חודשי" ? "HK" : "Ragil";
+
+        // בניית אובייקט לשליחה
+        const transactionToSend = {
+            ...transactionDetails,
+            paymentType,
+            amount,
+            tashlumim,
+            day,
+        };
+
+        try {
+            nextStep();
+            setClicked(true);
+            console.log("transactionData before sending:", transactionToSend);
+            const transaction = await addTransaction({ phone, transaction: transactionToSend }).unwrap();
 
             if (transaction && !transaction.error) {
                 const customerDetails = customers.find(c => c._id === transaction.data.customer) || null;
@@ -209,12 +253,11 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 console.log(transactionWhithCustomer);
             }
 
-            onSuccess()
+            onSuccess();
 
         } catch (err) {
             console.error("Error adding transaction:", err);
         }
-
     };
 
 
@@ -252,7 +295,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         setCurrentStep((prev) => prev - 1);
     };
 
-   // עסקה פעם ראשונה או שאין פרטי בנק
+    // עסקה פעם ראשונה או שאין פרטי בנק
     // if (!agent?.cardDetails || agent?.cardDetails.length === 0) {
     //     return(
     //         <PaymentDetails onSuccess={onSuccess}/>)
@@ -261,278 +304,294 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
 
     return (
-        (!agent?.cardDetails || agent?.cardDetails.length === 0) ? 
-            <PaymentDetails  />
-        :
-        (<div className="add-transaction-card">
-            <div className="transaction-header">
-                {/* <div className="rotating-coin">🪙</div> */}
-                <h2>הוספת עסקה חדשה</h2>
+        (!agent?.cardDetails || agent?.cardDetails.length === 0) ?
+            <PaymentDetails />
+            :
+            (<div className="add-transaction-card">
+                <div className="transaction-header">
+                    {/* <div className="rotating-coin">🪙</div> */}
+                    <h2>הוספת עסקה חדשה</h2>
 
-                {/* <button className="close-button" onClick={() => navigate("/dash")}>&times;</button> */}
-            </div>
-            <StepIndicator currentStep={currentStep - 1} />
-            {currentStep === 1 && (
-                <div className="transaction-body">
-                    <label htmlFor="customer">בחר לקוח: <span className="required-asterisk">*</span></label>
-                    <select id="customer" onChange={handleCustomerChange} value={transactionDetails.customer} required>
-                        <option value="">{selectedCustomer ? selectedCustomer.full_name : "--  בחר לקוח קיים --"}</option>
-                        {customers.map((customer) => (
-                            <option key={customer._id} value={customer._id}>
-                                {customer.full_name}
-                            </option>
-                        ))}
-                    </select>
-                    <button className="add-button" type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
-                        + הוסף לקוח חדש
-                    </button>
-                    <div className="customerDetayls">
-                        {selectedCustomer && (
-
-                            <div>
-                                <div className="row">
-                                    <h4>שם:</h4><p>{selectedCustomer.full_name}</p>
-                                </div>
-                                <div className="row">
-                                    <h4>טלפון:</h4><p>{selectedCustomer.phone}</p>
-                                </div>
-                                <div className="row">
-                                    <h4>אימייל:</h4><p>{selectedCustomer.email}</p>
-                                </div>
-                                <div className="row">
-                                    <h4>כתובת:</h4><p>{selectedCustomer.address}</p>
-                                </div>
-                            </div>
-                        )}</div>
-
+                    {/* <button className="close-button" onClick={() => navigate("/dash")}>&times;</button> */}
                 </div>
-            )}
-            {currentStep === 2 && (
-                <div className="transaction-body">
-                    <label htmlFor="service">בחר שירות: <span className="required-asterisk">*</span></label>
-                    <select id="service" onChange={handleServiceChange} value={transactionDetails.service} required>
-                        <option value="">-- בחר שירות קיים --</option>
-                        {filterServices.map((service) => (
-                            <option key={service._id} value={service._id}>
-                                {service.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button className="add-button" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
-                        + הוסף שירות חדש
-                    </button>
-                    {selectedService && (
-                        <div className="serviceRowBox">
-                            <label >סוג שירות: {types[selectedService.type]}</label>
-                            {/* <label htmlFor="description">תיאור:</label>
-                            <input
-                                type="text"
+                <StepIndicator currentStep={currentStep - 1} />
+                {currentStep === 1 && (
+                    <div className="transaction-body">
+                        <FormControl fullWidth variant="outlined" margin="normal">
+                            <InputLabel id="customer-label">בחר לקוח</InputLabel>
+                            <Select
+                                labelId="customer-label"
+                                id="customer"
+                                value={transactionDetails.customer || ""}
+                                onChange={handleCustomerChange}
+                                label="בחר לקוח"
+                                required
+                            >
+                                <MenuItem value="">
+                                    {selectedCustomer ? selectedCustomer.full_name : "--  בחר לקוח קיים --"}
+                                </MenuItem>
+                                {customers.map((customer) => (
+                                    <MenuItem key={customer._id} value={customer._id}>
+                                        {customer.full_name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <button className="add-button" type="button" onClick={() => { setCustomerModalOpen(true); console.log({ isCustomerModalOpen }); }}>
+                            + הוסף לקוח חדש
+                        </button>
+                        <div className="customerDetayls">
+                            {selectedCustomer && (
+                                <div>
+                                    <div className="row">
+                                        <h4>שם:</h4><p>{selectedCustomer.full_name}</p>
+                                    </div>
+                                    <div className="row">
+                                        <h4>טלפון:</h4><p>{selectedCustomer.phone}</p>
+                                    </div>
+                                    <div className="row">
+                                        <h4>אימייל:</h4><p>{selectedCustomer.email}</p>
+                                    </div>
+                                    <div className="row">
+                                        <h4>כתובת:</h4><p>{selectedCustomer.address}</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+                {currentStep === 2 && (
+                    <div className="transaction-body">
+                        <FormControl fullWidth variant="outlined" margin="normal">
+                            <InputLabel id="service-label">בחר שירות</InputLabel>
+                            <Select
+                                labelId="service-label"
+                                id="service"
+                                value={transactionDetails.service || ""}
+                                onChange={handleServiceChange}
+                                label="בחר שירות"
+                                required
+                            >
+                                <MenuItem value="">-- בחר שירות קיים --</MenuItem>
+                                {filterServices.map((service) => (
+                                    <MenuItem key={service._id} value={service._id}>
+                                        {service.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <button className="add-button" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
+                            + הוסף שירות חדש
+                        </button>
+                        {selectedService && (
+                            <div className="serviceRowBox">
+                                <FormControl fullWidth variant="outlined" margin="normal">
+                                    <InputLabel id="service-type-label">סוג שירות</InputLabel>
+                                    <Select
+                                        labelId="service-type-label"
+                                        value={serviceType}
+                                        onChange={e => setServiceType(e.target.value)}
+                                        label="סוג שירות"
+                                    >
+                                        <MenuItem value="רגיל">רגיל</MenuItem>
+                                        <MenuItem value="חודשי">חודשי</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                {serviceType === "חודשי" && (
+                                    <>
+                                        <TextField label="מספר חודשים" type="number" value={months} onChange={e => setMonths(e.target.value)} min="1" />
+                                        <TextField label="יום גבייה בחודש" type="number" value={chargeDay} onChange={e => setChargeDay(e.target.value)} min="1" max="31" />
+                                    </>
+                                )}
+                                {(selectedService.type === "hourly") &&
+                                    (<div className="perHourBox">
+                                        <div>
+                                            <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
+                                            <TextField variant="outlined"
+                                                type="Number"
+                                                id="pricePerHour"
+                                                name="pricePerHour"
+                                                value={transactionDetails.pricePerHour || selectedService.price}
+                                                onChange={handleInputChange}
+                                                required
+                                            /></div>
+                                        <div>
+                                            <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
+                                            <TextField variant="outlined"
+                                                type="Number"
+                                                id="hours"
+                                                name="hours"
+                                                value={transactionDetails.hours}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                    </div>)}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {currentStep === 3 && (
+                    <div className="transaction-body">
+                        <div className="transaction-row">
+                            <div className="field-group transaction-amount">
+                                <label>סכום עסקה:</label>
+                                <p className="transaction-price">{transactionDetails.price} ₪</p>
+                            </div>
+
+                            <div className="field-group date">
+                                <label htmlFor="billingDay">
+                                    תאריך חיוב: <span className="required-asterisk">*</span>
+                                </label>
+                                <TextField variant="outlined"
+                                    type="date"
+                                    id="billingDay"
+                                    name="billingDay"
+                                    value={transactionDetails.billingDay}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="field-group date">
+                                <HebrewDatePicker
+                                    name="billingDay"
+                                    value={transactionDetails.billingDay}
+                                    onChange={handleInputChange}
+                                    required
+                                    label="תאריך חיוב"
+                                />                            </div>
+
+
+
+                        </div>
+
+                        <div className="field-group full-width">
+                            <TextField variant="outlined"
                                 id="description"
                                 name="description"
-                                value={transactionDetails.description || selectedService.description}
+                                label='תיאור'
+                                value={transactionDetails.description}
                                 onChange={handleInputChange}
-                            /> */}
-                            {(selectedService.type === 'global') &&
-                                (<div>
-                                    <TextField variant="outlined"
-                                        type="Number"
-                                        id="price"
-                                        name="price"
-                                        label='מחיר'
-                                        value={transactionDetails.price || selectedService.price}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>)}
-                            {(selectedService.type === "hourly") &&
-                                (<div className="perHourBox">
-                                    <div>
-                                        <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
-                                        <TextField variant="outlined"
-                                            type="Number"
-                                            id="pricePerHour"
-                                            name="pricePerHour"
-                                            value={transactionDetails.pricePerHour || selectedService.price}
-                                            onChange={handleInputChange}
-                                            required
-                                        /></div>
-                                    <div>
-                                        <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
-                                        <TextField variant="outlined"
-                                            type="Number"
-                                            id="hours"
-                                            name="hours"
-                                            value={transactionDetails.hours}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>)}
-                        </div>
-                    )}
-                </div>
-            )}
-
-
-
-            {currentStep === 3 && (
-                <div className="transaction-body">
-                    <div className="transaction-row">
-                        <div className="field-group transaction-amount">
-                            <label>סכום עסקה:</label>
-                            <p className="transaction-price">{transactionDetails.price} ₪</p>
-                        </div>
-
-                        <div className="field-group date">
-                            <label htmlFor="billingDay">
-                                תאריך חיוב: <span className="required-asterisk">*</span>
-                            </label>
-                            <TextField variant="outlined"
-                                type="date"
-                                id="billingDay"
-                                name="billingDay"
-                                value={transactionDetails.billingDay}
-                                onChange={handleInputChange}
-                                required
                             />
                         </div>
 
-                        <div className="field-group date">
-                            <HebrewDatePicker
-                                name="billingDay"
-                                value={transactionDetails.billingDay}
+                        <div className="field-group full-width"> <label htmlFor="alerts">הפעל התראות
+                            <input className="noFocus"
+                                style={{ marginRight: '10px' }}
+                                type="checkbox"
+                                id="alerts"
+                                name="alerts"
+                                checked={transactionDetails.alerts}
                                 onChange={handleInputChange}
-                                required
-                                label="תאריך חיוב"
-                            />                            </div>
+                            />
 
-
-
-                    </div>
-
-                    <div className="field-group full-width">
-                        <TextField variant="outlined"
-                            id="description"
-                            name="description"
-                            label='תיאור'
-                            value={transactionDetails.description}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-
-                    <div className="field-group full-width"> <label htmlFor="alerts">הפעל התראות
-                        <input className="noFocus"
-                            style={{ marginRight: '10px' }}
-                            type="checkbox"
-                            id="alerts"
-                            name="alerts"
-                            checked={transactionDetails.alerts}
-                            onChange={handleInputChange}
-                        />
-
-                    </label>
-                    </div>
-
-
-
-
-                    {transactionDetails.alerts && (
-                        <div className="stepBox">
-                            <label>סוג:</label>
-                            {[{ value: 'email and phone', name: 'מייל וטלפון' },
-                            { value: 'email only', name: 'מייל בלבד' },
-                            { value: 'phone only', name: 'טלפון בלבד' },
-                            { value: 'human', name: 'אנושי' },
-                            ].map((type) => (
-                                <div className="alertRow" key={type.value}>
-                                    <input
-                                        type="radio"
-                                        name="typeAlerts"
-                                        value={type.value}
-                                        checked={transactionDetails.typeAlerts === type.value}
-                                        onChange={handleInputChange}
-                                    />
-                                    {type.name}
-                                </div>
-                            ))}
-
-                            <label>רמה:</label>
-                            {[
-                                { value: 'once', name: 'פעם אחת' },
-                                { value: 'weekly', name: 'שבועי' },
-                                { value: 'nudnik', name: 'נודניק' }
-                            ].map((level) => (
-                                <div className="alertRow" key={level.value}>
-                                    <input
-                                        type="radio"
-                                        name="alertsLevel"
-                                        value={level.value}
-                                        checked={transactionDetails.alertsLevel === level.value}
-                                        onChange={handleInputChange}
-                                    />
-                                    {level.name}
-                                </div>
-                            ))}
+                        </label>
                         </div>
-                    )}
+
+                        {transactionDetails.alerts && (
+                            <div className="stepBox">
+                                <label>סוג:</label>
+                                {[
+                                    ...(selectedCustomer?.email
+                                        ? [
+                                            { value: 'email and phone', name: 'מייל וטלפון' },
+                                            { value: 'email only', name: 'מייל בלבד' }
+                                        ]
+                                        : []),
+                                    { value: 'phone only', name: 'טלפון בלבד' },
+                                    { value: 'human', name: 'אנושי' },
+                                ].map((type) => (
+                                    <div className="alertRow" key={type.value}>
+                                        <input
+                                            type="radio"
+                                            name="typeAlerts"
+                                            value={type.value}
+                                            checked={transactionDetails.typeAlerts === type.value}
+                                            onChange={handleInputChange}
+                                        />
+                                        {type.name}
+                                    </div>
+                                ))}
+
+                                <label>רמה:</label>
+                                {[
+                                    { value: 'once', name: 'פעם אחת' },
+                                    { value: 'weekly', name: 'שבועי' },
+                                    { value: 'nudnik', name: 'נודניק' }
+                                ].map((level) => (
+                                    <div className="alertRow" key={level.value}>
+                                        <input
+                                            type="radio"
+                                            name="alertsLevel"
+                                            value={level.value}
+                                            checked={transactionDetails.alertsLevel === level.value}
+                                            onChange={handleInputChange}
+                                        />
+                                        {level.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                <div className="navigation-buttons">
+                    <div className="nav-left">
+                        {currentStep > 1 && (
+                            <button className="navButton" onClick={prevStep}>חזור</button>
+                        )}
+                    </div>
+                    {message && <p className={`message ${messageType}`} style={{ color: "#f9a825" }}>{message}</p>}
+
+                    <div className="nav-right">
+                        {currentStep < 3 && (
+                            <button className="navButton" onClick={nextStep}>הבא</button>
+                        )}
+                        {currentStep === 3 && (
+                            <button className="submit-button navButton" type="submit" onClick={handleSubmit} disabled={clicked}>
+                                סיים
+                            </button>
+                        )}
+                    </div>
+
                 </div>
-            )}
-
-            <div className="navigation-buttons">
-                <div className="nav-left">
-                    {currentStep > 1 && (
-                        <button className="navButton" onClick={prevStep}>חזור</button>
-                    )}
-                </div>
-                {message && <p className={`message ${messageType}`} style={{ color: "#f9a825" }}>{message}</p>}
-
-                <div className="nav-right">
-                    {currentStep < 3 && (
-                        <button className="navButton" onClick={nextStep}>הבא</button>
-                    )}
-                    {currentStep === 3 && (
-                        <button className="submit-button navButton" type="submit" onClick={handleSubmit} disabled={clicked}>
-                            סיים
-                        </button>
-                    )}
-                </div>
-
-            </div>
 
 
 
-            <Modal isOpen={isCustomerModalOpen} onClose={() => setCustomerModalOpen(false)}>
-                <AddCustomer
-                    onSuccess={(newCustomer) => {
+                <Modal isOpen={isCustomerModalOpen} onClose={() => setCustomerModalOpen(false)}>
+                    <AddCustomer
+                        onSuccess={(newCustomer) => {
 
-                        setSelectedCustomer(newCustomer); // עדכון אוטומטי של הלקוח הנבחר
-                        setCustomerModalOpen(false);
-                        // קריאה יזומה לפונקציה שמטפלת בבחירת לקוח
-                        handleCustomerChange({ target: { value: newCustomer._id } });
-                    }}
-                />
-            </Modal>
+                            setSelectedCustomer(newCustomer); // עדכון אוטומטי של הלקוח הנבחר
+                            setCustomerModalOpen(false);
+                            // קריאה יזומה לפונקציה שמטפלת בבחירת לקוח
+                            handleCustomerChange({ target: { value: newCustomer._id } });
+                        }}
+                    />
+                </Modal>
 
 
 
-            <Modal isOpen={isServiceModalOpen} onClose={() => setServiceModalOpen(false)}>
-                <AddService
-                    onSuccess={(newService) => {
-                        console.log(newService);
-                        // Handle successful service addition if necessary
-                        setSelectedService(newService); // עדכון השירות הנבחר
+                <Modal isOpen={isServiceModalOpen} onClose={() => setServiceModalOpen(false)}>
+                    <AddService
+                        onSuccess={(newService) => {
+                            console.log(newService);
+                            // Handle successful service addition if necessary
+                            setSelectedService(newService); // עדכון השירות הנבחר
 
-                        setServiceModalOpen(false);
-                        // קריאה יזומה לפונקציה שמטפלת בבחירת שירות
-                        handleServiceChange({ target: { value: newService._id } });
-                    }}
-                />
-            </Modal>
-            {/* <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
+                            setServiceModalOpen(false);
+                            // קריאה יזומה לפונקציה שמטפלת בבחירת שירות
+                            handleServiceChange({ target: { value: newService._id } });
+                        }}
+                    />
+                </Modal>
+                {/* <Modal isOpen={isBankAccountModalOpen} onClose={() => {setBankAccountModalOpen(false)}}>
                 bankAccount
             </Modal> */}
 
-        </div>)
+            </div>)
     );
 };
 
