@@ -13,7 +13,9 @@ Chart.register(...registerables); // הרשמת כל האפשרויות של Cha
 
 const TransactionsAsProvider = () => {
     const { phone } = useAuth()
-    const { data: transactionsAsProvider = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({ phone });
+    const { data: transactionsAsProvider = [], isLoading: isLoading, error: error, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone }, {
+        pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
+    });
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // ניהול השנה הנוכחית ב-state
     const chartRef = useRef(null); // רפרנס לגרף
@@ -156,7 +158,12 @@ const TransactionsAsProvider = () => {
          >
             <AddTransaction
                onSuccess={() => {
-                  setTimeout(() => setIsTransactionModalOpen(false), 2000);
+                  // רענון הנתונים אחרי הוספת עסקה (במיוחד לעסקאות חודשיות שנוצרות בשרת)
+                  setTimeout(() => {
+                     setIsTransactionModalOpen(false);
+                     // רענון מפורש של רשימת העסקאות כדי לקבל עסקאות שנוספו בשרת
+                     refetchTransactions();
+                  }, 3000); // מחכים 3 שניות כדי לאפשר לשרת לעבד את ה-callback
                }}
             />
          </Modal>

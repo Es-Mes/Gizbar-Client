@@ -15,6 +15,8 @@ import StepIndicator from "./StepIndicator";
 import PaymentDetails from "../../../component/payment/paymentDetails";
 import { TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import HebrewDatePicker from "../../../component/date/HebrewDatePicker";
+import PaymentForm from "../../../component/payment/PaymentForm";
+
 const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const { _id, phone } = useAuth();
     const { data: agent, isLoading } = useGetAgentQuery({ phone })
@@ -36,7 +38,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         typeAlerts: "email and phone",
         alertsLevel: "once",
     });
-    const [serviceType, setServiceType] = useState('רגיל');
+    const [serviceType, setServiceType] = useState('ragil');
     const [months, setMonths] = useState('');
     const [chargeDay, setChargeDay] = useState('');
 
@@ -46,6 +48,8 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
     const [clicked, setClicked] = useState(false);
+    const [showPaymentForm, setShowPaymentForm] = useState(false);
+    const [pendingTransaction, setPendingTransaction] = useState(null);
 
     const types = {
         global: 'גלובלי',
@@ -73,7 +77,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         setTransactionDetails((prev) => ({
             ...prev,
             price: selectedService.serviceType === "global"
-                ? Number(prev.price) || 0
+                ? Number(selectedService.price) || 0
                 : Number(prev.pricePerHour) * Number(prev.hours) || 0
         }));
         console.log('transaction details after update price: ', transactionDetails);
@@ -84,10 +88,9 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         console.log(`serviceId : ${serviceId}`);
 
         const service = services.find((srv) => srv._id === serviceId);
-        console.log(service);
         if (service) {
             setSelectedService(service);
-
+            console.log(`selectedService: ${JSON.stringify(service)}`);
             setTransactionDetails((prev) => ({
                 ...prev,
                 service: service._id,
@@ -178,7 +181,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         setMessage(" ");
 
         // בדיקות תקינות בסיסיות
-        if (!transactionDetails.billingDay) {
+        if (serviceType !== "monthly" && !transactionDetails.billingDay) {
             setMessage("יש לבחור תאריך חיוב");
             return;
         }
@@ -194,8 +197,8 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
             return;
         }
 
-        // בדיקות עבור הוראת קבע (חודשי)
-        if (serviceType === "חודשי") {
+        // בדיקות עבור הוראת קבע (monthly)
+        if (serviceType === "monthly") {
             if (months && (isNaN(Number(months)) || Number(months) < 1)) {
                 setMessage("יש להזין מספר חודשים תקין (1 ומעלה) או להשאיר ריק ללא הגבלה");
                 return;
@@ -207,36 +210,38 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         }
 
         // חישוב סכומים ומספר תשלומים
-        let amount, tashlumim, day;
-        if (serviceType === "חודשי") {
+        let amount, totalPayments;
+        if (serviceType === "monthly") {
             // הוראת קבע: סכום חודשי, מספר חודשים, יום גבייה
-            amount = selectedService?.type === "hourly"
-                ? Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)
-                : Number(transactionDetails.price);
-
-            tashlumim = months || ""; // ריק = ללא הגבלה
-            day = chargeDay || undefined;
-        } else {
-            // רגיל: סכום כולל, מספר תשלומים
-            amount = selectedService?.type === "hourly"
-                ? Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)
-                : Number(transactionDetails.price);
-
-            tashlumim = 1; // אפשר להרחיב לשדה תשלומים בעתיד
-            day = undefined;
+            totalPayments = Number(transactionDetails.price) * (Number(months) || 1);
         }
+        // רגיל: סכום כולל, מספר תשלומים
+        amount = selectedService?.type === "hourly"
+            ? Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)
+            : Number(transactionDetails.price);
 
-        const paymentType = serviceType === "חודשי" ? "HK" : "Ragil";
+
+        const paymentType = serviceType === "monthly" ? "HK" : "Ragil";
 
         // בניית אובייקט לשליחה
         const transactionToSend = {
             ...transactionDetails,
             paymentType,
             amount,
-            tashlumim,
-            day,
+            totalPayments,
+            months: months ? Number(months) : 0,
+            chargeDay: chargeDay ? Number(chargeDay) : 0,
         };
 
+        setPendingTransaction(transactionToSend);
+        console.log("transactionToSend:", transactionToSend);
+        // אם העסקה היא חודשי ויש לסוכן פרטי אשראי לגביה - פותחים את עמוד התשלום
+        if (serviceType === "monthly" && agent?.paymentType !== "none") {
+            console.log("Opening payment form for monthly transaction");
+            setShowPaymentForm(true);
+            return;
+        }
+        // אם העסקה היא רגיל - ממשיכים להוספת עסקה
         try {
             nextStep();
             setClicked(true);
@@ -260,10 +265,19 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         }
     };
 
-
-
-
-
+    // פונקציה שמופעלת אחרי אישור תשלום ב-PaymentForm
+    // העסקה תתווסף בצד השרת דרך callback של הוראת הקבע
+    const handlePaymentSuccess = async (paymentData) => {
+        setShowPaymentForm(false);
+        setClicked(true);
+        
+        // הצגת הודעת הצלחה
+        toast.success("👍 התשלום בוצע בהצלחה! העסקה תתעדכן בקרוב", { icon: false });
+        
+        // יש צורך לרענן את המטמון של העסקאות כדי שהעסקה החדשה תוצג
+        // הרענון יקרה אוטומטית דרך onSuccess() שקורא להורה לרענן את הנתונים
+        onSuccess();
+    };
 
     const nextStep = () => {
         setMessage("");
@@ -276,12 +290,14 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
             return;
         }
         if (currentStep === 2) {
-            // updatePrice()
-            console.log(transactionDetails);
             if (!transactionDetails.price) {
                 setMessage("יש להכניס מחיר לפני המעבר לשלב הבא");
                 return;
             }
+        }
+        if (currentStep === 2 && serviceType === "monthly" && (!months || !chargeDay)) {
+            setMessage("יש למלא את כל השדות עבור הוראת קבע");
+            return;
         }
         if (currentStep === 1 && !selectedCustomer) {
             setMessage("יש לבחור לקוח לפני המעבר לשלב הבא");
@@ -295,17 +311,25 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    // עסקה פעם ראשונה או שאין פרטי בנק
-    // if (!agent?.cardDetails || agent?.cardDetails.length === 0) {
-    //     return(
-    //         <PaymentDetails onSuccess={onSuccess}/>)
-    // }
-
-
 
     return (
-        (!agent?.cardDetails || agent?.cardDetails.length === 0) ?
-            <PaymentDetails />
+        showPaymentForm ? (
+            <PaymentForm
+                initialCustomerData={{
+                    FirstName: selectedCustomer?.full_name,
+                    Zeout: selectedCustomer?.zeout,
+                    Phone: selectedCustomer?.phone,
+                    Mail: selectedCustomer?.email,
+                    PaymentType: "HK",
+                    Amount: pendingTransaction.amount,
+                    Tashlumim: months || "",
+                    Day: chargeDay || "",
+                }}
+                outsieder={false}
+                onPaymentSuccess={handlePaymentSuccess}
+            />)
+            //  : (!agent?.cardDetails || agent?.cardDetails.length === 0) ?
+            //     <PaymentDetails />
             :
             (<div className="add-transaction-card">
                 <div className="transaction-header">
@@ -380,6 +404,40 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                                 ))}
                             </Select>
                         </FormControl>
+                        {(selectedService?.type === "hourly") ?
+                            (<div className="perHourBox">
+                                <div>
+                                    <TextField variant="outlined"
+                                        type="Number"
+                                        id="pricePerHour"
+                                        name="pricePerHour"
+                                        value={transactionDetails.pricePerHour || selectedService.price}
+                                        onChange={handleInputChange}
+                                        label="מחיר לשעה"
+                                        required
+                                    /></div>
+                                <div>
+                                    <TextField variant="outlined"
+                                        type="Number"
+                                        id="hours"
+                                        name="hours"
+                                        value={transactionDetails.hours}
+                                        onChange={handleInputChange}
+                                        label="מספר שעות"
+                                        required
+                                    />
+                                </div>
+                            </div>) :
+                            (<TextField variant="outlined"
+                                type="Number"
+                                id="price"
+                                name="price"
+                                value={transactionDetails.price}
+                                onChange={handleInputChange}
+                                label="מחיר"
+                                required
+                            />)
+                        }
                         <button className="add-button" type="button" onClick={() => { setServiceModalOpen(true); console.log({ isServiceModalOpen }) }}>
                             + הוסף שירות חדש
                         </button>
@@ -393,40 +451,17 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                                         onChange={e => setServiceType(e.target.value)}
                                         label="סוג שירות"
                                     >
-                                        <MenuItem value="רגיל">רגיל</MenuItem>
-                                        <MenuItem value="חודשי">חודשי</MenuItem>
+                                        <MenuItem value="ragil">רגיל</MenuItem>
+                                        <MenuItem value="monthly">חודשי</MenuItem>
                                     </Select>
                                 </FormControl>
-                                {serviceType === "חודשי" && (
+                                {serviceType === "monthly" && (
                                     <>
-                                        <TextField label="מספר חודשים" type="number" value={months} onChange={e => setMonths(e.target.value)} min="1" />
-                                        <TextField label="יום גבייה בחודש" type="number" value={chargeDay} onChange={e => setChargeDay(e.target.value)} min="1" max="31" />
+                                        <TextField label="מספר חודשים" type="number" value={months} onChange={e => setMonths(e.target.value)} min="1" required />
+                                        <TextField label="יום גבייה בחודש" type="number" value={chargeDay} onChange={e => setChargeDay(e.target.value)} min="1" max="31" required />
                                     </>
                                 )}
-                                {(selectedService.type === "hourly") &&
-                                    (<div className="perHourBox">
-                                        <div>
-                                            <label htmlFor="pricePerHour">מחיר לשעה:<span className="required-asterisk">*</span></label>
-                                            <TextField variant="outlined"
-                                                type="Number"
-                                                id="pricePerHour"
-                                                name="pricePerHour"
-                                                value={transactionDetails.pricePerHour || selectedService.price}
-                                                onChange={handleInputChange}
-                                                required
-                                            /></div>
-                                        <div>
-                                            <label htmlFor="hours">מספר שעות עבודה:<span className="required-asterisk">*</span></label>
-                                            <TextField variant="outlined"
-                                                type="Number"
-                                                id="hours"
-                                                name="hours"
-                                                value={transactionDetails.hours}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </div>
-                                    </div>)}
+
                             </div>
                         )}
                     </div>
@@ -435,36 +470,62 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 {currentStep === 3 && (
                     <div className="transaction-body">
                         <div className="transaction-row">
+                            {/* מחיר כולל */}
                             <div className="field-group transaction-amount">
-                                <label>סכום עסקה:</label>
-                                <p className="transaction-price">{transactionDetails.price} ₪</p>
+                                <label>מחיר כולל:</label>
+                                <p className="transaction-price">
+                                    {serviceType === "monthly"
+                                        ? (
+                                            selectedService?.type === "hourly"
+                                                ? ((Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)) * (months && Number(months) > 0 ? Number(months) : 1)) || 0
+                                                : ((Number(transactionDetails.price) || 0) * (months && Number(months) > 0 ? Number(months) : 1))
+                                        )
+                                        : selectedService?.type === "hourly"
+                                            ? (Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)) || 0
+                                            : Number(transactionDetails.price) || 0
+                                    } ₪
+                                </p>
                             </div>
 
-                            <div className="field-group date">
-                                <label htmlFor="billingDay">
-                                    תאריך חיוב: <span className="required-asterisk">*</span>
-                                </label>
-                                <TextField variant="outlined"
-                                    type="date"
-                                    id="billingDay"
-                                    name="billingDay"
-                                    value={transactionDetails.billingDay}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
+                            {/* תשלום חודשי */}
+                            {serviceType === "monthly" && (
+                                <div className="field-group transaction-amount">
+                                    <label>תשלום לחודש:</label>
+                                    <p className="transaction-price">
+                                        {selectedService?.type === "hourly"
+                                            ? (Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)).toFixed(2)
+                                            : (Number(transactionDetails.price) || 0)
+                                        } ₪
+                                    </p>
+                                </div>
+                            )}
+                            {/* תאריך חיוב - רק לעסקה רגילה */}
+                            {serviceType !== "monthly" && (
+                                <div className="field-group date">
+                                    <label htmlFor="billingDay">
+                                        תאריך חיוב: <span className="required-asterisk">*</span>
+                                    </label>
+                                    <TextField variant="outlined"
+                                        type="date"
+                                        id="billingDay"
+                                        name="billingDay"
+                                        value={transactionDetails.billingDay}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                            )}
 
-                            <div className="field-group date">
-                                <HebrewDatePicker
-                                    name="billingDay"
-                                    value={transactionDetails.billingDay}
-                                    onChange={handleInputChange}
-                                    required
-                                    label="תאריך חיוב"
-                                />                            </div>
-
-
-
+                            {serviceType !== "monthly" && (
+                                <div className="field-group date" >
+                                    <HebrewDatePicker
+                                        name="billingDay"
+                                        value={transactionDetails.billingDay}
+                                        onChange={handleInputChange}
+                                        label=" "
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div className="field-group full-width">

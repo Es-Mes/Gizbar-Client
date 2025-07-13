@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import jsPDF from 'jspdf';
 import "jspdf-font"; // מייבא פונטים בעברית
 import Modal from "../../modals/Modal";
 
-const PaymentForm = ({ initialCustomerData,outsieder}) => {
+const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
+    const navigate = useNavigate();
     const iframeRef = useRef(null);
     const initialData = initialCustomerData || {};
     const [customerData, setCustomerData] = useState({
@@ -133,6 +135,12 @@ const PaymentForm = ({ initialCustomerData,outsieder}) => {
                     setAmount(amountPaid);
                     setShowReceiptModal(true);
 
+                    
+                    // קריאה לפונקציה חיצונית לסיום תהליך (הוספת העסקה לשרת)
+                    if (typeof onPaymentSuccess === "function") {
+                        onPaymentSuccess();
+                    }
+
                     console.log("✅ התשלום הצליח! מספר שובר:", shovar);
                 }
                 else {
@@ -142,9 +150,9 @@ const PaymentForm = ({ initialCustomerData,outsieder}) => {
             }
         };
 
-        window.addEventListener("message", handleMessage);
+         window.addEventListener("message", handleMessage);
         return () => window.removeEventListener("message", handleMessage);
-    }, []);
+    }, [customerData, onPaymentSuccess]);
 
 
     useEffect(() => {

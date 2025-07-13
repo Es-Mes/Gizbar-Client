@@ -21,7 +21,9 @@ const HomeMain = () => {
 
    console.log(agent);
 
-   const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions } = useGetAllTransactionsQuery({ phone });
+   const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone }, {
+      pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
+   });
    console.log(errorLoadingTransactions);
 
    const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({ phone });
@@ -647,7 +649,12 @@ const HomeMain = () => {
          >
             <AddTransaction
                onSuccess={() => {
-                  setTimeout(() => setIsTransactionModalOpen(false), 2000);
+                  // רענון הנתונים אחרי הוספת עסקה (במיוחד לעסקאות חודשיות שנוצרות בשרת)
+                  setTimeout(() => {
+                     setIsTransactionModalOpen(false);
+                     // רענון מפורש של רשימת העסקאות כדי לקבל עסקאות שנוספו בשרת
+                     refetchTransactions();
+                  }, 3000); // מחכים 3 שניות כדי לאפשר לשרת לעבד את ה-callback
                }}
             />
          </Modal>

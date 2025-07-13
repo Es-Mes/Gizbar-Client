@@ -44,9 +44,7 @@ const TransactionItem = ({ transaction }) => {
 
 
     const isIncome = transaction.agent.first_name ? false : true
-    console.log(transaction);
-
-
+    // console.log(transaction);
     const actionsRef = useRef(null);
 
     // console.dir(editedTransaction,{depth:null});
