@@ -110,28 +110,28 @@ const TransactionsAsProvider = () => {
     /*/////סינון לפי סוג עסקה FilterBy*/////
 
     const filteredTransactions = useMemo(() => {
-    if (!transactionsAsProvider || transactionsAsProvider.length === 0) return [];
+        if (!transactionsAsProvider || transactionsAsProvider.length === 0) return [];
 
-    const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
-    if (filterBy === "recentMonth") {
-        setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
-        return transactionsAsProvider.filter(transaction => {
-            const billingDate = new Date(transaction.billingDay);
-            return billingDate >= startOfMonth && billingDate < startOfNextMonth && transaction.status !== "canceled";
-        });
-    }
+        if (filterBy === "recentMonth") {
+            setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
+            return transactionsAsProvider.filter(transaction => {
+                const billingDate = new Date(transaction.billingDay);
+                return billingDate >= startOfMonth && billingDate < startOfNextMonth && transaction.status !== "canceled";
+            });
+        }
 
-    if (filterBy === "delayed") {
-        setHeader("עסקאות בפיגור");
-        return transactionsAsProvider.filter(t => t.status === "notPaid" && t.status !== "canceled");
-    }
+        if (filterBy === "delayed") {
+            setHeader("עסקאות בפיגור");
+            return transactionsAsProvider.filter(t => t.status === "notPaid" && t.status !== "canceled");
+        }
 
-    setHeader("כל העסקאות");
-    return transactionsAsProvider.filter(t =>  t.status !== "canceled");
-}, [transactionsAsProvider, filterBy]);
+        setHeader("כל העסקאות");
+        return transactionsAsProvider.filter(t => t.status !== "canceled");
+    }, [transactionsAsProvider, filterBy]);
 
 
 
@@ -144,29 +144,29 @@ const TransactionsAsProvider = () => {
                     <button className="backButton" onClick={() => navigate(-1)}>
                         <GrFormNextLink className='GrFormNextLink' /><p className='backText'>חזור</p>
                     </button>
-                    <h2>{header}</h2><button className='newTransactionBtn'  onClick={() => { setIsTransactionModalOpen(true)}}>
-                    עסקה חדשה <div className="rotating-coin small"><img src='/icons8-money-bag-bitcoin-50.png'/></div>
+                    <h2>{header}</h2><button className='newTransactionBtn' onClick={() => { setIsTransactionModalOpen(true) }}>
+                        עסקה חדשה <div className="rotating-coin small"><img src='/icons8-money-bag-bitcoin-50.png' /></div>
 
-                </button>
+                    </button>
                 </div>
-                
+
                 <TransactionsList transactions={filteredTransactions} />
             </div>
             <Modal isOpen={isTransactionModalOpen}
-            onClose={() => setIsTransactionModalOpen(false)}
-            disableOverlayClick={true}
-         >
-            <AddTransaction
-               onSuccess={() => {
-                  // רענון הנתונים אחרי הוספת עסקה (במיוחד לעסקאות חודשיות שנוצרות בשרת)
-                  setTimeout(() => {
-                     setIsTransactionModalOpen(false);
-                     // רענון מפורש של רשימת העסקאות כדי לקבל עסקאות שנוספו בשרת
-                     refetchTransactions();
-                  }, 3000); // מחכים 3 שניות כדי לאפשר לשרת לעבד את ה-callback
-               }}
-            />
-         </Modal>
+                onClose={() => setIsTransactionModalOpen(false)}
+                disableOverlayClick={true}
+            >
+                <AddTransaction
+                    onSuccess={() => {
+                        // רענון הנתונים אחרי הוספת עסקה (במיוחד לעסקאות חודשיות שנוצרות בשרת)
+                        setTimeout(() => {
+                            setIsTransactionModalOpen(false);
+                            // רענון מפורש של רשימת העסקאות כדי לקבל עסקאות שנוספו בשרת
+                            refetchTransactions();
+                        }, 3000); // מחכים 3 שניות כדי לאפשר לשרת לעבד את ה-callback
+                    }}
+                />
+            </Modal>
         </div>
     )
 }

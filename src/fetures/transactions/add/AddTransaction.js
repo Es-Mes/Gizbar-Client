@@ -50,6 +50,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const [clicked, setClicked] = useState(false);
     const [showPaymentForm, setShowPaymentForm] = useState(false);
     const [pendingTransaction, setPendingTransaction] = useState(null);
+    const [preferAlternativePayment, setPreferAlternativePayment] = useState(false);
 
     const types = {
         global: 'גלובלי',
@@ -57,7 +58,10 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     }
     useEffect(() => {
         if (isSuccess) {
-            toast.success("👍 העיסקה נוספה בהצלחה", { icon: false });
+            // הצגת הודעה רק לעסקאות בודדות, לא בזמן יצירה קולקטיבית
+            if (!clicked || serviceType !== "monthly") {
+                toast.success("👍 העיסקה נוספה בהצלחה", { icon: false });
+            }
             setMessageType("success");
             // setTimeout(() => navigate("/dash"), 2000);
             onSuccess()
@@ -68,7 +72,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
             setMessage("שגיאה בהוספת העסקה. נסה שוב.");
             setMessageType("error");
         }
-    }, [isSuccess, isError, navigate]);
+    }, [isSuccess, isError, navigate, clicked, serviceType]);
 
     //עדכון המחיר הגלובלי
     const updatePrice = () => {
@@ -207,40 +211,107 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 setMessage("יש להזין יום גבייה תקין (1-31)");
                 return;
             }
+            // אם לא הוזן מספר חודשים ואין אשראי, נבקש הזנה מפורשת
+            if (!months && agent?.paymentType === "none") {
+                setMessage("יש להזין מספר חודשים עבור הוראת קבע ללא אשראי");
+                return;
+            }
         }
 
         // חישוב סכומים ומספר תשלומים
-        let amount, totalPayments;
+        let payments, totalPayments;
         if (serviceType === "monthly") {
             // הוראת קבע: סכום חודשי, מספר חודשים, יום גבייה
             totalPayments = Number(transactionDetails.price) * (Number(months) || 1);
         }
         // רגיל: סכום כולל, מספר תשלומים
-        amount = selectedService?.type === "hourly"
+        payments = selectedService?.type === "hourly"
             ? Number(transactionDetails.pricePerHour) * Number(transactionDetails.hours || 1)
             : Number(transactionDetails.price);
 
 
-        const paymentType = serviceType === "monthly" ? "HK" : "Ragil";
+        const transactionType = serviceType === "monthly" ? "HK" : "ragil";
 
         // בניית אובייקט לשליחה
         const transactionToSend = {
             ...transactionDetails,
-            paymentType,
-            amount,
-            totalPayments,
-            months: months ? Number(months) : 0,
-            chargeDay: chargeDay ? Number(chargeDay) : 0,
+            // transactionType,
+            payments,
+            price: payments, // מחיר העסקה - זהה לתשלומים בעסקה רגילה
+            // totalPayments,
+            // serviceName: selectedService.name,
+            // months: months ? Number(months) : 0,
+            // chargeDay: chargeDay ? Number(chargeDay) : 0,
         };
 
         setPendingTransaction(transactionToSend);
         console.log("transactionToSend:", transactionToSend);
+
         // אם העסקה היא חודשי ויש לסוכן פרטי אשראי לגביה - פותחים את עמוד התשלום
         if (serviceType === "monthly" && agent?.paymentType !== "none") {
             console.log("Opening payment form for monthly transaction");
             setShowPaymentForm(true);
             return;
         }
+
+        // אם העסקה היא חודשי אבל אין אשראי - יוצרים עסקאות נפרדות לכל חודש
+        if (serviceType === "monthly" && agent?.paymentType === "none") {
+            try {
+                nextStep();
+                setClicked(true);
+                console.log("Creating separate transactions for each month");
+
+                const monthsCount = Number(months); // חייב להיות מוגדר אחרי הבדיקות
+                const currentDate = new Date();
+                const chargeDay_num = Number(chargeDay);
+
+                // יצירת עסקאות נפרדות לכל חודש
+                for (let i = 0; i < monthsCount; i++) {
+                    // חישוב תאריך הגבייה לחודש הנוכחי
+                    let billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, chargeDay_num);
+
+                    // טיפול במקרים שבהם היום הנבחר לא קיים בחודש (למשל 31 בפברואר)
+                    if (billingDate.getDate() !== chargeDay_num) {
+                        // אם היום הנבחר גדול מהימים בחודש, נלך לסוף החודש
+                        billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i + 1, 0);
+                    }
+
+                    const monthlyTransaction = {
+                        ...transactionDetails,
+                        //transactionType: "ragil", // עסקה רגילה לכל חודש
+                        // payments,
+                        price: payments, // מחיר העסקה - זהה לתשלום בעסקה רגילה
+                        // serviceName: selectedService.name,
+                        billingDay: billingDate.toISOString().split('T')[0], // פורמט YYYY-MM-DD
+                        // description: `${transactionDetails.description || selectedService.name} - תשלום ${i + 1} מתוך ${monthsCount}`,
+                        // הסרת שדות שרלוונטיים רק להוראת קבע
+                        // totalPayments: undefined,
+                        // months: undefined,
+                        // chargeDay: undefined
+                    };
+
+                    console.log(`Creating transaction ${i + 1}/${monthsCount} for date ${billingDate.toLocaleDateString('he-IL')}:`, monthlyTransaction);
+
+                    const transaction = await addTransaction({ phone, transaction: monthlyTransaction }).unwrap();
+
+                    if (transaction && !transaction.error) {
+                        console.log(`Transaction ${i + 1} created successfully:`, transaction);
+                    }
+                }
+
+                toast.success(`👍 נוצרו ${monthsCount} עסקאות חודשיות בהצלחה!`, { icon: false });
+                onSuccess();
+
+            } catch (err) {
+                console.error("Error creating monthly transactions:", err);
+                toast.error("שגיאה ביצירת העסקאות החודשיות");
+                setMessage("שגיאה ביצירת העסקאות החודשיות. נסה שוב.");
+                setMessageType("error");
+                setClicked(false); // מאפשר לנסות שוב
+            }
+            return;
+        }
+
         // אם העסקה היא רגיל - ממשיכים להוספת עסקה
         try {
             nextStep();
@@ -270,13 +341,66 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
     const handlePaymentSuccess = async (paymentData) => {
         setShowPaymentForm(false);
         setClicked(true);
-        
+
         // הצגת הודעת הצלחה
         toast.success("👍 התשלום בוצע בהצלחה! העסקה תתעדכן בקרוב", { icon: false });
-        
+
         // יש צורך לרענן את המטמון של העסקאות כדי שהעסקה החדשה תוצג
         // הרענון יקרה אוטומטית דרך onSuccess() שקורא להורה לרענן את הנתונים
         onSuccess();
+    };
+
+    // פונקציה שמטפלת במעבר לתשלום אלטרנטיבי (לא דרך הו"ק באשראי)
+    const handleAlternativePayment = async () => {
+        setShowPaymentForm(false);
+        setPreferAlternativePayment(true);
+
+        try {
+            setClicked(true);
+            console.log("User chose alternative payment - creating separate transactions for each month");
+
+            const monthsCount = Number(months);
+            const currentDate = new Date();
+            const chargeDay_num = Number(chargeDay);
+
+            // יצירת עסקאות נפרדות לכל חודש (כמו במקרה של אין אשראי)
+            for (let i = 0; i < monthsCount; i++) {
+                let billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, chargeDay_num);
+
+                if (billingDate.getDate() !== chargeDay_num) {
+                    billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i + 1, 0);
+                }
+
+                const monthlyTransaction = {
+                    ...transactionDetails,
+                    // transactionType: "ragil",
+                    // payments: pendingTransaction.payments,
+                    price: pendingTransaction.payments, // מחיר העסקה - זהה לתשלום בעסקה רגילה
+                    // serviceName: selectedService.name,
+                    billingDay: billingDate.toISOString().split('T')[0],
+                    // description: `${transactionDetails.description || selectedService.name} - תשלום ${i + 1} מתוך ${monthsCount}`,
+                    // totalPayments: undefined,
+                    // months: undefined,
+                    // chargeDay: undefined
+                };
+
+                console.log(`Creating alternative transaction ${i + 1}/${monthsCount}:`, monthlyTransaction);
+
+                const transaction = await addTransaction({ phone, transaction: monthlyTransaction }).unwrap();
+
+                if (transaction && !transaction.error) {
+                    console.log(`Alternative transaction ${i + 1} created successfully`);
+                }
+            }
+
+            toast.success(`👍 נוצרו ${monthsCount} עסקאות חודשיות בהצלחה!`, { icon: false });
+            onSuccess();
+
+        } catch (err) {
+            console.error("Error creating alternative payment transactions:", err);
+            toast.error("שגיאה ביצירת העסקאות");
+            setClicked(false);
+        }
     };
 
     const nextStep = () => {
@@ -321,12 +445,18 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                     Phone: selectedCustomer?.phone,
                     Mail: selectedCustomer?.email,
                     PaymentType: "HK",
-                    Amount: pendingTransaction.amount,
+                    Amount: pendingTransaction.payments,
                     Tashlumim: months || "",
                     Day: chargeDay || "",
                 }}
                 outsieder={false}
                 onPaymentSuccess={handlePaymentSuccess}
+                // הוספת props מיוחדים להוראת קבע מ-AddTransaction
+                showAlternativeOption={true}
+                onAlternativePayment={handleAlternativePayment}
+                alternativePaymentText="אני מעדיף תשלום בדרך אחרת, לא בהו״ק באשראי"
+                // מידע נוסף לטיפול באלטרנטיבה
+                monthsData={{ months, chargeDay }}
             />)
             //  : (!agent?.cardDetails || agent?.cardDetails.length === 0) ?
             //     <PaymentDetails />
@@ -468,7 +598,38 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 )}
 
                 {currentStep === 3 && (
-                    <div className="transaction-body">
+                    <div className="transaction-body">                {/* הודעה אינפורמטיבית לעסקאות חודשיות עם אשראי שבוחרים אלטרנטיבה */}
+                        {serviceType === "monthly" && agent?.paymentType !== "none" && (
+                            <div className="info-message" style={{
+                                backgroundColor: "#fff3e0",
+                                padding: "10px",
+                                borderRadius: "5px",
+                                marginBottom: "15px",
+                                border: "1px solid #ffb74d",
+                                color: "#e65100"
+                            }}>
+                                <strong>💳 הו"ק באשראי:</strong> יפתח טופס תשלום ליצירת הוראת קבע אוטומטית.
+                                <br />
+                                <small>אם תעדיף דרך אחרת, תוכל לבחור זאת בטופס התשלום.</small>
+                            </div>
+                        )}
+
+                        {/* הודעה אינפורמטיבית לעסקאות חודשיות */}
+                        {serviceType === "monthly" && agent?.paymentType === "none" && (
+                            <div className="info-message" style={{
+                                backgroundColor: "#e3f2fd",
+                                padding: "10px",
+                                borderRadius: "5px",
+                                marginBottom: "15px",
+                                border: "1px solid #90caf9",
+                                color: "#1565c0"
+                            }}>
+                                <strong>📅 הודעה:</strong> יתווספו {months} עסקאות נפרדות לרשימה, כל אחת עבור חודש שונה.
+                                <br />
+                                תאריכי הגבייה: יום {chargeDay} בכל חודש.
+                            </div>
+                        )}
+
                         <div className="transaction-row">
                             {/* מחיר כולל */}
                             <div className="field-group transaction-amount">

@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 import "jspdf-font"; // מייבא פונטים בעברית
 import Modal from "../../modals/Modal";
 
-const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
+const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlternativeOption, onAlternativePayment, alternativePaymentText }) => {
     const navigate = useNavigate();
     const iframeRef = useRef(null);
     const initialData = initialCustomerData || {};
@@ -21,10 +21,10 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
         Currency: 1, // שקלים
         PaymentType: initialCustomerData.PaymentType || "Ragil",
         Tashlumim: initialData.Tashlumim || 1, // מספר תשלומים, ברירת מחדל 1
-        Day : initialData.Day || 1, // יום התשלום, ברירת מחדל 1
-        Param1:initialData.transactionID,
-        Mosad: initialData.mosad? initialData.mosad : process.env.REACT_APP_MOSAD,
-        ApiValid: initialData.apiValid? initialData.apiValid : process.env.REACT_APP_API_IFRAME,
+        Day: initialData.Day || 1, // יום התשלום, ברירת מחדל 1
+        Param1: initialData.transactionID,
+        Mosad: initialData.mosad ? initialData.mosad : process.env.REACT_APP_MOSAD,
+        ApiValid: initialData.apiValid ? initialData.apiValid : process.env.REACT_APP_API_IFRAME,
         Comment: "",
         CallBack: process.env.REACT_APP_CALLBACK_URL,
     });
@@ -135,7 +135,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
                     setAmount(amountPaid);
                     setShowReceiptModal(true);
 
-                    
+
                     // קריאה לפונקציה חיצונית לסיום תהליך (הוספת העסקה לשרת)
                     if (typeof onPaymentSuccess === "function") {
                         onPaymentSuccess();
@@ -150,7 +150,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
             }
         };
 
-         window.addEventListener("message", handleMessage);
+        window.addEventListener("message", handleMessage);
         return () => window.removeEventListener("message", handleMessage);
     }, [customerData, onPaymentSuccess]);
 
@@ -233,7 +233,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
                     { label: "סכום לתשלום", name: "Amount", type: "number" },
                     { label: "מספר תשלומים", name: "Tashlumim", type: "number" },
                 ].map(({ label, name, type = "text" }) => (
-                     (outsieder)?  <label key={name} className="form-label">
+                    (outsieder) ? <label key={name} className="form-label">
                         {label}:
                         <input
                             className="TextBox"
@@ -249,22 +249,22 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
                             <span className="error">{errors[name]}</span>
                         )}
                     </label>
-                    : 
-                    <label key={name} className="form-label">
-                        {label}:
-                        <input
-                            className="TextBox"
-                            type={type}
-                            name={name}
-                            value={customerData[name]}
-                            onChange={handleChange}
-                            min={name === "Tashlumim" || name === "Amount" ? "1" : undefined} // מינימום לערכים מספריים
-                            required
-                        />
-                        {errors[name] && (
-                            <span className="error">{errors[name]}</span>
-                        )}
-                    </label>
+                        :
+                        <label key={name} className="form-label">
+                            {label}:
+                            <input
+                                className="TextBox"
+                                type={type}
+                                name={name}
+                                value={customerData[name]}
+                                onChange={handleChange}
+                                min={name === "Tashlumim" || name === "Amount" ? "1" : undefined} // מינימום לערכים מספריים
+                                required
+                            />
+                            {errors[name] && (
+                                <span className="error">{errors[name]}</span>
+                            )}
+                        </label>
                 ))}
 
                 <label className="form-label">אופן התשלום:</label>
@@ -301,6 +301,17 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
                 >
                     לתשלום
                 </button>
+
+                {/* כפתור אלטרנטיבי - רק כשמגיעים מ-AddTransaction */}
+                {showAlternativeOption && onAlternativePayment && (
+                    <button
+                        type="button"
+                        className="alternative-payment-button"
+                        onClick={onAlternativePayment}
+                    >
+                        {alternativePaymentText || "אני מעדיף תשלום בדרך אחרת"}
+                    </button>
+                )}
             </form>
 
             <style>{`
@@ -362,6 +373,25 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess }) => {
 
                 .pay-button:hover {
                     background-color: var(--text);
+                }
+
+                .alternative-payment-button {
+                    background-color: #f5f5f5;
+                    color: #666;
+                    border: 2px solid #ddd;
+                    padding: 8px 12px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    border-radius: 5px;
+                    margin-top: 10px;
+                    width: 100%;
+                    transition: all 0.3s ease;
+                }
+
+                .alternative-payment-button:hover {
+                    background-color: #e0e0e0;
+                    border-color: #bbb;
+                    color: #333;
                 }
 
                 .payment-status {
