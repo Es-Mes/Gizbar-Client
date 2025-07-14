@@ -1,5 +1,5 @@
 // features/messages/messagesApiSlice.js
-import  apiSlice  from "../../fetures/agent/apiSlice";
+import apiSlice from "../../fetures/agent/apiSlice";
 
 export const messagesApiSlice = apiSlice.injectEndpoints({
   endpoints: (build) => ({
@@ -11,7 +11,17 @@ export const messagesApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Messages"],
     }),
+
+    // שליחת הודעות לסוכנים (אם נדרש endpoint נפרד)
+    sendMessageToAgents: build.mutation({
+      query: (body) => ({
+        url: "/api/admin/message/agents",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Messages"],
+    }),
   }),
 });
 
-export const { useSendCustomMessageMutation } = messagesApiSlice;
+export const { useSendCustomMessageMutation, useSendMessageToAgentsMutation } = messagesApiSlice;
