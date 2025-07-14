@@ -8,12 +8,12 @@ import useAuth from "../../../hooks/useAuth";
 
 const CustomerDetails = ({ customer, isNarrow }) => {
   const phone = useAuth();
-  const { data: transactions = [], isLoading: isLoading, error: error, refetch: refetchTransactions } = useGetAllTransactionsQuery( phone , {
+  const { data: transactions = [], isLoading: isLoading, error: error, refetch: refetchTransactions } = useGetAllTransactionsQuery(phone, {
     pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
   });
   console.log("CustomerDetails transactions:", transactions);
 
-  
+
   const customerTransactions = transactions.filter(t => t.customer?._id === customer._id);
   // if (customerTransactions.length === 0) return <p>אין עסקאות ללקוח זה.</p>;
   // // Filter transactions by status
@@ -22,11 +22,11 @@ const CustomerDetails = ({ customer, isNarrow }) => {
 
   const delayedTransactions = customerTransactions.filter(t => t.status === "notPaid");
   const delayedAmount = delayedTransactions.reduce((sum, t) => sum + t.price, 0);
-  
+
   // חישוב סכום נגבה ב-12 חודשים אחרונים
   const currentDate = new Date();
   const twelveMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 12, currentDate.getDate());
-  
+
   const totalCollectedLast12Months = customerTransactions.reduce((sum, t) => {
     if (t.status === "paid") {
       const transactionDate = new Date(t.billingDay);
@@ -50,7 +50,7 @@ const CustomerDetails = ({ customer, isNarrow }) => {
     // יצירת 12 החודשים האחרונים
     const last12Months = [];
     const currentDate = new Date();
-    
+
     for (let i = 11; i >= 0; i--) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
       const key = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
@@ -70,18 +70,18 @@ const CustomerDetails = ({ customer, isNarrow }) => {
   if (!customer || !transactions) return <p>טוען...</p>;
 
   return (
-    <div style={{ 
-      padding: "15px", 
+    <div style={{
+      padding: "15px",
       fontSize: "0.95rem",
       background: "linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)",
       borderRadius: "8px",
       border: "1px solid var(--hoverBtnModel)"
     }}>
       {isNarrow && (
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "1fr 1fr", 
-          gap: "10px", 
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "10px",
           marginBottom: "15px",
           padding: "10px",
           background: "#fff",
@@ -100,15 +100,15 @@ const CustomerDetails = ({ customer, isNarrow }) => {
       )}
 
       {/* סיכום נתונים בכרטיסים */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", 
-        gap: "12px", 
-        marginBottom: "20px" 
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+        gap: "12px",
+        marginBottom: "20px"
       }}>
-        <div 
-          onClick={() => navigate(`/dash/transactions/income/providerList?customer=${customer._id}`)} 
-          style={{ 
+        <div
+          onClick={() => navigate(`/dash/transactions/income/providerList?customer=${customer._id}`)}
+          style={{
             background: "#fff",
             padding: "12px",
             borderRadius: "8px",
@@ -128,9 +128,9 @@ const CustomerDetails = ({ customer, isNarrow }) => {
           </div>
         </div>
 
-        <div 
-          onClick={() => navigate(`/dash/transactions/income/providerList?customer=${customer._id}&filter=delayed`)} 
-          style={{ 
+        <div
+          onClick={() => navigate(`/dash/transactions/income/providerList?customer=${customer._id}&filter=delayed`)}
+          style={{
             background: "#fff",
             padding: "12px",
             borderRadius: "8px",
@@ -153,7 +153,7 @@ const CustomerDetails = ({ customer, isNarrow }) => {
           </div>
         </div>
 
-        <div style={{ 
+        <div style={{
           background: "#fff",
           padding: "12px",
           borderRadius: "8px",
@@ -171,24 +171,24 @@ const CustomerDetails = ({ customer, isNarrow }) => {
 
       {/* טבלה חודשית קבועה */}
       <div style={{ marginTop: "20px" }}>
-        <h4 style={{ 
-          marginBottom: "12px", 
-          fontSize: "1rem", 
+        <h4 style={{
+          marginBottom: "12px",
+          fontSize: "1rem",
           color: "var(--text)",
-          textAlign: "center" 
+          textAlign: "center"
         }}>
           סכומים שנגבו ב-12 החודשים האחרונים
         </h4>
-        <div style={{ 
-          background: "#fff", 
-          borderRadius: "12px", 
+        <div style={{
+          background: "#fff",
+          borderRadius: "12px",
           padding: "16px",
           border: "1px solid var(--hoverBtnModel)",
           boxShadow: "0 2px 8px rgba(139, 123, 218, 0.08)"
         }}>
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(85px, 1fr))", 
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(85px, 1fr))",
             gap: "8px",
             textAlign: "center"
           }}>
@@ -202,27 +202,27 @@ const CustomerDetails = ({ customer, isNarrow }) => {
                 transition: "all 0.2s",
                 opacity: month.hasData ? 1 : 0.6
               }}>
-                <div style={{ 
-                  fontWeight: "600", 
+                <div style={{
+                  fontWeight: "600",
                   fontSize: "0.8rem",
                   marginBottom: "4px"
                 }}>
                   {month.displayName}
                 </div>
-                <div style={{ 
-                  fontWeight: month.hasData ? "bold" : "normal", 
-                  fontSize: "0.85rem" 
+                <div style={{
+                  fontWeight: month.hasData ? "bold" : "normal",
+                  fontSize: "0.85rem"
                 }}>
                   {month.hasData ? `₪${month.amount.toLocaleString()}` : "-"}
                 </div>
               </div>
             ))}
           </div>
-          
+
           {!hasAnyMonthlyData && (
-            <div style={{ 
-              textAlign: "center", 
-              color: "#6c757d", 
+            <div style={{
+              textAlign: "center",
+              color: "#6c757d",
               marginTop: "16px",
               fontSize: "0.9rem",
               fontStyle: "italic"

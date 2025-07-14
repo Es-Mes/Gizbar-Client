@@ -193,7 +193,7 @@ const TransactionsAsProvider = () => {
                             {(customerId || customerName) ? 'חזור לרשימת לקוחות' : 'חזור'}
                         </p>
                     </button>
-                    <h2 style={{ 
+                    <h2 style={{
                         fontSize: (customerId || customerName) ? 'clamp(1rem, 2.5vw, 1.3rem)' : '1.5rem',
                         lineHeight: '1.4',
                         wordBreak: 'break-word',
