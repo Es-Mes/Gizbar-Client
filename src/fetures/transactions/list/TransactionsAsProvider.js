@@ -24,6 +24,8 @@ const TransactionsAsProvider = () => {
 
     const [searchParams] = useSearchParams();
     const filterBy = searchParams.get("filter");
+    const customerId = searchParams.get("customer");
+    const customerName = searchParams.get("q");
 
     const [header, setHeader] = useState("כל העסקאות")
 
@@ -112,26 +114,64 @@ const TransactionsAsProvider = () => {
     const filteredTransactions = useMemo(() => {
         if (!transactionsAsProvider || transactionsAsProvider.length === 0) return [];
 
+        let filtered = transactionsAsProvider.filter(t => t.status !== "canceled");
+
+        // סינון לפי לקוח ספציפי (לפי ID)
+        if (customerId) {
+            filtered = filtered.filter(t => t.customer?._id === customerId);
+        }
+
+        // סינון לפי שם לקוח (חיפוש טקסט)
+        if (customerName && !customerId) {
+            filtered = filtered.filter(t =>
+                t.customer?.full_name?.toLowerCase().includes(customerName.toLowerCase())
+            );
+        }
+
         const today = new Date();
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
+        // חישוב נתונים עבור כותרת מפורטת
+        const totalTransactions = filtered.length;
+        const delayedTransactions = filtered.filter(t => t.status === "notPaid");
+        const delayedCount = delayedTransactions.length;
+        const delayedAmount = delayedTransactions.reduce((sum, t) => sum + (t.price || 0), 0);
+        const totalCollected = filtered.reduce((sum, t) => sum + (t.status === "paid" ? (t.price || 0) : 0), 0);
+
+        // קביעת כותרת וסינון נוסף לפי סוג
         if (filterBy === "recentMonth") {
-            setHeader(`עסקאות מהחודש הנוכחי - ${today.getMonth() + 1}`);
-            return transactionsAsProvider.filter(transaction => {
+            const monthName = today.getMonth() + 1;
+            if (customerId || customerName) {
+                const customerDisplayName = customerName || filtered[0]?.customer?.full_name || "לקוח";
+                setHeader(`${customerDisplayName} - חודש ${monthName}\n${totalTransactions} עסקאות | ${delayedCount} בפיגור (₪${delayedAmount.toLocaleString()}) | נגבה: ₪${totalCollected.toLocaleString()}`);
+            } else {
+                setHeader(`עסקאות מהחודש הנוכחי - ${monthName}`);
+            }
+            filtered = filtered.filter(transaction => {
                 const billingDate = new Date(transaction.billingDay);
-                return billingDate >= startOfMonth && billingDate < startOfNextMonth && transaction.status !== "canceled";
+                return billingDate >= startOfMonth && billingDate < startOfNextMonth;
             });
+        } else if (filterBy === "delayed") {
+            if (customerId || customerName) {
+                const customerDisplayName = customerName || filtered[0]?.customer?.full_name || "לקוח";
+                setHeader(`${customerDisplayName} - עסקאות בפיגור\n${delayedCount} עסקאות (₪${delayedAmount.toLocaleString()})`);
+            } else {
+                setHeader("עסקאות בפיגור");
+            }
+            filtered = filtered.filter(t => t.status === "notPaid");
+        } else {
+            // ללא פילטר זמן מיוחד
+            if (customerId || customerName) {
+                const customerDisplayName = customerName || filtered[0]?.customer?.full_name || "לקוח";
+                setHeader(`עסקאות ${customerDisplayName}\n${totalTransactions} עסקאות | ${delayedCount} בפיגור (₪${delayedAmount.toLocaleString()}) | נגבה: ₪${totalCollected.toLocaleString()}`);
+            } else {
+                setHeader("כל העסקאות");
+            }
         }
 
-        if (filterBy === "delayed") {
-            setHeader("עסקאות בפיגור");
-            return transactionsAsProvider.filter(t => t.status === "notPaid" && t.status !== "canceled");
-        }
-
-        setHeader("כל העסקאות");
-        return transactionsAsProvider.filter(t => t.status !== "canceled");
-    }, [transactionsAsProvider, filterBy]);
+        return filtered;
+    }, [transactionsAsProvider, filterBy, customerId, customerName]);
 
 
 
@@ -141,10 +181,26 @@ const TransactionsAsProvider = () => {
         <div className='transactions_first_page'>
             <div className="transactions-display">
                 <div className="header-with-button">
-                    <button className="backButton" onClick={() => navigate(-1)}>
-                        <GrFormNextLink className='GrFormNextLink' /><p className='backText'>חזור</p>
+                    <button className="backButton" onClick={() => {
+                        if (customerId || customerName) {
+                            navigate('/dash/customers');
+                        } else {
+                            navigate(-1);
+                        }
+                    }}>
+                        <GrFormNextLink className='GrFormNextLink' />
+                        <p className='backText'>
+                            {(customerId || customerName) ? 'חזור לרשימת לקוחות' : 'חזור'}
+                        </p>
                     </button>
-                    <h2>{header}</h2><button className='newTransactionBtn' onClick={() => { setIsTransactionModalOpen(true) }}>
+                    <h2 style={{ 
+                        fontSize: (customerId || customerName) ? 'clamp(1rem, 2.5vw, 1.3rem)' : '1.5rem',
+                        lineHeight: '1.4',
+                        wordBreak: 'break-word',
+                        whiteSpace: 'pre-line',
+                        margin: '8px 0',
+                        color: '#333'
+                    }}>{header}</h2><button className='newTransactionBtn' onClick={() => { setIsTransactionModalOpen(true) }}>
                         עסקה חדשה <div className="rotating-coin small"><img src='/icons8-money-bag-bitcoin-50.png' /></div>
 
                     </button>

@@ -15,6 +15,7 @@ import Modal from "../../../modals/Modal"
 import EditCustomer from "../edit/EditCustomer"
 import AddCustomer from "../add/AddCustomer"
 import { useGetAgentQuery } from "../../agent/apiSlice";
+import { useGetAllTransactionsQuery } from "../../transactions/TransactionsApiSlice";
 import AddTransaction from "../../transactions/add/AddTransaction";
 import DeleteCustomer from "../delete/DeleteCustomer";
 import CustomerDetails from "../view/CustomerDetails";
@@ -22,18 +23,26 @@ import CustomerDetails from "../view/CustomerDetails";
 const CustomersList = () => {
     const { phone } = useAuth(); // קבלת מספר הטלפון של הסוכן
     const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
+    const { data: allTransactions = [] } = useGetAllTransactionsQuery({ phone });
     const customers = agent?.customers || [];
+
+    // חישוב מספר עסקאות לכל לקוח
+    const getCustomerTransactionsCount = (customerId) => {
+        return allTransactions.filter(transaction =>
+            transaction.customer?._id === customerId && transaction.status !== "canceled"
+        ).length;
+    };
 
     //תצוגת הטבלה
     const tableRef = useRef(null);
     const [isNarrow, setIsNarrow] = useState(false);
     const location = useLocation();
 
-const [openDetailsId, setOpenDetailsId] = useState(null);
+    const [openDetailsId, setOpenDetailsId] = useState(null);
 
     const toggleCustomerDetails = (customerId) => {
         console.log(`customerId: ${customerId}`);
-        
+
         setOpenDetailsId(prev => (prev === customerId ? null : customerId));
     };
 
@@ -198,86 +207,88 @@ const [openDetailsId, setOpenDetailsId] = useState(null);
                 <tbody>
                     {filteredData.map(customer => (
                         <React.Fragment key={customer._id}>
-                        <tr >
-                            <td>
-                                <div className="customers-list-customer">
-                                    {customer.full_name}
-                                </div>
-                            </td>
-                            <td>
-                                {customer.phone}
-                            </td>
-                            {!isNarrow && <td className="email">
-                                {customer.email}
-                            </td>}
-                            {!isNarrow && <td className="city">
-                                {customer.city}
-                            </td>}
+                            <tr >
+                                <td>
+                                    <div className="customers-list-customer">
+                                        {customer.full_name}
+                                    </div>
+                                </td>
+                                <td>
+                                    {customer.phone}
+                                </td>
+                                {!isNarrow && <td className="email">
+                                    {customer.email}
+                                </td>}
+                                {!isNarrow && <td className="city">
+                                    {customer.city}
+                                </td>}
 
 
-                            <td className="edit_btn">
-                            </td>
-                            <td onClick={() => { openTransactionModal(); setSpecificCustomer(customer._id) }} className="btn-customer-list">
-                                <CiCoinInsert size={20} />
+                                <td className="transactions-count">
+                                    {getCustomerTransactionsCount(customer._id)}
+                                </td>
+                                <td onClick={() => { openTransactionModal(); setSpecificCustomer(customer._id) }} className="btn-customer-list">
+                                    <CiCoinInsert size={20} />
 
-                            </td>
-                            <td className="btn-customer-list">
-                                <span onClick={() => toggleCustomerDetails(customer._id)} style={{ cursor: "pointer" , color: "gray" }} className="customers-list-btn customers-list-view">
-                                    <PiEyeThin size={20} />
-                                </span>
-                            </td>
-                            <td style={{ position: "relative" }}
-                            >
-                                <div ref={(el) => (actionsRefs.current[customer._id] = el)}>
-
-                                    <span
-                                        onClick={(event) => { toggleActions(event, customer._id) }} style={{ cursor: "pointer" }}>
-                                        {openMenuCustomerId === customer._id ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
+                                </td>
+                                <td className="btn-customer-list">
+                                    <span onClick={() => toggleCustomerDetails(customer._id)} style={{ cursor: "pointer", color: "gray" }} className="customers-list-btn customers-list-view">
+                                        <PiEyeThin size={20} />
                                     </span>
-                                    {openMenuCustomerId === customer._id && (
-                                        <div className={`actions-dropdown floating-menu ${openUpwardsId === customer._id ? "open-up" : ""}`}>
-                                            <div
-                                                className="action-item"
-                                                onClick={() => {
-                                                    openEditModel(customer);
-                                                    closeMenu();
-                                                }}
-                                            >
-                                                <GrEdit size={20} /> עריכה
+                                </td>
+                                <td style={{ position: "relative" }}
+                                >
+                                    <div ref={(el) => (actionsRefs.current[customer._id] = el)}>
+
+                                        <span
+                                            onClick={(event) => { toggleActions(event, customer._id) }} style={{ cursor: "pointer" }}>
+                                            {openMenuCustomerId === customer._id ? <GrFormUp size={20} /> : <GrMoreVertical size={20} />}
+                                        </span>
+                                        {openMenuCustomerId === customer._id && (
+                                            <div className={`actions-dropdown floating-menu ${openUpwardsId === customer._id ? "open-up" : ""}`}>
+                                                <div
+                                                    className="action-item"
+                                                    onClick={() => {
+                                                        openEditModel(customer);
+                                                        closeMenu();
+                                                    }}
+                                                >
+                                                    <GrEdit size={20} /> עריכה
+                                                </div>
+                                                <div
+                                                    className="action-item disabled"
+                                                    onClick={closeMenu} // אם אין פעולה, רק סוגר
+                                                >
+                                                    <LuBellRing size={20} /> שלח הודעה
+                                                </div>
+                                                <div
+                                                    onClick={() => {
+                                                        console.log("clicked");
+                                                        openDeleteModel(customer);
+                                                        closeMenu();
+                                                    }}
+                                                    className="action-item"
+                                                >
+                                                    <GrFormTrash size={20} /> מחיקה
+                                                </div>
                                             </div>
-                                            <div
-                                                className="action-item disabled"
-                                                onClick={closeMenu} // אם אין פעולה, רק סוגר
-                                            >
-                                                <LuBellRing size={20} /> שלח הודעה
-                                            </div>
-                                            <div
-                                                onClick={() => {
-                                                    console.log("clicked");
-                                                    openDeleteModel(customer);
-                                                    closeMenu();
-                                                }}
-                                                className="action-item"
-                                            >
-                                                <GrFormTrash size={20} /> מחיקה
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </td>
-                        </tr>
-                        
-{ openDetailsId === customer._id && (
-                            <tr className="expanded-customer-row">
-                                <td colSpan={isNarrow ? 5 : 8} style={{ background: "#f8f8ff" }}>
-                                    <CustomerDetails
-                                        customer={customer}
-                                        onClose={() => setOpenDetailsId(null)}
-                                    />
+                                        )}
+                                    </div>
                                 </td>
                             </tr>
-                        )}
-                         </React.Fragment>
+
+                            {openDetailsId === customer._id && (
+                                <tr className="expanded-customer-row">
+                                    <td colSpan={isNarrow ? 5 : 8} style={{ background: "#f8f8ff" }}>
+                                        <CustomerDetails
+                                            customer={customer}
+                                            isNarrow={isNarrow}
+                                            onClose={() => setOpenDetailsId(null)}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
                     ))}
 
                 </tbody>
