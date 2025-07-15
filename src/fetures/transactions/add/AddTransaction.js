@@ -71,6 +71,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
             console.log('data', data)
             setMessage("שגיאה בהוספת העסקה. נסה שוב.");
             setMessageType("error");
+            setClicked(false);
         }
     }, [isSuccess, isError, navigate, clicked, serviceType]);
 
@@ -236,7 +237,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
         const transactionToSend = {
             ...transactionDetails,
             // transactionType,
-            payments,
+            // payments,
             price: payments, // מחיר העסקה - זהה לתשלומים בעסקה רגילה
             // totalPayments,
             // serviceName: selectedService.name,
@@ -276,13 +277,19 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                         billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i + 1, 0);
                     }
 
+                    // תיקון בעיית אזור הזמן - שימוש בזמן המקומי
+                    const year = billingDate.getFullYear();
+                    const month = String(billingDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(billingDate.getDate()).padStart(2, '0');
+                    const billingDateString = `${year}-${month}-${day}`;
+
                     const monthlyTransaction = {
                         ...transactionDetails,
                         //transactionType: "ragil", // עסקה רגילה לכל חודש
                         // payments,
                         price: payments, // מחיר העסקה - זהה לתשלום בעסקה רגילה
                         // serviceName: selectedService.name,
-                        billingDay: billingDate.toISOString().split('T')[0], // פורמט YYYY-MM-DD
+                        billingDay: billingDateString, // פורמט YYYY-MM-DD
                         // description: `${transactionDetails.description || selectedService.name} - תשלום ${i + 1} מתוך ${monthsCount}`,
                         // הסרת שדות שרלוונטיים רק להוראת קבע
                         // totalPayments: undefined,
@@ -319,20 +326,24 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
             console.log("transactionData before sending:", transactionToSend);
             const transaction = await addTransaction({ phone, transaction: transactionToSend }).unwrap();
 
-            if (transaction && !transaction.error) {
-                const customerDetails = customers.find(c => c._id === transaction.data.customer) || null;
+            // if (transaction && !transaction.error) {
+            //     const customerDetails = customers.find(c => c._id === transaction.data.customer) || null;
 
-                const transactionWhithCustomer = {
-                    ...transaction.data,
-                    customer: customerDetails
-                };
-                console.log(transactionWhithCustomer);
-            }
+            //     const transactionWhithCustomer = {
+            //         ...transaction.data,
+            //         customer: customerDetails
+            //     };
+            //     console.log(transactionWhithCustomer);
+            // }
 
             onSuccess();
 
         } catch (err) {
             console.error("Error adding transaction:", err);
+            toast.error("שגיאה בהוספת העסקה. נסה שוב.");
+            setMessage("שגיאה בהוספת העסקה. נסה שוב.");
+            setMessageType("error");
+            setClicked(false); // מאפשר לנסות שוב
         }
     };
 
@@ -365,19 +376,25 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
             // יצירת עסקאות נפרדות לכל חודש (כמו במקרה של אין אשראי)
             for (let i = 0; i < monthsCount; i++) {
-                let billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, chargeDay_num);
+                let billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, chargeDay_num );
 
                 if (billingDate.getDate() !== chargeDay_num) {
                     billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i + 1, 0);
                 }
 
+                // תיקון בעיית אזור הזמן - שימוש בזמן המקומי
+                const year = billingDate.getFullYear();
+                const month = String(billingDate.getMonth() + 1).padStart(2, '0');
+                const day = String(billingDate.getDate()).padStart(2, '0');
+                const billingDateString = `${year}-${month}-${day}`;
+
                 const monthlyTransaction = {
                     ...transactionDetails,
                     // transactionType: "ragil",
                     // payments: pendingTransaction.payments,
-                    price: pendingTransaction.payments, // מחיר העסקה - זהה לתשלום בעסקה רגילה
+                    price: pendingTransaction.price, // מחיר העסקה - זהה לתשלום בעסקה רגילה
                     // serviceName: selectedService.name,
-                    billingDay: billingDate.toISOString().split('T')[0],
+                    billingDay: billingDateString,
                     // description: `${transactionDetails.description || selectedService.name} - תשלום ${i + 1} מתוך ${monthsCount}`,
                     // totalPayments: undefined,
                     // months: undefined,
@@ -588,7 +605,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                                 {serviceType === "monthly" && (
                                     <>
                                         <TextField label="מספר חודשים" type="number" value={months} onChange={e => setMonths(e.target.value)} min="1" required />
-                                        <TextField label="יום גבייה בחודש" type="number" value={chargeDay} onChange={e => setChargeDay(e.target.value)} min="1" max="31" required />
+                                        <TextField label="יום גבייה בחודש" type="number" value={chargeDay} onChange={e => setChargeDay((e.target.value))} min="1" max="31" required />
                                     </>
                                 )}
 
