@@ -89,7 +89,7 @@ const TransactionsList = ({ transactions }) => {
 
     return (
         <>
-            <div style={{ display: "flex", flexDirection: "row",gap:"15px",marginRight:"20px",marginBottom:"0" }}>
+            <div style={{ display: "flex", flexDirection: "row", gap: "15px", marginRight: "20px", marginBottom: "0" }}>
                 <Button
                     sx={{
                         color: "#755dedba",           // צבע הכתב
@@ -140,21 +140,20 @@ const TransactionsList = ({ transactions }) => {
             </div>
 
             {showFilters && (
-                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: 2, padding: "10px", borderRadius: "8px" }}>
+                <Box style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "16px", padding: "10px", borderRadius: "8px" }}>
 
                     <div className="date-range" >
                         <div className="date-box" style={{ gap: "18px" }}>
                             {/* שם לקוח */}
-                            <TextField
-                                variant="outlined"
+                            <input
                                 type="text"
                                 placeholder={"סנן לפי שם לקוח"}
                                 value={customerNameFilter}
                                 onChange={(e) => setCustomerNameFilter(e.target.value)}
+                                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
                             />
                             {/* סוג שירות */}
-                            <TextField
-                                variant="outlined"
+                            <input
                                 type="text"
                                 placeholder={"סנן לפי סוג שירות"}
                                 value={serviceFilter}

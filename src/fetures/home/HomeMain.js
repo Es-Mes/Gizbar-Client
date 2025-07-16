@@ -1,5 +1,4 @@
-import { Link, NavLink } from "react-router-dom"
-import { Line, Pie } from "react-chartjs-2";
+import { Link } from "react-router-dom"
 import "chart.js/auto";
 import Chart from "chart.js/auto";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -15,15 +14,16 @@ import Modal from "../../modals/Modal";
 import { useGetAgentQuery } from "../agent/apiSlice";
 import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
 const HomeMain = () => {
-   const { _id, phone } = useAuth()
+   const { phone } = useAuth()
    const { data: agent, isLoading, error } = useGetAgentQuery({ phone });
    console.log(error);
 
    console.log(agent);
 
-   const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone }, {
-      pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
-   });
+   // const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone }, {
+   //    pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
+   // });
+   const { data: transactions = [], isLoading: isLoadingTransactions, error: errorLoadingTransactions, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone });
    console.log(errorLoadingTransactions);
 
    const { data: transactionsAsCustomer = [] } = useGetAllTransactionsAsCustomerQuery({ phone });
@@ -34,14 +34,27 @@ const HomeMain = () => {
    const navigate = useNavigate();
    const chartRef = useRef(null);
    const expenseChartRef = useRef(null);
+   const chartInstance = useRef(null);
+   const outcomeChartInstance = useRef(null);
 
    Chart.register(ChartDataLabels);
 
    //משתנים לייבוא הצבעים לגרפים
-   const cssVars = getComputedStyle(document.documentElement);
-   const bgClear = cssVars.getPropertyValue('--bgSoftLight2').trim();
-   const bgSoftLight = cssVars.getPropertyValue('--bgSoftLight').trim();
-   const text = cssVars.getPropertyValue('--bgSoftLight3').trim();
+   const [cssColors, setCssColors] = useState({
+      bgClear: '',
+      bgSoftLight: '',
+      text: ''
+   });
+
+   // useEffect לטעינת הצבעים מ-CSS
+   useEffect(() => {
+      const cssVars = getComputedStyle(document.documentElement);
+      setCssColors({
+         bgClear: cssVars.getPropertyValue('--bgSoftLight2').trim(),
+         bgSoftLight: cssVars.getPropertyValue('--bgSoftLight').trim(),
+         text: cssVars.getPropertyValue('--bgSoftLight3').trim()
+      });
+   }, []);
 
    //הכנסות בחודש הנוכחי 
    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
@@ -78,7 +91,6 @@ const HomeMain = () => {
       // עסקאות סך הכל לחודש זה כולל עתידיות ושלא נגבו
       const thisMonthTransactions = transactionsAsProvider.filter((transaction) => {
          const billingDate = new Date(transaction.billingDay);
-         const paymentDate = new Date(transaction.paymentDate);
          return billingDate >= firstDayInThisMonth;
       });
 
@@ -175,7 +187,7 @@ const HomeMain = () => {
       setMonthOutcome(paidOutcome + expectedOutcome + delayedOutcome); // <-- זה הפתרון
 
 
-   }, [transactions, transactionsAsCustomer]);  // useEffect יפעל רק אם transactionsAsProvider משתנה
+   }, [transactions, transactionsAsCustomer, transactionsAsProvider]);  // useEffect יפעל רק אם transactionsAsProvider משתנה
 
 
 
@@ -183,16 +195,35 @@ const HomeMain = () => {
 
 
    //גרף ההכנסות לחודש זה
-
    useEffect(() => {
-      if (chartRef.current &&
-         totalIncome !== undefined &&
-         totalExpectedIncome !== undefined &&
-         delayedTransactionsIncome !== undefined
-      ) {
+      // בדיקה שכל הנתונים מוכנים והרכיב mounted וגם הצבעים נטענו
+      if (!chartRef.current ||
+         totalIncome === undefined ||
+         totalExpectedIncome === undefined ||
+         delayedTransactionsIncome === undefined ||
+         !cssColors.bgClear) {
+         return;
+      }
+
+      // אם כל הנתונים הם 0, לא ניצור גרף
+      const hasData = totalIncome > 0 || totalExpectedIncome > 0 || delayedTransactionsIncome > 0;
+      if (!hasData) {
+         // אם יש גרף קיים, נהרוס אותו
          if (chartInstance.current) {
-            chartInstance.current.destroy(); // הורס את התרשים הישן לפני יצירת אחד חדש
+            chartInstance.current.destroy();
+            chartInstance.current = null;
          }
+         return;
+      }
+
+      // הרס גרף קיים אם יש
+      if (chartInstance.current) {
+         chartInstance.current.destroy();
+         chartInstance.current = null;
+      }
+
+      // יצירת גרף חדש
+      try {
          const ctx = chartRef.current.getContext("2d");
          chartInstance.current = new Chart(ctx, {
             type: "pie",
@@ -200,15 +231,14 @@ const HomeMain = () => {
                labels: ["הכנסות קיימות", "הכנסות שעומדות להכנס", "הכנסות בפיגור"],
                datasets: [
                   {
-                     // label: "סך הכול הכנסות החודש",
                      data: [totalIncome, totalExpectedIncome, delayedTransactionsIncome],
-                     backgroundColor: [bgClear, text, bgSoftLight]
+                     backgroundColor: [cssColors.bgClear, cssColors.text, cssColors.bgSoftLight]
                   },
                ],
             },
             options: {
                responsive: true,
-               maintainAspectRatio: true, // לשמור על עיגול
+               maintainAspectRatio: true,
                plugins: {
                   legend: {
                      display: false,
@@ -218,43 +248,70 @@ const HomeMain = () => {
                      enabled: true
                   },
                   datalabels: {
-                     display: false // מסיר לגמרי את המספרים מהגרף
+                     display: false
                   }
-
                }
             },
          });
+         console.log("Income chart created successfully");
+      } catch (error) {
+         console.error("Error creating income chart:", error);
       }
-   }, [totalIncome, totalExpectedIncome, delayedTransactionsIncome]); // תלות בנתונים
+
+      // cleanup function
+      return () => {
+         if (chartInstance.current) {
+            chartInstance.current.destroy();
+            chartInstance.current = null;
+         }
+      };
+   }, [totalIncome, totalExpectedIncome, delayedTransactionsIncome, cssColors]);
 
    //גרף ההוצאות לחודש זה
-
    useEffect(() => {
-      if (
-         expenseChartRef.current &&
-         totalOutcome !== undefined &&
-         totalExpectedOutcome !== undefined &&
-         delayedTransactionsOutcome !== undefined
-      ) {
-         if (OutcomeChartInstance.current) {
-            OutcomeChartInstance.current.destroy(); // הורס את התרשים הישן לפני יצירת אחד חדש
+      // בדיקה שכל הנתונים מוכנים והרכיב mounted וגם הצבעים נטענו
+      if (!expenseChartRef.current ||
+         totalOutcome === undefined ||
+         totalExpectedOutcome === undefined ||
+         delayedTransactionsOutcome === undefined ||
+         !cssColors.bgClear) {
+         return;
+      }
+
+      // אם כל הנתונים הם 0, לא ניצור גרף
+      const hasData = totalOutcome > 0 || totalExpectedOutcome > 0 || delayedTransactionsOutcome > 0;
+      if (!hasData) {
+         // אם יש גרף קיים, נהרוס אותו
+         if (outcomeChartInstance.current) {
+            outcomeChartInstance.current.destroy();
+            outcomeChartInstance.current = null;
          }
+         return;
+      }
+
+      // הרס גרף קיים אם יש
+      if (outcomeChartInstance.current) {
+         outcomeChartInstance.current.destroy();
+         outcomeChartInstance.current = null;
+      }
+
+      // יצירת גרף חדש
+      try {
          const ctx = expenseChartRef.current.getContext("2d");
-         OutcomeChartInstance.current = new Chart(ctx, {
+         outcomeChartInstance.current = new Chart(ctx, {
             type: "pie",
             data: {
-               labels: ["חיובים שיצאו", "חיובים שעומדים לצאת ", "חיובים בפיגור"],
-
+               labels: ["חיובים שיצאו", "חיובים שעומדים לצאת", "חיובים בפיגור"],
                datasets: [
                   {
                      data: [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome],
-                     backgroundColor: [bgClear, text, bgSoftLight]
+                     backgroundColor: [cssColors.bgClear, cssColors.text, cssColors.bgSoftLight]
                   },
                ],
             },
             options: {
                responsive: true,
-               maintainAspectRatio: true, // לשמור על עיגול
+               maintainAspectRatio: true,
                plugins: {
                   legend: {
                      display: false,
@@ -264,138 +321,41 @@ const HomeMain = () => {
                      enabled: true,
                   },
                   datalabels: {
-                     display: false // מסיר לגמרי את המספרים מהגרף
+                     display: false
                   }
-
                }
             },
          });
+         console.log("Expense chart created successfully");
+      } catch (error) {
+         console.error("Error creating expense chart:", error);
       }
-   }, [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome]); // תלות בנתונים
 
-
-   //לעדכן סופית!!!!!
-   const yearlyMonthIncome = useMemo(() => {
-      const months = new Array(12).fill(0);
-      const currentMonthIndex = new Date().getMonth();
-      months[currentMonthIndex] = monthIncome; // עדכון ההכנסה של החודש הנוכחי
-      return months;
-   }, [monthIncome]);
-
-   const yearlyMonthOutcome = useMemo(() => {
-      const months = new Array(12).fill(0);
-      const currentMonthIndex = new Date().getMonth();
-      months[currentMonthIndex] = monthOutcome;
-      return months;
-   }, [monthOutcome]);
-
-   const yearlyMonthCustomers = useMemo(() => {
-      const months = new Array(12).fill(0);
-      const currentMonthIndex = new Date().getMonth();
-      months[currentMonthIndex] = customersCount;
-      return months;
-   }, [customersCount]);
-
-   const yearlyMonthServicies = useMemo(() => {
-      const months = new Array(12).fill(0);
-      const currentMonthIndex = new Date().getMonth();
-      months[currentMonthIndex] = servicesCount;
-      return months;
-   }, [servicesCount]);
-
-   const yearlyMonthDelayed = useMemo(() => {
-      const months = new Array(12).fill(0);
-      const currentMonthIndex = new Date().getMonth();
-      months[currentMonthIndex] = delayedTransactionsCount;
-      return months;
-   }, [delayedTransactionsCount]);
-
-
-
-
-   const data = {
-      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
-      datasets: [
-         {
-            label: "הכנסות חודשיות",
-            data: yearlyMonthIncome,
-            borderColor: text,
-            backgroundColor: "rgba(0, 123, 255, 0.5)",
-         },
-      ],
-   };
-
-   const outcomeData = {
-      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
-      datasets: [
-         {
-            label: "הוצאות חודשיות",
-            data: yearlyMonthOutcome,
-            borderColor: text,
-            backgroundColor: "rgba(220, 53, 69, 0.5)",
-         },
-      ],
-   };
-
-
-   const customersData = {
-      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
-      datasets: [
-         {
-            label: "לקוחות לחודש",
-            data: yearlyMonthCustomers,
-            borderColor: text,
-            backgroundColor: "rgba(0, 123, 255, 0.5)",
-         },
-      ],
-   };
-   const serviciesData = {
-      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
-      datasets: [
-         {
-            label: "שירותים לחודש",
-            data: yearlyMonthServicies,
-            borderColor: text,
-            backgroundColor: "rgba(0, 123, 255, 0.5)",
-         },
-      ],
-   };
-   const dellayedData = {
-      labels: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
-      datasets: [
-         {
-            label: "עסקאות בפיגור לחודש",
-            data: yearlyMonthDelayed,
-            borderColor: text,
-            backgroundColor: "rgba(0, 123, 255, 0.5)",
-         },
-      ],
-   };
-
-
-   const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-         legend: { display: false }, // הסתרת מקרא
-         tooltip: {
-            enabled: true, // מאפשר הצגת מידע בנקודות ב-hover
-            mode: "nearest",
-            intersect: false,
-         },
-         datalabels: {
-            display: false // מסיר לגמרי את המספרים מהגרף
+      // cleanup function
+      return () => {
+         if (outcomeChartInstance.current) {
+            outcomeChartInstance.current.destroy();
+            outcomeChartInstance.current = null;
          }
-      },
-      scales: {
-         x: { display: false }, // ביטול ציר X
-         y: { display: false }, // ביטול ציר Y
-      },
-   };
+      };
+   }, [totalOutcome, totalExpectedOutcome, delayedTransactionsOutcome, cssColors]);
+
+   // ניקוי גרפים בעת unmount
+   useEffect(() => {
+      return () => {
+         if (chartInstance.current) {
+            chartInstance.current.destroy();
+            chartInstance.current = null;
+         }
+         if (outcomeChartInstance.current) {
+            outcomeChartInstance.current.destroy();
+            outcomeChartInstance.current = null;
+         }
+      };
+   }, []);
 
 
-   const chartInstance = useRef(null); // נוסיף משתנה לשמור את התרשים
-   const OutcomeChartInstance = useRef(null); // נוסיף משתנה לשמור את תרשים ההוצאות
+
 
 
    //עסקאות
@@ -430,32 +390,26 @@ const HomeMain = () => {
    const recentTransactions = filterRecentTransactions(transactionsToDisplay);
 
 
-   const filterPendingTransactions = (transactionsToDisplay) => {
-      if (transactionsToDisplay == null) {
-         return [];
-      }
-      // קבלת תאריך נוכחי
-      const today = new Date();
-
-      return [...transactionsToDisplay]
-         .filter(transaction =>
-            transaction.status === "pendingCharge" && // רק עסקאות שלא נגבו
-            new Date(transaction.billingDay) > today // תאריך גבייה מאוחר מהיום
-         )
-         .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate)) // למיין לפי תאריך הגבייה (מוקדם לראשון)
-         .slice(0, 5); // חמש הראשונות
-   };
-
-
-   const pendingTransactions = filterPendingTransactions(transactionsToDisplay);
-   // console.log(`pendingTransactions${pendingTransactions}`)
-
-
-   const today = new Date().toLocaleDateString('he-IL', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-   });
+   // Commented out unused functions and variables
+   // const filterPendingTransactions = (transactionsToDisplay) => {
+   //    if (transactionsToDisplay === null) {
+   //       return [];
+   //    }
+   //    const today = new Date();
+   //    return [...transactionsToDisplay]
+   //       .filter(transaction =>
+   //          transaction.status === "pendingCharge" &&
+   //          new Date(transaction.billingDay) > today
+   //       )
+   //       .sort((a, b) => new Date(a.collectionDate) - new Date(b.collectionDate))
+   //       .slice(0, 5);
+   // };
+   // const pendingTransactions = filterPendingTransactions(transactionsToDisplay);
+   // const today = new Date().toLocaleDateString('he-IL', {
+   //    day: 'numeric',
+   //    month: 'long',
+   //    year: 'numeric',
+   // });
 
    ///פונקציות לניווט לעסקאות
    const handleClickAllIncome = () => {

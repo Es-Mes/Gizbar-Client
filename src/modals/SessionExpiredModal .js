@@ -1,10 +1,8 @@
 import React from 'react';
 import '../component/LoadingScreen.css'; // משתמש באותו עיצוב כמו loading
-import { useNavigate } from 'react-router-dom';
 
-const SessionExpiredModal = ({handleLoginRedirect}) => {
-      const navigate = useNavigate();
-    
+const SessionExpiredModal = ({ handleLoginRedirect }) => {
+
   return (
     <div className="loading-screen full-screen">
       <div className="loading-box">

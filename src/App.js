@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom"
-import SiteLayout from "./component/Layout/site/SiteLayout"
 import DashLayout from "./component/Layout/dash/DashLayout"
 import CustomersList from "./fetures/customers/List/CustomersList"
 import AddCustomer from "./fetures/customers/add/AddCustomer"
@@ -12,25 +11,16 @@ import ScrollToTop from './ScrollToTop';
 
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
-import AddTransaction from "./fetures/transactions/add/AddTransaction"
 import TransactionsAsProvider from "./fetures/transactions/list/TransactionsAsProvider"
 import AddService from "./fetures/services/add/AddService"
 import ServicesList from "./fetures/services/list/ServicesList"
-import useAuth from "./hooks/useAuth"
 import UnderConstruction from "./component/UnderConstruction"
-import AllTransactions from "./fetures/transactions/list/AllTransactions"
 import PersonalSettings from "./fetures/settings/PersonalSettings"
-import ExpensesList from "./fetures/expenses/list/ExpensesList"
-import ExpensesPage from "./fetures/expenses/ExpensesPage"
-import PaymentIframe from "./component/payment/PaymentForm"
 import PaymentPage from "./component/payment/PaymentPage"
-// import FeedbackForm from "./fetures/pages/FeedbackForm"
-// import ContactForm from "./fetures/pages/ContactForm"
 import { useEffect } from "react";
 import TransactionsMenu from "./fetures/transactions/view/TransactionsMenu"
 import TransactionsAsCustomer from "./fetures/transactions/list/TransactionsAsCustomer"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { setToken } from "./fetures/auth/authSlice"
 import CustomerDetails from "./fetures/customers/view/CustomerDetails"
 import './toast-custom.css';
@@ -68,10 +58,10 @@ const App = () => {
                         {/* <Route path ="" */}
                         <Route path="UnderConstruction" element={<UnderConstruction />} />
                         <Route path="CreditPay" element={<PaymentPage />} />
-                        
+
                         <Route index element={<HomeMain />} />
                         <Route path="settings/personal" element={<PersonalSettings />} />
-                        <Route path="settings/paymentDetails" element={<PaymentDetails/>}/>
+                        <Route path="settings/paymentDetails" element={<PaymentDetails />} />
                         <Route path="customers" element={<Outlet />}>
                             <Route index element={<CustomersList />} />
                             <Route path="add" element={<AddCustomer />} />
@@ -91,12 +81,12 @@ const App = () => {
                             {/* <Route index element={<TransactionsMenu />} /> */}
                             <Route path="addMessage" element={<MessageForm />} />
                         </Route>
-                        <Route element={<RequireAuth allowRoles={["admin"]}/>}>
+                        <Route element={<RequireAuth allowRoles={["admin"]} />}>
                             <Route path="agents" element={<Outlet />}>
-                            <Route index element={<AgentsList />} />
-                            <Route path="add" element={<AddCustomer />} />
-                            <Route path=":customerId" element={<CustomerDetails />} />
-                        </Route>
+                                <Route index element={<AgentsList />} />
+                                <Route path="add" element={<AddCustomer />} />
+                                <Route path=":customerId" element={<CustomerDetails />} />
+                            </Route>
                         </Route>
                     </Route>
                 </Route>

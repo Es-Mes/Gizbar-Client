@@ -1,10 +1,15 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useRefreshMutation } from "./authApiSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { selectToken, logout, setNeedsReauth } from "./authSlice";
+import { logout, setNeedsReauth } from "./authSlice";
 import SessionExpiredModal from "../../modals/SessionExpiredModal ";
 import useAuthStatus from "../../hooks/useAuthStatus";
+import {
+  AUTH_TIMEOUTS,
+  USER_ACTIVITY_EVENTS,
+  AUTH_MESSAGES
+} from "./authConstants";
 
 const PersistsLogin = () => {
   const { token, isExpired } = useAuthStatus();
@@ -15,92 +20,165 @@ const PersistsLogin = () => {
   const dispatch = useDispatch();
   const effectRan = useRef(false);
   const lastActivityRef = useRef(Date.now());
+  const inactivityTimeoutRef = useRef(null);
+  const refreshTimeoutRef = useRef(null);
 
   const [refresh, { isLoading }] = useRefreshMutation();
 
-  // ⏰ מחשב מתי הטוקן יפוג ומפעיל setNeedsReauth
-  useEffect(() => {
+  // פונקציה לרענון טוקן מותנה בפעילות
+  const refreshTokenIfActive = useCallback(async () => {
+    const now = Date.now();
+    const timeSinceLastActivity = now - lastActivityRef.current;
+
+    // רק אם היתה פעילות בזמן המוגדר
+    if (timeSinceLastActivity <= AUTH_TIMEOUTS.MAX_INACTIVE_TIME_FOR_REFRESH) {
+      try {
+        await refresh().unwrap();
+        console.log(AUTH_MESSAGES.TOKEN_REFRESHED);
+      } catch (error) {
+        console.error(AUTH_MESSAGES.TOKEN_REFRESH_FAILED, error);
+        dispatch(setNeedsReauth());
+      }
+    } else {
+      console.log(AUTH_MESSAGES.NO_RECENT_ACTIVITY);
+      dispatch(setNeedsReauth());
+    }
+  }, [refresh, dispatch]);
+
+  // פונקציה לאיפוס טיימר חוסר פעילות
+  const resetInactivityTimer = useCallback(() => {
+    lastActivityRef.current = Date.now();
+
+    // איפוס הטיימר הקיים
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+
+    // הגדרת טיימר חדש
+    inactivityTimeoutRef.current = setTimeout(() => {
+      const timeSinceLastActivity = Date.now() - lastActivityRef.current;
+      // בדיקה נוספת לוודא שבאמת עברה שעה מהפעילות האחרונה
+      if (timeSinceLastActivity >= AUTH_TIMEOUTS.INACTIVITY_TIMEOUT) {
+        console.log(AUTH_MESSAGES.USER_INACTIVE);
+        dispatch(setNeedsReauth());
+      }
+    }, AUTH_TIMEOUTS.INACTIVITY_TIMEOUT);
+  }, [dispatch]);
+
+  // פונקציה להגדרת רענון לפני תפוגת טוקן
+  const scheduleTokenRefresh = useCallback(() => {
     if (!token || !expirationTime) return;
 
-    const now = Date.now();
-    const timeToExpiry = expirationTime * 1000 - now;
+    // איפוס טיימר קיים
+    if (refreshTimeoutRef.current) {
+      clearTimeout(refreshTimeoutRef.current);
+    }
 
-    if (timeToExpiry <= 0) {
+    const now = Date.now();
+    const expiryTime = expirationTime * 1000;
+    const timeToRefresh = expiryTime - now - AUTH_TIMEOUTS.REFRESH_BEFORE_EXPIRY;
+
+    if (timeToRefresh <= 0) {
+      // הטוקן כבר פג או עומד לפוג בקרוב
       dispatch(setNeedsReauth());
       return;
     }
 
-    const timeout = setTimeout(() => {
-      dispatch(setNeedsReauth());
-    }, timeToExpiry);
+    refreshTimeoutRef.current = setTimeout(() => {
+      refreshTokenIfActive();
+    }, timeToRefresh);
 
-    return () => clearTimeout(timeout);
-  }, [token, expirationTime, dispatch]);
+    console.log(`${AUTH_MESSAGES.REFRESH_SCHEDULED} ${Math.round(timeToRefresh / 60000)} minutes`);
+  }, [token, expirationTime, refreshTokenIfActive, dispatch]);
 
-  // 🔄 רענון אוטומטי רק אם הייתה פעילות ב־10 דקות האחרונות
+  // ⏰ הגדרת רענון טוקן אוטומטי לפני תפוגה
   useEffect(() => {
-    if (!token) return;
+    scheduleTokenRefresh();
 
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const tenMinutes = 10 * 60 * 1000;
-
-      if (now - lastActivityRef.current <= tenMinutes) {
-        refresh().catch((err) => console.error("Auto-refresh failed:", err));
-      } else {
-        console.log("Skipped refresh – no recent activity");
+    return () => {
+      if (refreshTimeoutRef.current) {
+        clearTimeout(refreshTimeoutRef.current);
       }
-    }, 55 * 60 * 1000); // כל 55 דקות
+    };
+  }, [scheduleTokenRefresh]);
 
-    return () => clearInterval(interval);
-  }, [token, refresh]);
-
-  // 🚨 חוסר פעילות במשך שעה → השעיה
+  // 🚨 מעקב אחר פעילות המשתמש
   useEffect(() => {
     if (!token) return;
 
-    let inactivityTimeout;
+    // הוספת מאזינים לאירועי פעילות
+    USER_ACTIVITY_EVENTS.forEach((event) => {
+      window.addEventListener(event, resetInactivityTimer, { passive: true });
+    });
 
-    const resetInactivityTimer = () => {
-      lastActivityRef.current = Date.now(); // עדכון פעילות אחרונה
-      clearTimeout(inactivityTimeout);
-      inactivityTimeout = setTimeout(() => {
-        dispatch(setNeedsReauth());
-      }, 60 * 60 * 1000); // שעה
-    };
-
-    const events = ["mousemove", "keydown", "click", "scroll"];
-    events.forEach((event) => window.addEventListener(event, resetInactivityTimer));
-
+    // איפוס ראשוני של הטיימר
     resetInactivityTimer();
 
     return () => {
-      clearTimeout(inactivityTimeout);
-      events.forEach((event) => window.removeEventListener(event, resetInactivityTimer));
-    };
-  }, [token, dispatch]);
+      // ניקוי מאזינים
+      USER_ACTIVITY_EVENTS.forEach((event) => {
+        window.removeEventListener(event, resetInactivityTimer);
+      });
 
-  // 🟡 ניסיון רענון ראשוני אם אין טוקן
-  useEffect(() => {
-    if (!token && localStorage.getItem("persist")) {
-      if (!effectRan.current) {
-        refresh().catch((err) => console.error("Initial refresh failed:", err));
+      // ניקוי טיימר
+      if (inactivityTimeoutRef.current) {
+        clearTimeout(inactivityTimeoutRef.current);
       }
-      return () => {
-        effectRan.current = true;
-      };
+    };
+  }, [token, resetInactivityTimer]);
+
+  // 🟡 רענון ראשוני אם יש persist אבל אין טוקן
+  useEffect(() => {
+    const persistLogin = localStorage.getItem("persist");
+
+    if (!token && persistLogin && !effectRan.current) {
+      effectRan.current = true;
+
+      refresh()
+        .unwrap()
+        .then(() => {
+          console.log(AUTH_MESSAGES.INITIAL_REFRESH_SUCCESS);
+        })
+        .catch((error) => {
+          console.error(AUTH_MESSAGES.INITIAL_REFRESH_FAILED, error);
+          // אם הרענון הראשוני נכשל, נוודא שהמשתמש מופנה להתחברות
+          dispatch(logout());
+        });
     }
-  }, [token, refresh]);
+  }, [token, refresh, dispatch]);
+
+  // ניקוי כללי בעת unmount
+  useEffect(() => {
+    return () => {
+      if (refreshTimeoutRef.current) {
+        clearTimeout(refreshTimeoutRef.current);
+      }
+      if (inactivityTimeoutRef.current) {
+        clearTimeout(inactivityTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleLoginRedirect = () => {
+    // ניקוי כל הטיימרים לפני יציאה
+    if (refreshTimeoutRef.current) {
+      clearTimeout(refreshTimeoutRef.current);
+    }
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+
     dispatch(logout());
     navigate("/login");
   };
 
+  // בדיקה אם הטוקן פג תוקף (לא רק needsReauth)
+  const shouldShowReauth = needsReauth || isExpired;
+
   let content;
   if (isLoading) {
     content = <div className="fullscreen-cover">טוען נתונים...</div>;
-  } else if (isExpired || needsReauth) {
+  } else if (shouldShowReauth) {
     content = <SessionExpiredModal handleLoginRedirect={handleLoginRedirect} />;
   } else if (token) {
     content = <Outlet />;

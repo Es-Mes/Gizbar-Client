@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -37,6 +36,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlt
     const [shovarNumber, setShovarNumber] = useState("");
     const [customerName, setCustomerName] = useState("");
     const [amount, setAmount] = useState(0);
+    const [clicked, setClicked] = useState(false);
 
 
     //  const handleCopy = () => {
@@ -126,6 +126,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlt
                 console.log("הודעה מהעסקה:", message);
 
                 if (status === "OK") {
+                    setPaymentStatus("✅ התשלום התקבל בהצלחה!");
                     const shovar = data.Value.Shovar;
                     const clientName = data.Value.ClientName;
                     const amountPaid = customerData.Amount; // או מה שיש לך
@@ -146,6 +147,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlt
                 else {
                     setPaymentStatus("❌ התשלום נכשל, אנא נסה שוב.");
                     setErrorsMessage(message); // הצגת הודעת השגיאה שמגיעה מהשרת
+                    setClicked(false);
                 }
             }
         };
@@ -173,7 +175,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlt
             console.log("Validation failed. Customer data:", customerData);
             return;
         }
-
+        setClicked(true);
         console.log("ApiValid:", customerData.ApiValid);
         console.log("API_VALID:", process.env.REACT_APP_API_IFRAME);
         console.log("Customer Data:", customerData);
@@ -284,6 +286,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlt
                     id="NedarimFrame"
                     ref={iframeRef}
                     src="https://www.matara.pro/nedarimplus/iframe/"
+                    title="Payment form"
                     style={{
                         width: "100%",
                         border: "none",
@@ -298,6 +301,7 @@ const PaymentForm = ({ initialCustomerData, outsieder, onPaymentSuccess, showAlt
                     type="button"
                     className="pay-button"
                     onClick={handlePayment}
+                    disabled={Object.keys(errors).length > 0 || !customerData.Amount || !customerData.FirstName || clicked}
                 >
                     לתשלום
                 </button>

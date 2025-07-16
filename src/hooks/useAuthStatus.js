@@ -1,20 +1,42 @@
 import { useSelector } from "react-redux";
-import { selectToken } from "../fetures/auth/authSlice";
+import { selectToken, selectExpirationTime } from "../fetures/auth/authSlice";
 import { jwtDecode } from "jwt-decode";
 
 const useAuthStatus = () => {
   const token = useSelector(selectToken);
-  let isExpired = true; // הנחת יסוד: אין טוקן = פג תוקף
+  const expirationTime = useSelector(selectExpirationTime);
 
-  if (token) {
-    const decodedToken = jwtDecode(token);
-    // 'exp' הוא בשניות, Date.now() במילישניות
-    if (decodedToken.exp * 1000 > Date.now()) {
-      isExpired = false;
+  let isExpired = true;
+  let timeToExpiry = 0;
+
+  if (token && expirationTime) {
+    const now = Date.now();
+    const expiryMs = expirationTime * 1000;
+    timeToExpiry = expiryMs - now;
+
+    // הטוקן תקף אם עוד לא פג תוקפו
+    isExpired = timeToExpiry <= 0;
+  } else if (token) {
+    // אם יש טוקן אבל אין expirationTime, ננסה לחלץ מהטוקן
+    try {
+      const decodedToken = jwtDecode(token);
+      const now = Date.now();
+      const expiryMs = decodedToken.exp * 1000;
+      timeToExpiry = expiryMs - now;
+      isExpired = timeToExpiry <= 0;
+    } catch (error) {
+      console.error('Failed to decode token in useAuthStatus:', error);
+      isExpired = true;
+      timeToExpiry = 0;
     }
   }
 
-  return { token, isExpired };
+  return {
+    token,
+    isExpired,
+    timeToExpiry: Math.max(0, timeToExpiry),
+    expirationTime
+  };
 };
 
 export default useAuthStatus;

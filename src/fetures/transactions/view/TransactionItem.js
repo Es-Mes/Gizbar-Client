@@ -224,9 +224,9 @@ const TransactionItem = ({ transaction }) => {
                         new Date(editedTransaction.paymentDate).toLocaleDateString("he-IL") :
                         new Date(editedTransaction.billingDay).toLocaleDateString("he-IL")}
                 </td>
-                <td>{editedTransaction.status === "paid" ? "שולם" : (editedTransaction.status == "canceled" ? "בוטל" : "לא שולם")}</td>
+                <td>{editedTransaction.status === "paid" ? "שולם" : (editedTransaction.status === "canceled" ? "בוטל" : "לא שולם")}</td>
                 <td>
-                    {(editedTransaction.status == "notPaid" || editedTransaction.status == "pendingCharge") ?
+                    {(editedTransaction.status === "notPaid" || editedTransaction.status === "pendingCharge") ?
                         (alertsLevelMapping[editedTransaction.alertsLevel] || "לא מוגדר") :
                         (<span>-</span>)}
                 </td>

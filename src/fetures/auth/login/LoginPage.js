@@ -6,10 +6,8 @@ import { useNavigate } from "react-router-dom"
 import { NavLink } from "react-router-dom/dist/umd/react-router-dom.development"
 import useAuth from "../../../hooks/useAuth"
 import { Link } from "react-router-dom"
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import LoadingScreen from "../../../component/LoadingScreen";
-import { useSelector } from "react-redux";
+import Alert from '@mui/material/Alert';
 
 export const LoginPage = () => {
   // const { _id, phone, roles } = useAuth()
@@ -30,7 +28,7 @@ export const LoginPage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [errMsg, setErrorMsg] = useState("")
   const [successMsg, setSuccessMsg] = useState("")
-  const [loginErr,setLoginErr] = useState()
+  const [loginErr, setLoginErr] = useState()
 
   //ספירה לאחור לשליחת קוד חדש
   const [canResend, setCanResend] = useState(false);
@@ -71,29 +69,29 @@ export const LoginPage = () => {
   }, [isSuccess])
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  const data = new FormData(e.target);
-  const userObj = Object.fromEntries(data.entries());
-  setLoginErr(null); // נקה שגיאה קודמת
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const userObj = Object.fromEntries(data.entries());
+    setLoginErr(null); // נקה שגיאה קודמת
 
-  try {
-    const result = await login(userObj).unwrap(); // כאן ייזרק שגיאה במקרה הצורך
-    // אם הצליח - את יכולה לעשות הפניות/ניקוי שדות וכו'
-    console.log("Login success:", result);
-  } catch (err) {
-    const message = err?.data?.message;
+    try {
+      const result = await login(userObj).unwrap(); // כאן ייזרק שגיאה במקרה הצורך
+      // אם הצליח - את יכולה לעשות הפניות/ניקוי שדות וכו'
+      console.log("Login success:", result);
+    } catch (err) {
+      const message = err?.data?.message;
 
-    if (message === "Unauthorized - Agent not found") {
-      setLoginErr("משתמש לא קיים");
-    } else if (message === "Unauthorized, wrong password") {
-      setLoginErr("סיסמה שגויה");
-    } else if (message?.includes("phone")) {
-      setLoginErr("מספר טלפון לא תקין, יש לכתוב ספרות בלבד");
-    } else {
-      setLoginErr("שגיאה בלתי צפויה, נסה שוב");
+      if (message === "Unauthorized - Agent not found") {
+        setLoginErr("משתמש לא קיים");
+      } else if (message === "Unauthorized, wrong password") {
+        setLoginErr("סיסמה שגויה");
+      } else if (message?.includes("phone")) {
+        setLoginErr("מספר טלפון לא תקין, יש לכתוב ספרות בלבד");
+      } else {
+        setLoginErr("שגיאה בלתי צפויה, נסה שוב");
+      }
     }
-  }
-};
+  };
 
   const sendForgotPassword = async (e) => {
     e.preventDefault();
@@ -175,7 +173,7 @@ export const LoginPage = () => {
         <div className='login-page'>
           <div className="login-form">
             <form id="loginForm" className='login-page-form'>
-              <div className="rotating-coin"><img src="/icons8-coin-50.png"/></div>
+              <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
               <h2>הכנס טלפון לזיהוי</h2>
               <div className="field">
                 <label htmlFor="phone">טלפון</label>
@@ -205,7 +203,7 @@ export const LoginPage = () => {
         <div className='login-page'>
           <div className="login-form">
             <form id="loginForm" className='login-page-form'>
-              <div className="rotating-coin"><img src="/icons8-coin-50.png"/></div>
+              <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
               <h2>שינוי סיסמא</h2>
               <p>קוד טלפוני נשלח למספר שהזנת</p>
               <div className="field">
@@ -293,7 +291,7 @@ export const LoginPage = () => {
         <div className='login-page'>
           <div className="login-form">
             <form id="loginForm" onSubmit={handleSubmit} className='login-page-form'>
-              <div className="rotating-coin"><img src="/icons8-coin-50.png"/></div>
+              <div className="rotating-coin"><img src="/icons8-coin-50.png" /></div>
               <h2>מזדהים ומתחברים</h2>
               <div className="field">
                 <label htmlFor="phone">טלפון</label>
@@ -313,7 +311,7 @@ export const LoginPage = () => {
                     name="password"
                     id="password"
                     required
-                    autoComplete="current-password"	
+                    autoComplete="current-password"
                   />
                   <span
                     className="eye-icon"

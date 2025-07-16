@@ -376,7 +376,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
 
             // יצירת עסקאות נפרדות לכל חודש (כמו במקרה של אין אשראי)
             for (let i = 0; i < monthsCount; i++) {
-                let billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, chargeDay_num );
+                let billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, chargeDay_num);
 
                 if (billingDate.getDate() !== chargeDay_num) {
                     billingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + i + 1, 0);
