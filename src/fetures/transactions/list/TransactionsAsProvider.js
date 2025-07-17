@@ -13,9 +13,7 @@ Chart.register(...registerables); // הרשמת כל האפשרויות של Cha
 
 const TransactionsAsProvider = () => {
     const { phone } = useAuth()
-    const { data: transactionsAsProvider = [], isLoading: isLoading, error: error, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone }, {
-        pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
-    });
+    const { data: transactionsAsProvider = [], isLoading: isLoading, error: error, refetch: refetchTransactions } = useGetAllTransactionsQuery({ phone });
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // ניהול השנה הנוכחית ב-state
     const chartRef = useRef(null); // רפרנס לגרף

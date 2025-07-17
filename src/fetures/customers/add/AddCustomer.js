@@ -26,6 +26,7 @@ const AddCustomer = ({ onSuccess }) => {
     };
     const handleSubmit = async (e) => {
         setClicked(true)
+        setMessage(null);
         e.preventDefault();
         if (!phone) {
             alert("מזהה הסוכן לא נמצא. נסה להתחבר מחדש.");
@@ -48,7 +49,18 @@ const AddCustomer = ({ onSuccess }) => {
             }
 
         } catch (err) {
-            setMessage(`שגיאה בהוספת הלקוח ${err.error}`);
+            // טיפול בשגיאות מיוחדות
+            let errorMessage = "שגיאה בהוספת הלקוח";
+
+            if (err?.data?.message === "Existing customer") {
+                errorMessage = "קיים לקוח עם מספר טלפון זהה";
+            } else if (err?.data?.message) {
+                errorMessage = err.data.message;
+            }
+
+            setMessage(errorMessage);
+            setClicked(false);
+            console.error("Error adding customer:", err);
         }
     };
 
@@ -93,6 +105,7 @@ const AddCustomer = ({ onSuccess }) => {
                     id="city"
                     name="city"
                     value={customerData.city}
+                    onChange={handleChange}
                     label='עיר'
                 />
 
@@ -109,7 +122,14 @@ const AddCustomer = ({ onSuccess }) => {
                 </button>
             </form>
 
-            {isError && <p className="error-message">{error?.data?.message || "שגיאה בהוספת הלקוח"}</p>}
+            {isError && !message && (
+                <p className="error-message">
+                    {error?.data?.message === "Existing customer"
+                        ? "קיים לקוח עם מספר טלפון זהה"
+                        : (error?.data?.message || "שגיאה בהוספת הלקוח")
+                    }
+                </p>
+            )}
             {message && <p style={{ color: "#f9a825" }}>{message}</p>}
 
         </div>

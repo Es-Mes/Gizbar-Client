@@ -9,7 +9,7 @@ import useAuth from "../../../hooks/useAuth";
 const CustomerDetails = ({ customer, isNarrow }) => {
   const phone = useAuth();
   const { data: transactions = [], isLoading: isLoading, error: error, refetch: refetchTransactions } = useGetAllTransactionsQuery(phone, {
-    pollingInterval: 30000, // בדיקה כל 30 שניות לעסקאות חדשות
+    pollingInterval: 120000, // בדיקה כל 2 דקות - מאוזן לפרטי לקוח
   });
   console.log("CustomerDetails transactions:", transactions);
 

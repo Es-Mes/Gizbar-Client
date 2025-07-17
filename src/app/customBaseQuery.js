@@ -1,5 +1,6 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setToken, logout,setNeedsReauth } from '../fetures/auth/authSlice'
+import { setToken, logout, setNeedsReauth } from '../fetures/auth/authSlice'
+import { toast } from 'react-toastify'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.REACT_APP_BASE_URL,
@@ -24,17 +25,41 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       // מנסה מחדש את הבקשה המקורית
       result = await baseQuery(args, api, extraOptions)
     } else {
-       api.dispatch(setNeedsReauth());
+      api.dispatch(setNeedsReauth());
     }
   }
-  if(result?.error?.status === 403){
-     api.dispatch(setNeedsReauth());
+  if (result?.error?.status === 403) {
+    const errorMessage = result?.error?.data?.message;
+
+    // רשימת הודעות שגיאה ספציפיות שלא צריכות להפעיל reauth
+    const specificErrorMessages = [
+      "A customer who has transactions cannot be deleted.",
+      // ניתן להוסיף הודעות נוספות כאן בעתיד
+    ];
+
+    // בדיקה אם זו שגיאה ספציפית או שגיאת הרשאה כללית
+    if (specificErrorMessages.includes(errorMessage)) {
+      // שגיאה ספציפית - לא צריך reauth, נטפל במקום
+      console.log("Specific 403 error, not triggering reauth:", errorMessage);
+    } else {
+      // שגיאת הרשאה כללית - צריך טיפול מיוחד
+      console.log("General 403 error, showing toast and handling gracefully");
+
+      // הצגת toast עם הודעה ברורה
+      toast.error("אין לך הרשאה לבצע פעולה זו", {
+        autoClose: 5000,
+        position: "top-center"
+      });
+
+      // במקום setNeedsReauth, נחזיר לעמוד הראשי או נטפל אחרת
+      // api.dispatch(setNeedsReauth()); // נשאיר מוערם לעת עתה
+    }
   }
-  
-//   נחלץ את .data אם יש
+
+  //   נחלץ את .data אם יש
   result.data = result?.data?.data ?? result.data;
 
   console.log(result);
-  
+
   return result
 }

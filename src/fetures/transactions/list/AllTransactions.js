@@ -6,9 +6,9 @@ import { useMemo } from "react";
 import { useGetAllTransactionsQuery } from "../TransactionsApiSlice";
 
 const AllTransactions = () => {
-    const { _id ,phone} = useAuth();
+    const { _id, phone } = useAuth();
     const { data: transactions = [], isLoading: isLoading, error: error } = useGetAllTransactionsQuery({ phone });
-   
+
 
     const [requireField, setRequireFiled] = useState(3); // ברירת מחדל: שלושה חודשים אחורה
 

@@ -65,10 +65,16 @@ const TransactionItem = ({ transaction }) => {
     const [sendReminder] = useSendReminderMutation();
     const [updateTransaction] = useUpdateTransactionMutation();
 
+    // עדכון ה-state המקומי כאשר ה-transaction prop משתנה
+    useEffect(() => {
+        setEditedTransaction({ ...transaction });
+    }, [transaction]);
+
 
 
     const confirmPayInCash = async () => {
         setPayInCashClicked(true);
+
         try {
             const result = await payInCash({ _id: editedTransaction._id });
 

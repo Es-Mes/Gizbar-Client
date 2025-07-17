@@ -13,6 +13,7 @@ import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
 import { useGetAgentQuery } from "../agent/apiSlice";
 import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
+
 const HomeMain = () => {
    const { phone } = useAuth()
    const { data: agent, isLoading, error } = useGetAgentQuery({ phone });

@@ -36,6 +36,9 @@ const TransactionsList = ({ transactions }) => {
                 ? transaction.customer?.full_name || ''
                 : transaction.agent?.first_name || '';
 
+            // נבדוק גם serviceType וגם service - כי יכול להיות ששמות השדות שונים
+            const serviceName = transaction.serviceName || '';
+
             const billingDate = new Date(transaction.billingDay);
             const createdDate = new Date(transaction.createdAt);
 
@@ -47,21 +50,22 @@ const TransactionsList = ({ transactions }) => {
 
             let isMatch = true;
 
-            // שם לקוח
+            // שם לקוח - סינון גמיש יותר
             if (customerNameFilter.trim() !== '') {
-                isMatch = isMatch &&
-                    customerName.toLowerCase().includes(customerNameFilter.toLowerCase());
+                const searchTerm = customerNameFilter.toLowerCase().trim();
+                const customerMatches = customerName.toLowerCase().includes(searchTerm);
+                isMatch = isMatch && customerMatches;
             }
 
             // טווח לפי billingDay
             if (billingFrom) isMatch = isMatch && billingDate >= billingFrom;
             if (billingTo) isMatch = isMatch && billingDate <= billingTo;
 
-            // סוג שירות
+            // סוג שירות - סינון גמיש יותר
             if (serviceFilter.trim() !== '') {
-                const service = transaction.serviceType || '';
-                isMatch = isMatch &&
-                    service.toLowerCase().includes(serviceFilter.toLowerCase());
+                const searchTerm = serviceFilter.toLowerCase().trim();
+                const serviceMatches = serviceName.toLowerCase().includes(searchTerm);
+                isMatch = isMatch && serviceMatches;
             }
 
             // טווח לפי createdAt
@@ -85,7 +89,9 @@ const TransactionsList = ({ transactions }) => {
     if (!isValid) return null;
     if (isEmpty) return <p>אין עסקאות תואמות</p>;
 
-    // ... המשך הרינדור כמו קודם
+    // בדיקה אם יש סינון פעיל אבל אין תוצאות
+    const hasActiveFilters = isFilterActive;
+    const noFilteredResults = filteredTransactions.length === 0;
 
     return (
         <>
@@ -141,7 +147,6 @@ const TransactionsList = ({ transactions }) => {
 
             {showFilters && (
                 <Box style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "16px", padding: "10px", borderRadius: "8px" }}>
-
                     <div className="date-range" >
                         <div className="date-box" style={{ gap: "18px" }}>
                             {/* שם לקוח */}
@@ -158,6 +163,7 @@ const TransactionsList = ({ transactions }) => {
                                 placeholder={"סנן לפי סוג שירות"}
                                 value={serviceFilter}
                                 onChange={(e) => setServiceFilter(e.target.value)}
+                                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
                             />
                         </div>
                     </div>
@@ -184,7 +190,6 @@ const TransactionsList = ({ transactions }) => {
                         </div>
                     </div>
 
-
                     {/* טווח לפי createdAt */}
                     <div className="date-range">
                         <p style={{ fontSize: "1em", marginBottom: "4px", color: "#555" }}>
@@ -209,71 +214,30 @@ const TransactionsList = ({ transactions }) => {
                 </Box>
             )}
 
-            {/* <div className="filters">
-                <div className='customer-filter'>
-                    <p style={{ fontSize: "1em", marginBottom: "4px", color: "#555" }}>
-                        {isIncome ? "סנן לפי שם לקוח:" : "סנן לפי נותן השירות:"}
-                    </p>
-                    <TextField variant="outlined"
-                        type="text"
-                        placeholder={isIncome ? "הכנס שם לקוח" : "הכנס שם נותן שירות"}
-                        value={customerNameFilter}
-                        onChange={(e) => setCustomerNameFilter(e.target.value)}
-                    />
-                     <TextField variant="outlined"
-                        type="text"
-                        placeholder={"הכנס סוג שירות"}
-                        value={serviceFilter}
-                        onChange={(e) => setServiceFilter(e.target.value)}
-                    />
-                     
-                </div>
-
-                <div className="date-range">
-                    <p style={{ fontSize: "1em", marginBottom: "4px", color: "#555" }}>
-                        עסקאות מתאריך ועד תאריך:
-                    </p>
-                    <div className='date-box'>
-                        <TextField variant="outlined"
-                            type="date"
-                            value={fromDate}
-                            onChange={(e) => setFromDate(e.target.value)}
-                            style={{ marginLeft: "20px" }}
-                        />
-                        <TextField variant="outlined"
-                            type="date"
-                            value={toDate}
-                            onChange={(e) => setToDate(e.target.value)}
-                        />
-                    </div>
-                </div> */}
-
-
-            {/* </div > */}
-
-            <table className="transaction-table">
-                <thead>
-                    <tr>
-                        {isIncome ? <th>לקוח</th> : <th>נותן השירות</th>}
-                        <th>סכום</th>
-                        <th>תאריך העסקה</th>
-                        <th>שירות</th>
-                        <th>תאריך תשלום</th>
-                        <th>סטטוס</th>
-                        <th>התראות</th>
-                        <th>פעולות מהירות</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredTransactions.map((transaction) => (
-                        <TransactionItem
-                            key={transaction._id}
-                            transaction={transaction}
-                        // אם בעתיד תצטרכי פעולה – אפשר להוסיף פה callback
-                        />
-                    ))}
-                </tbody>
-            </table>
+            {filteredTransactions.length > 0 && (
+                <table className="transaction-table">
+                    <thead>
+                        <tr>
+                            {isIncome ? <th>לקוח</th> : <th>נותן השירות</th>}
+                            <th>סכום</th>
+                            <th>תאריך העסקה</th>
+                            <th>שירות</th>
+                            <th>תאריך תשלום</th>
+                            <th>סטטוס</th>
+                            <th>התראות</th>
+                            <th>פעולות מהירות</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredTransactions.map((transaction) => (
+                            <TransactionItem
+                                key={transaction._id}
+                                transaction={transaction}
+                            />
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </>
     );
 };

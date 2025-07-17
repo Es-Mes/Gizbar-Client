@@ -278,9 +278,9 @@ const AgentsList = () => {
         <div className="agents-list">
             <h1 style={{ color: 'var(--text)' }} className="agents-title">משתמשים</h1>
             <div className="agents-list-top">
-                <button onClick={addCustomerClick}>
+                {/* <button onClick={addCustomerClick}>
                     הוספת משתמש למערכת <FiUserPlus />
-                </button>
+                </button> */}
                 <button
                     onClick={openBulkMessageModal}
                     style={{
@@ -298,12 +298,7 @@ const AgentsList = () => {
                     <LuBellRing size={16} />
                     שלח הודעה לכל המשתמשים ({filteredData?.length})
                 </button>
-                <input
-                    type="text"
-                    placeholder={'סנן לפי שם פרטי או משפחה'}
-                    onChange={handleChange}
-                    value={nameFilter}
-                />
+
                 <div style={{
                     alignSelf: "end"
                 }}>
@@ -374,6 +369,12 @@ const AgentsList = () => {
                     marginBottom: "20px"
                 }}>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "15px" }}>
+                        <TextField
+                            variant="outlined"
+                            label={'סנן לפי שם פרטי או משפחה'}
+                            onChange={handleChange}
+                            value={nameFilter}
+                        />
                         {/* סינון לפי אימייל */}
                         <TextField
                             variant="outlined"
@@ -500,11 +501,11 @@ const AgentsList = () => {
                             </td>
                             <td className="btn-customer-list">
                                 <span
-                                    onClick={() => openViewAgentModal(agent)}
+                                    // onClick={() => openViewAgentModal(agent)}
                                     style={{ cursor: "pointer", color: "gray" }}
-                                    className="customers-list-btn customers-list-view"
+                                    className="customers-list-btn customers-list-view inDevelopment"
                                 >
-                                    <PiEyeThin size={20} />
+                                    <PiEyeThin  size={20} />
                                 </span>
                             </td>
                             <td style={{ position: "relative" }} ref={(el) => (actionsRefs.current[agent._id] = el)}
@@ -517,7 +518,7 @@ const AgentsList = () => {
                                     <div className={`actions-dropdown floating-menu ${openUpwardsId === agent._id ? "open-up" : ""}`}>
 
                                         <div
-                                            className="action-item"
+                                            className="action-item inDevelopment"
                                             onClick={() => {
                                                 // openEditModel(agent);
                                                 closeMenu();
@@ -533,20 +534,19 @@ const AgentsList = () => {
                                             <LuBellRing size={20} /> שלח הודעה
                                         </div>
 
-                                        <div
+                                        <div className="action-item inDevelopment"
                                             onClick={() => {
                                                 console.log("Delete agent clicked:", agent._id);
                                                 // openDeleteModel(agent);
                                                 closeMenu();
                                             }}
-                                            className="action-item"
                                             style={{ color: "#dc3545" }}
                                         >
                                             <GrFormTrash size={20} /> מחיקה
                                         </div>
 
                                         <div
-                                            className="action-item"
+                                            className="action-item inDevelopment"
                                             onClick={() => {
                                                 console.log("Reset password for agent:", agent._id);
                                                 closeMenu();
@@ -556,7 +556,7 @@ const AgentsList = () => {
                                         </div>
 
                                         <div
-                                            className="action-item"
+                                            className="action-item inDevelopment"
                                             onClick={() => {
                                                 console.log("Toggle agent status:", agent._id);
                                                 closeMenu();

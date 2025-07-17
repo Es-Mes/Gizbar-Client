@@ -53,6 +53,29 @@ const transactionsApiSlice = apiSlice.injectEndpoints({
                 body: { _id },
             }),
             invalidatesTags: ["Transactions"],
+            // Optimistic update - עדכון מיידי של cache
+            async onQueryStarted({ _id }, { dispatch, queryFulfilled, getState }) {
+                const phone = getState().auth?.user?.phone;
+                if (!phone) return;
+
+                // Update cache optimistically
+                const patchResult = dispatch(
+                    transactionsApiSlice.util.updateQueryData('getAllTransactions', { phone }, (draft) => {
+                        const transaction = draft.find(t => t._id === _id);
+                        if (transaction) {
+                            transaction.status = 'paid';
+                            transaction.paymentDate = new Date().toISOString();
+                        }
+                    })
+                );
+
+                try {
+                    await queryFulfilled;
+                } catch {
+                    // Revert optimistic update on error
+                    patchResult.undo();
+                }
+            },
         }),
         sendReminder: build.mutation({
             query: ({ type, _id }) => ({

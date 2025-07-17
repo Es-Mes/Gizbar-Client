@@ -130,7 +130,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 }));
             }
         }
-    }, [specificCustomer, customers]);
+    }, [specificCustomer, customers, setSelectedCustomer, setTransactionDetails]);
 
 
     const handleCustomerChange = (event) => {
@@ -802,7 +802,7 @@ const AddTransaction = ({ onSuccess, specificCustomer }) => {
                 <Modal isOpen={isCustomerModalOpen} onClose={() => setCustomerModalOpen(false)}>
                     <AddCustomer
                         onSuccess={(newCustomer) => {
-
+                            console.log(newCustomer);
                             setSelectedCustomer(newCustomer); // עדכון אוטומטי של הלקוח הנבחר
                             setCustomerModalOpen(false);
                             // קריאה יזומה לפונקציה שמטפלת בבחירת לקוח

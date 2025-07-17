@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
-
 import { useUpdateTransactionMutation } from "../TransactionsApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import { TextField } from "@mui/material";
+import HebrewDatePicker from "../../../component/date/HebrewDatePicker";
 
 const EditTransactionModal = ({ transaction, onSuccess }) => {
     const { phone } = useAuth();
@@ -22,10 +22,17 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
 
     useEffect(() => {
         if (transaction) {
+            // פונקציה לפורמט התאריך ל-YYYY-MM-DD
+            const formatDateForInput = (dateString) => {
+                if (!dateString) return "";
+                const date = new Date(dateString);
+                return date.toISOString().split('T')[0];
+            };
+
             setTransactionDetails({
                 _id: transaction._id || "",
                 price: transaction.price || 0,
-                billingDay: transaction.billingDay || "",
+                billingDay: formatDateForInput(transaction.billingDay),
                 alerts: transaction.alerts || false,
                 typeAlerts: transaction.typeAlerts || "",
                 alertsLevel: transaction.alertsLevel || "",
@@ -113,6 +120,15 @@ const EditTransactionModal = ({ transaction, onSuccess }) => {
                             label="תאריך חיוב"
                             onChange={handleInputChange}
                             InputLabelProps={{ shrink: true }}
+                        />
+                    </div>
+
+                    <div className="field-group date" style={{ flexDirection: 'row', minWidth: '260px' }}>
+                        <HebrewDatePicker
+                            name="billingDay"
+                            value={transactionDetails.billingDay}
+                            onChange={handleInputChange}
+                            label="תאריך עברי"
                         />
                     </div>
 
