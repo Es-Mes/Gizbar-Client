@@ -36,10 +36,9 @@ const TransactionsList = ({ transactions }) => {
                 ? transaction.customer?.full_name || ''
                 : transaction.agent?.first_name || '';
 
-            // נבדוק גם serviceType וגם service - כי יכול להיות ששמות השדות שונים
             const serviceName = transaction.serviceName || '';
 
-            const billingDate = new Date(transaction.billingDay);
+            const billingDate = transaction.paymentDate ? new Date(transaction.paymentDate) : new Date(transaction.billingDay);
             const createdDate = new Date(transaction.createdAt);
 
             const billingFrom = fromDate ? new Date(fromDate) : null;
