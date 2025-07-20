@@ -54,3 +54,193 @@
   color: var(--text);
   text-decoration: underline;
 }
+
+/* סטיילים חדשים */
+.settings-section {
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--text);
+  border-bottom: 2px solid var(--bgSoft);
+  padding-bottom: 8px;
+}
+
+.read-only-indicator {
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+}
+
+.no-payment-info,
+.no-card-info {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  gap: 20px;
+}
+
+.card-label {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.card-value {
+  flex: 2;
+  text-align: right;
+  color: #555;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.edit-payment-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: var(--bgSoft);
+  text-decoration: none;
+  font-weight: 500;
+  border: 1px solid var(--bgSoft);
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.edit-payment-link:hover {
+  background-color: var(--bgSoft);
+  color: white;
+}
+
+.actions-section {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--bgSoft);
+}
+
+.change-password-btn {
+  background-color: var(--bgSoft);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.change-password-btn:hover {
+  background-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.edit-section-btn,
+.view-details-btn {
+  background-color: transparent;
+  color: var(--bgSoft);
+  border: 2px solid var(--bgSoft);
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.edit-section-btn:hover,
+.view-details-btn:hover {
+  background-color: var(--bgSoft);
+  color: white;
+}
+
+.edit-personal-modal {
+  max-width: 500px;
+  width: 90vw;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.edit-personal-modal h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.modal-actions button {
+  min-width: 120px;
+}
+
+/* התאמות לנייד */
+@media (max-width: 768px) {
+  .settings-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .edit-section-btn,
+  .view-details-btn {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .edit-personal-modal {
+    padding: 20px;
+  }
+}
