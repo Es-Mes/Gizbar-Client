@@ -13,6 +13,9 @@ import AddTransaction from "../transactions/add/AddTransaction";
 import Modal from "../../modals/Modal";
 import { useGetAgentQuery } from "../agent/apiSlice";
 import { useGetAllTransactionsAsCustomerQuery, useGetAllTransactionsQuery } from "../transactions/TransactionsApiSlice";
+// import HebrewDatePicker from "../../component/date/HebrewDatePicker";
+import HebrewDatePicker from 'react-hebrew-datepicker';
+
 
 const HomeMain = () => {
    const { phone } = useAuth()
@@ -80,6 +83,20 @@ const HomeMain = () => {
    const transactionsAsProvider = useMemo(() => [...transactions].reverse(), [transactions]);
 
    const transactionsToDisplay = (selectedOption === "agent") ? [...transactions].slice().reverse() : [...transactionsAsCustomer].slice().reverse()
+
+   // //בחירת תאריך עברי
+   // const [formData, setFormData] = useState({
+   //    name: '',
+   //    birthDate: '',
+   //    hebrewDate: ''
+   // });
+
+   // const handleInputChange = (event) => {
+   //    setFormData({
+   //       ...formData,
+   //       [event.target.name]: event.target.value
+   //    });
+   // };
 
 
    useEffect(() => {
@@ -587,7 +604,15 @@ const HomeMain = () => {
                   הוצאות
                </button>
             </div>
-
+            <div style={{marginBottom: "400px"}}>
+               <HebrewDatePicker
+                  name="hebrewDate"
+                  // value={formData.hebrewDate}
+                  // onChange={handleInputChange}
+                  // label="תאריך עברי"
+                  // required
+               />
+            </div>
             <div>
                <TransactionsList transactions={recentTransactions} />
             </div>

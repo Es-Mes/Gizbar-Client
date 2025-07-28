@@ -268,7 +268,7 @@ const PersonalSettings = () => {
     </Modal>
 
     {/* מודל עריכת פרטי תשלום */}
-    <Modal isOpen={isEditPaymentModalOpen} onClose={() => setEditPaymentModalOpen(false)}>
+    {/* <Modal isOpen={isEditPaymentModalOpen} onClose={() => setEditPaymentModalOpen(false)}>
       <EditPaymentDetailsModal
         agent={agent}
         onClose={() => setEditPaymentModalOpen(false)}
@@ -277,7 +277,22 @@ const PersonalSettings = () => {
           window.location.reload(); // או שתשתמש ב-refetch אם יש לך
         }}
       />
-    </Modal>
+    </Modal> */}
+    {isEditPaymentModalOpen && (
+  <div className="iframe-modal-overlay">
+    <div className="iframe-modal-content">
+      <button className="close-btn" onClick={() => setEditPaymentModalOpen(false)}>סגור</button>
+      <iframe
+        src={`https://ultra.kesherhk.info/external/paymentPage/321649?customerRef=${agent._id}`}
+        title="תשלום"
+        width="100%"
+        height="600px"
+        style={{ border: "none" }}
+        allowFullScreen
+      />
+    </div>
+  </div>
+)}
   </>
   );
 };
