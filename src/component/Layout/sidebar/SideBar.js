@@ -12,11 +12,13 @@ import {
 } from "react-icons/fa6";
 import "./sidebar.css";
 import useAuth from "../../../hooks/useAuth";
+import { useGetAgentQuery } from "../../../fetures/agent/apiSlice";
 
 const Sidebar = ({ closeMenu }) => {
-  const { roles, paymentType } = useAuth()
+  const { roles, phone } = useAuth()
+  const { data: agent, isLoading, isError } = useGetAgentQuery({ phone }, { refetchOnMountOrArgChange: true });
+  const paymentType = agent?.paymentType || "none"; // default to "none" if not set
   console.log("paymentType", paymentType);
-
   const menuItems = [
     // {
     //   title: "משתמשים",

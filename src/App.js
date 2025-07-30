@@ -27,7 +27,7 @@ import './toast-custom.css';
 import PaymentDetails from "./component/payment/paymentDetails"
 import AgentsList from "./fetures/agent/list/AgentsList"
 import MessageForm from "./fetures/messages/MessageForm"
-
+import 'react-hebrew-datepicker/dist/styles.css';
 
 const App = () => {
 

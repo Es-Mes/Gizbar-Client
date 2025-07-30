@@ -1,11 +1,11 @@
 :root {
   /* --bgSoft: #4da6ff; */
 }
-.calendar-popup {
+/* .calendar-popup {
   z-index: 9999 !important; /* גבוה יותר מכל modal רגיל */
-}
 
-.date-picker-day {
+
+/* .date-picker-day {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -14,8 +14,8 @@
   cursor: pointer;
   font-size: 14px;
   transition: 0.2s;
-}
-
+} */
+/* 
 .date-picker-day:hover {
   border: 1.5px solid var(--bgSoft);
 }
@@ -79,4 +79,4 @@
 }
 
 
-
+ */

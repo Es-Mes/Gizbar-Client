@@ -10,7 +10,6 @@ const apiSlice = createApi({
     getAgent: builder.query({
       query: ({ phone }) => `/api/agent/${phone}`,
       providesTags: ['Agent']
-
     }),
   }),
 })

@@ -604,7 +604,7 @@ const HomeMain = () => {
                   הוצאות
                </button>
             </div>
-            <div style={{marginBottom: "400px"}}>
+            {/* <div style={{marginBottom: "400px"}}>
                <HebrewDatePicker
                   name="hebrewDate"
                   // value={formData.hebrewDate}
@@ -612,7 +612,7 @@ const HomeMain = () => {
                   // label="תאריך עברי"
                   // required
                />
-            </div>
+            </div> */}
             <div>
                <TransactionsList transactions={recentTransactions} />
             </div>

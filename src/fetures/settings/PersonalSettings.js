@@ -262,7 +262,6 @@ const PersonalSettings = () => {
         onClose={() => setEditBillingModalOpen(false)}
         onSuccess={() => {
           // רענון הנתונים אחרי עדכון מוצלח
-          window.location.reload(); // או שתשתמש ב-refetch אם יש לך
         }}
       />
     </Modal>
